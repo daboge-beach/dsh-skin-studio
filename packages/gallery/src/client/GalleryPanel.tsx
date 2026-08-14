@@ -90,13 +90,17 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
   const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
+  const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
 
   // 订阅官方 theme 服务获取当前主题
   const snapshot = useThemeSnapshot(ctx)
   const activeSkinId = snapshot?.active.id
 
-  // 吉祥物浮层开关（settings.mascotEnabled，默认 true）
-  useEffect(() => skinStudioSettings.subscribe(s => setMascotEnabled(s.mascotEnabled)), [])
+  // 吉祥物浮层开关 + 语录语言（settings.mascotEnabled / settings.quoteLang）
+  useEffect(() => skinStudioSettings.subscribe(s => {
+    setMascotEnabled(s.mascotEnabled)
+    setQuoteLang(s.quoteLang)
+  }), [])
 
   /** 试穿前的用户偏好（退出还原用）。 */
   const previousPreferenceRef = useRef<string | undefined>(undefined)
@@ -254,6 +258,14 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           onClick={() => skinStudioSettings.setMascotEnabled(!mascotEnabled)}
         >
           吉祥物浮层：{mascotEnabled ? '开' : '关'}
+        </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          title="切换吉祥物语录语言（中文 / English），每款皮肤每种语言各 200 句"
+          onClick={() => skinStudioSettings.setQuoteLang(quoteLang === 'zh' ? 'en' : 'zh')}
+        >
+          语录语言：{quoteLang === 'zh' ? '中文' : 'English'}
         </button>
       </nav>
 

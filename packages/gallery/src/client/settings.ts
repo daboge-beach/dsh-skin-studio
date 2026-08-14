@@ -17,9 +17,13 @@ export interface SkinStudioSettings {
    * 选择，浏览器半边启动时恢复（详见 src/client/index.ts 的收敛逻辑）。
    */
   activeSkin: string | null
+  /**
+   * 吉祥物语录语言（quotes.ts 中/英双池，默认中文）。
+   */
+  quoteLang: 'zh' | 'en'
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh' }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -63,6 +67,13 @@ export const skinStudioSettings = {
   setActiveSkin(id: string | null): void {
     if (current.activeSkin === id) return
     write({ ...current, activeSkin: id })
+  },
+  getQuoteLang(): 'zh' | 'en' {
+    return current.quoteLang
+  },
+  setQuoteLang(lang: 'zh' | 'en'): void {
+    if (current.quoteLang === lang) return
+    write({ ...current, quoteLang: lang })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)

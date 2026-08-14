@@ -6,7 +6,8 @@
  *   的 animation/transition（级联怪癖），内联样式已被证实免疫。
  * - 拖动：pointer 事件 + 点击/拖动阈值区分；拖动时暂停漫步，松手后从新
  *   位置继续散步；点击（未拖动）立即冒一条语录。
- * - 语录自动冒泡（quotes.ts，连续不重复）。
+ * - 语录自动冒泡（quotes.ts 中/英双池各 200 句，连续不重复；登场首句
+ *   是对程序员的问候，语言由皮肤中心设置选择）。
  * - reduced-motion：定格第一帧、不移动；settings.mascotEnabled 可关。
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -14,7 +15,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { usePrefersReducedMotion, useThemeSnapshot } from './hooks.ts'
 import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
-import { randomQuote } from './quotes.ts'
+import { randomGreeting, randomQuote, type QuoteLang } from './quotes.ts'
 import styles from './MascotFloat.module.css'
 
 /** 漫步目标点（相对当前锚位的 translate 偏移）。 */
@@ -43,6 +44,8 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const snapshot = useThemeSnapshot(ctx)
   const reduced = usePrefersReducedMotion()
   const [enabled, setEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
+  /** 语录语言（settings.quoteLang，中/英双池）。 */
+  const [lang, setLang] = useState<QuoteLang>(() => skinStudioSettings.get().quoteLang)
   /** 淡出淡入：皮肤切换瞬间先降 opacity 再升起。 */
   const [visible, setVisible] = useState(false)
   const [point, setPoint] = useState<WanderPoint>({ x: 0, y: 0 })
@@ -55,13 +58,20 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const activeSkin = snapshot !== null ? skinRegistry.get(snapshot.active.id) : undefined
   const skinId = activeSkin?.id ?? ''
 
-  useEffect(() => skinStudioSettings.subscribe(s => setEnabled(s.mascotEnabled)), [])
+  useEffect(() => skinStudioSettings.subscribe(s => {
+    setEnabled(s.mascotEnabled)
+    setLang(s.quoteLang)
+  }), [])
+
+  // 换皮肤后第一句气泡用「对程序员的问候」
+  const greetedRef = useRef(false)
 
   useEffect(() => {
     setVisible(false)
     setPoint({ x: 0, y: 0 })
     setAnchor(null)
     setBubble(null)
+    greetedRef.current = false
     const raf = requestAnimationFrame(() => { setVisible(true) })
     return () => cancelAnimationFrame(raf)
   }, [activeSkin?.id])
@@ -79,15 +89,18 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
     return () => { alive = false }
   }, [reduced, enabled, dragging, activeSkin?.mascotUrl])
 
-  // 随机弹一条语录（更新 lastQuoteRef 以连续不重复）
+  // 随机弹一条语录（更新 lastQuoteRef 以连续不重复；登场首句用问候）
   const bubbleTimerRef = useRef<number>(undefined)
   const pushBubble = useCallback((): void => {
-    const q = randomQuote(skinId, lastQuoteRef.current)
+    const q = greetedRef.current
+      ? randomQuote(skinId, lang, lastQuoteRef.current)
+      : randomGreeting(skinId, lang)
+    greetedRef.current = true
     lastQuoteRef.current = q
     setBubble(q)
     if (bubbleTimerRef.current !== undefined) window.clearTimeout(bubbleTimerRef.current)
     bubbleTimerRef.current = window.setTimeout(() => { setBubble(null) }, BUBBLE_MS)
-  }, [skinId])
+  }, [skinId, lang])
 
   // 自动语录冒泡（拖动中不抢戏）
   useEffect(() => {
