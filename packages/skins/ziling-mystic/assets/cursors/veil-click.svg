@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 紫灵 · 紫纱面饰点击态：从面饰中心向上迸发妙音声波（紫色波纹） -->
+  <g transform="translate(15 16)">
+    <!-- 妙音声波（向上波纹） -->
+    <g fill="none" stroke="#AFA9EC" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.9">
+      <path d="M-6 -13 C -2 -18, 2 -18, 6 -13" />
+      <path d="M-8 -18 C -2 -25, 2 -25, 8 -18" />
+      <path d="M-10 -23 C -2 -32, 2 -32, 10 -23" />
+    </g>
+    <g fill="none" stroke="#7F77DD" stroke-width="0.8" stroke-opacity="0.6">
+      <circle cx="0" cy="-13" r="3.6" />
+      <circle cx="0" cy="-21" r="3.2" />
+    </g>
+    <!-- 面纱 -->
+    <path d="M0 -13 C 6 -6, 9.5 2, 6.5 9 C 4.4 14, -4.4 14, -6.5 9 C -9.5 2, -6 -6, 0 -13 Z" fill="#AFA9EC" fill-opacity="0.55" stroke="#7F77DD" stroke-width="1.2" />
+  </g>
+</svg>

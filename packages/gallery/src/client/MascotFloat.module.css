@@ -1,0 +1,66 @@
+/* MascotFloat — 右下角吉祥物浮层（可拖动 / 散步 / 语录冒泡）。
+   注意：animation 与 transition 由组件内联 style 提供（规避宿主环境对
+   class 规则动画的清覆），这里只保留结构与静态视觉。 */
+
+.wander {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 999;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.float {
+  width: 160px;
+  height: 160px;
+  pointer-events: auto;
+  touch-action: none; /* 拖动不被浏览器手势打断 */
+  /* 2×2 网格 4 帧：200% 200% 让每一帧占满元素 */
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.18));
+  user-select: none;
+}
+
+.float:hover {
+  transform: scale(1.08);
+}
+
+/* 语录气泡（自动 + 点击吉祥物触发，自动消失） */
+.bubble {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 220px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-overlay);
+  color: var(--dsw-alias-label-primary);
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  animation: bubble-in 0.25s ease;
+  opacity: 0.97;
+}
+
+/* 小尾巴 */
+.bubble i {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  border-right: 0.5px solid var(--dsw-alias-border-l1);
+  border-bottom: 0.5px solid var(--dsw-alias-border-l1);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.96); }
+  to   { opacity: 0.97; transform: translateX(-50%) translateY(0) scale(1); }
+}

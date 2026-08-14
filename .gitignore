@@ -48,3 +48,12 @@ packages/uploads/
 **/gittoken*
 **/.github_token*
 **/.env.secret
+
+# 本地自检截图（浏览器验证产物，不入库）
+.selfcheck/
+
+# gallery 插件配置编译产物（tsdown 构建时会顺带编译 config 自身，源文件为 *.config.ts）
+packages/gallery/*.config.js
+packages/gallery/*.config.js.map
+packages/gallery/*.config.d.ts
+packages/gallery/*.config.d.ts.map

@@ -1,0 +1,83 @@
+/* demo 宿主壳：模拟 DSH Web 布局（侧边栏 + 主区域）。 */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+}
+
+.demo-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  height: 100%;
+}
+
+.demo-sidebar {
+  background: var(--dsw-specific-sidebar-fill);
+  border-right: 0.5px solid var(--dsw-alias-border-l1);
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-brand {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 8px 14px;
+}
+
+.demo-brand span {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--dsw-alias-label-secondary);
+  margin-left: 6px;
+}
+
+.demo-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.demo-nav:hover {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.demo-note {
+  margin-top: auto;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+  padding: 8px;
+}
+
+.demo-main {
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  .demo-shell {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .demo-nav span {
+    display: none;
+  }
+}

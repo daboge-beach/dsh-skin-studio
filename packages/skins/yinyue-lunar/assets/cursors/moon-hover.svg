@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 银月 · 月牙法器悬停态：虚线圆 + 散布白色星点（星辉环绕） -->
+  <g transform="translate(16 15)">
+    <!-- 虚线圆 -->
+    <circle r="12" fill="none" stroke="#85B7EB" stroke-width="1.2" stroke-dasharray="2.4 3.2" stroke-linecap="round" />
+    <!-- 散布星点 -->
+    <g fill="#FFFFFF" fill-opacity="0.9">
+      <circle cx="-10" cy="-8" r="1" />
+      <circle cx="-4" cy="-12" r="0.8" />
+      <circle cx="10" cy="-7" r="1.1" />
+      <circle cx="9" cy="8" r="0.8" />
+      <circle cx="-8" cy="9" r="1" />
+      <circle cx="3" cy="-11" r="0.7" />
+    </g>
+    <!-- 月牙 -->
+    <mask id="m2">
+      <rect x="-16" y="-16" width="32" height="32" fill="white" />
+      <circle cx="3.4" cy="0" r="7.2" fill="black" />
+    </mask>
+    <circle cx="0" cy="0" r="7.2" fill="#DDEBFA" stroke="#85B7EB" stroke-width="1.4" mask="url(#m2)" />
+    <circle cx="3.4" cy="0" r="7.2" fill="none" stroke="#85B7EB" stroke-width="1.2" />
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+/* UploadDropZone — 虚线上传格。 */
+
+.zone {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1.5px dashed var(--dsw-alias-border-l2);
+  border-radius: 12px;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
+}
+
+.zone:hover,
+.zone:focus-visible {
+  border-color: var(--dsw-alias-brand-primary);
+  background: var(--dsw-alias-bg-layer-1);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.zone--over {
+  border-color: var(--dsw-alias-brand-primary);
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.zone--busy {
+  cursor: progress;
+}
+
+.input {
+  display: none;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.hint {
+  font-size: 12px;
+}

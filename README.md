@@ -172,8 +172,8 @@ dsh-skin-studio/
 ## 🗺️ 路线图
 
 - [x] 仓库初始化、规范定稿
-- [ ] v0.1：内置 2 款示例皮肤（aurora / midnight）+ 皮肤中心 MVP
-- [ ] v0.2：拖拽上传、zip 解压、格式校验
+- [x] v0.1：皮肤中心 MVP（`packages/gallery`：画廊 / 试穿 / 应用 / 详情面板 / 吉祥物浮层 / 切换特效，内置 aurora + midnight + 凡人修仙传 5 款）
+- [x] v0.2：拖拽上传、zip 解压、格式校验（浏览器内零依赖解压 + `skin.json` 校验）
 - [ ] v0.3：皮肤脚手架 CLI、开发热重载
 - [ ] v0.4：插件联动（消费行情/token 统计等数据）
 - [ ] v1.0：跟随 DSH v1.0 稳定 API，正式发布

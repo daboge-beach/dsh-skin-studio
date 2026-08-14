@@ -1,0 +1,186 @@
+/* SkinCard — 卡片与吉祥物动画（配色全部走 --dsw-alias-*）。 */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--dsw-alias-bg-layer-1);
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card:hover {
+  border-color: var(--dsw-alias-border-l2);
+  transform: translateY(-2px);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: 2px;
+}
+
+.card--active {
+  border: 1.5px solid var(--dsw-alias-brand-primary);
+}
+
+.card--try-on {
+  border: 1.5px solid var(--dsw-alias-state-success-primary);
+}
+
+/* ── 预览区 ────────────────────────────────────────────── */
+
+.preview {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-primary);
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-overlay);
+  opacity: 0.92;
+}
+
+/* ── 吉祥物：2×2 网格 4 帧循环（docs 规格原文） ────────── */
+
+.mascot {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 72px;
+  height: 72px;
+  background-size: 144px 144px; /* 2x2 网格整体缩放到 2 倍显示尺寸 */
+  background-repeat: no-repeat;
+  animation: mascot-loop 1.2s steps(1) infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 25%));
+}
+
+@keyframes mascot-loop {
+  0%   { background-position: 0% 0%; }    /* 左上 帧1 */
+  25%  { background-position: 100% 0%; }  /* 右上 帧2 */
+  50%  { background-position: 0% 100%; }  /* 左下 帧3 */
+  75%  { background-position: 100% 100%; }/* 右下 帧4 */
+}
+
+/* 无障碍：用户系统开启 reduce-motion 时只显示第一帧 */
+@media (prefers-reduced-motion: reduce) {
+  .mascot { animation: none; }
+}
+
+/* ── 徽章 ──────────────────────────────────────────────── */
+
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dsw-alias-bg-base);
+}
+
+.badge--active { background: var(--dsw-alias-brand-primary); }
+.badge--try-on { background: var(--dsw-alias-state-success-primary); }
+
+/* ── 信息区 ────────────────────────────────────────────── */
+
+.info {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-primary);
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dsw-alias-label-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.variant {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.removeBtn {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-state-error-primary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.removeBtn:hover {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+/* ── 试穿按钮：hover 浮现 ──────────────────────────────── */
+
+.try-on-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  padding: 5px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-bg-base);
+}
+
+.card:hover .try-on-btn,
+.card:focus-within .try-on-btn {
+  opacity: 1;
+}

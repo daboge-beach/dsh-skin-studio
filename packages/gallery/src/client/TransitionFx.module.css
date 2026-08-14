@@ -1,0 +1,180 @@
+/* TransitionFx — 切换特效（纯 transform/opacity，reduced-motion 全关）。 */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* 基础全屏一闪（docs/FANREN_SKINS_DESIGN.md §三 过渡动画规范） */
+.flash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: flash 600ms ease-out;
+}
+
+@keyframes flash {
+  0%   { opacity: 0; }
+  30%  { opacity: 0.3; }
+  100% { opacity: 0; }
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── 慕沛灵：粉色花瓣从屏幕中心向外绽放 ─────────────────── */
+
+.petal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 12px;
+  border-radius: 60% 40% 60% 40%;
+  background: #ed93b1;
+  opacity: 0;
+  animation: petal-bloom 800ms ease-out both;
+}
+
+.petal:nth-child(odd) {
+  background: #d4537e;
+}
+
+@keyframes petal-bloom {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(0) scale(0.5);
+  }
+  25% { opacity: 0.9; }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--a) + 40deg)) translateX(46vmax) scale(1);
+  }
+}
+
+/* ── 韩立：金色雷光从屏幕四角向中心聚拢 ─────────────────── */
+
+.bolt {
+  position: absolute;
+  width: 34vmax;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(251 191 36 / 0%), #fbbf24);
+  opacity: 0;
+  animation: bolt-converge 640ms ease-in both;
+}
+
+.bolt--tl { left: 0; top: 12%; transform-origin: left center; transform: rotate(35deg); }
+.bolt--tr { right: 0; top: 12%; transform-origin: right center; transform: rotate(-35deg); background: linear-gradient(270deg, rgb(251 191 36 / 0%), #fbbf24); }
+.bolt--bl { left: 0; bottom: 12%; transform-origin: left center; transform: rotate(-35deg); }
+.bolt--br { right: 0; bottom: 12%; transform-origin: right center; transform: rotate(35deg); background: linear-gradient(270deg, rgb(251 191 36 / 0%), #fbbf24); }
+
+@keyframes bolt-converge {
+  0%   { opacity: 0; scale: 1; }
+  40%  { opacity: 1; }
+  100% { opacity: 0; scale: 0.1 1; }
+}
+
+.burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(251 191 36 / 85%) 0%, rgb(251 191 36 / 0%) 70%);
+  opacity: 0;
+  animation: burst-in 500ms ease-out 260ms both;
+}
+
+@keyframes burst-in {
+  0%   { opacity: 0; transform: scale(0.2); }
+  35%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+
+/* ── 银月：银白月光从顶部向下倾泻 ───────────────────────── */
+
+.moonfall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 55vh;
+  background: linear-gradient(180deg, rgb(230 241 251 / 85%), rgb(181 212 244 / 30%) 55%, rgb(181 212 244 / 0%));
+  opacity: 0;
+  animation: moonfall-pour 800ms ease-in-out both;
+}
+
+@keyframes moonfall-pour {
+  0%   { opacity: 0; transform: translateY(-100%); }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(115%); }
+}
+
+/* ── 南宫婉：朱雀赤纹从屏幕中心向四周扩散 ───────────────── */
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 2px solid #e24b4a;
+  opacity: 0;
+  animation: ring-spread 720ms ease-out both;
+}
+
+.ring--1 { width: 12vmax; height: 12vmax; margin: -6vmax 0 0 -6vmax; border-width: 3px; }
+.ring--2 { width: 12vmax; height: 12vmax; margin: -6vmax 0 0 -6vmax; animation-delay: 120ms; }
+.ring--3 { width: 12vmax; height: 12vmax; margin: -6vmax 0 0 -6vmax; animation-delay: 240ms; }
+
+@keyframes ring-spread {
+  0%   { opacity: 0; transform: scale(0.2); }
+  30%  { opacity: 0.85; }
+  100% { opacity: 0; transform: scale(3.2); }
+}
+
+/* ── 紫灵：紫色星辰从下向上升起 ─────────────────────────── */
+
+.star {
+  position: absolute;
+  bottom: -4vh;
+  left: var(--x);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px 2px rgb(251 191 36 / 55%);
+  opacity: 0;
+  animation: star-rise 850ms ease-out var(--d) both;
+}
+
+.star:nth-child(3n) {
+  background: #afa9ec;
+  box-shadow: 0 0 8px 2px rgb(175 169 236 / 55%);
+}
+
+@keyframes star-rise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-102vh) scale(1); }
+}
+
+/* ── 可访问性：reduced-motion 时特效全关（只保留无动画的安全状态） ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .flash,
+  .petal,
+  .bolt,
+  .burst,
+  .moonfall,
+  .ring,
+  .star {
+    animation: none;
+    opacity: 0;
+  }
+}

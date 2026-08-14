@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 紫灵 · 紫纱面饰默认态：水滴形半透明紫纱 + 深紫描边 -->
+  <g transform="translate(15 16)">
+    <!-- 水滴形面纱 -->
+    <path d="M0 -13 C 6 -6, 9.5 2, 6.5 9 C 4.4 14, -4.4 14, -6.5 9 C -9.5 2, -6 -6, 0 -13 Z" fill="#AFA9EC" fill-opacity="0.42" stroke="#534AB7" stroke-width="1.4" />
+    <!-- 纱上暗纹 -->
+    <path d="M -4 2 C -2 6, 2 6, 4 3" fill="none" stroke="#7F77DD" stroke-width="1" opacity="0.7" />
+    <circle cx="-1" cy="5" r="0.9" fill="#7F77DD" fill-opacity="0.8" />
+    <circle cx="1.6" cy="6.6" r="0.8" fill="#7F77DD" fill-opacity="0.8" />
+  </g>
+</svg>

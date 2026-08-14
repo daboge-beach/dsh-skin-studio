@@ -1,0 +1,301 @@
+/* SkinDetailModal — 详情面板布局。 */
+
+.detail {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 顶部大预览 ────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.hero--image {
+  align-items: flex-end;
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.hero-body {
+  position: relative;
+  max-width: 80%;
+}
+
+.hero-name {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 35%);
+}
+
+.hero-desc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  opacity: 0.92;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 35%);
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+  background: rgb(0 0 0 / 30%);
+  color: var(--dsw-alias-label-primary);
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgb(0 0 0 / 30%);
+  backdrop-filter: blur(8px);
+  color: var(--dsw-alias-label-primary);
+  transition: background-color 0.15s;
+}
+
+.close:hover {
+  background: rgb(0 0 0 / 50%);
+}
+
+/* ── 元信息 ────────────────────────────────────────────── */
+
+.meta {
+  padding: 18px 24px 0;
+}
+
+.meta h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-primary);
+}
+
+.author {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.link {
+  color: var(--dsw-alias-brand-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ── 配色 swatch ───────────────────────────────────────── */
+
+.palette {
+  padding: 18px 24px 0;
+}
+
+.palette h3,
+.tokens h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch-color {
+  width: 48px;
+  height: 32px;
+  border-radius: 8px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+}
+
+.swatch-label {
+  font-size: 11px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* ── Token 覆盖 ────────────────────────────────────────── */
+
+.tokens {
+  padding: 18px 24px 0;
+}
+
+.tokens-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.tokens-header h3 {
+  margin: 0;
+}
+
+.tokens-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-brand-primary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.tokens-toggle:hover {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.tokens-list {
+  display: flex;
+  flex-direction: column;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.token-row {
+  display: grid;
+  grid-template-columns: 1fr auto 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.token-row:nth-child(odd) {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.token-name {
+  color: var(--dsw-alias-label-primary);
+  overflow-wrap: anywhere;
+}
+
+.token-value {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.token-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+}
+
+.tokens-more {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--dsw-alias-label-secondary);
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+/* ── 底部操作栏 ────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 20px 24px 22px;
+  margin-top: 18px;
+  border-top: 0.5px solid var(--dsw-alias-border-l1);
+}
+
+.btn {
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn--ghost {
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+}
+
+.btn--primary {
+  border: none;
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-bg-base);
+}
+
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn--outline-primary {
+  border: 1px solid var(--dsw-alias-brand-primary);
+  background: transparent;
+  color: var(--dsw-alias-brand-primary);
+}
+
+.btn--outline-primary:hover:not(:disabled) {
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-bg-base);
+}
+
+/* 窄屏：操作栏换行。 */
+@media (max-width: 520px) {
+  .actions {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+
+  .btn {
+    flex: 1;
+  }
+}

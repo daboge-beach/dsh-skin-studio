@@ -1,0 +1,97 @@
+/* Toast 栈：固定在底部居中，配色全部走 --dsw-alias-*。 */
+
+.host {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: min(92vw, 560px);
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-overlay);
+  color: var(--dsw-alias-label-primary);
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  font-size: 13px;
+  animation: toast-in 0.2s ease;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.toast--error {
+  border-color: var(--dsw-alias-state-error-primary);
+}
+
+.toast--success {
+  border-color: var(--dsw-alias-state-success-primary);
+}
+
+.message {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+
+.actions {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn {
+  flex: none;
+  padding: 4px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn:hover {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.btn--primary {
+  background: var(--dsw-alias-brand-primary);
+  border-color: transparent;
+  color: var(--dsw-alias-bg-base);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+.close {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+}

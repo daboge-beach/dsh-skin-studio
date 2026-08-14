@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 银月 · 月牙法器默认态：上弦月形，银蓝填充 + 蓝色描边 -->
+  <g transform="translate(16 15)">
+    <!-- 月牙（由两个圆相减形成） -->
+    <mask id="m">
+      <rect x="-16" y="-16" width="32" height="32" fill="white" />
+      <circle cx="3.2" cy="0" r="7.5" fill="black" />
+    </mask>
+    <circle cx="0" cy="0" r="7.5" fill="#B5D4F4" stroke="#378ADD" stroke-width="1.4" mask="url(#m)" />
+    <circle cx="3.2" cy="0" r="7.5" fill="none" stroke="#378ADD" stroke-width="1.2" />
+  </g>
+</svg>

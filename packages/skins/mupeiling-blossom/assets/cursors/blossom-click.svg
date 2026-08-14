@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 慕沛灵 · 花瓣法宝点击态：花瓣向外绽放 + 三层涟漪扩散 -->
+  <g transform="translate(16 16)">
+    <!-- 三层涟漪 -->
+    <circle r="13" fill="none" stroke="#ED93B1" stroke-opacity="0.35" stroke-width="1" />
+    <circle r="9.5" fill="none" stroke="#D4537E" stroke-opacity="0.45" stroke-width="1" />
+    <circle r="6" fill="none" stroke="#ED93B1" stroke-opacity="0.55" stroke-width="1" />
+    <!-- 绽放的花瓣 -->
+    <g fill="#ED93B1" fill-opacity="0.75" stroke="#D4537E" stroke-width="0.6">
+      <ellipse cx="0" cy="-8.8" rx="3.6" ry="6.6" />
+      <ellipse cx="0" cy="-8.8" rx="3.6" ry="6.6" transform="rotate(72)" />
+      <ellipse cx="0" cy="-8.8" rx="3.6" ry="6.6" transform="rotate(144)" />
+      <ellipse cx="0" cy="-8.8" rx="3.6" ry="6.6" transform="rotate(216)" />
+      <ellipse cx="0" cy="-8.8" rx="3.6" ry="6.6" transform="rotate(288)" />
+    </g>
+    <circle r="2.8" fill="#993556" />
+  </g>
+</svg>
