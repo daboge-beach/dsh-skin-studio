@@ -186,37 +186,22 @@ const DECOR: Record<string, DecorSpec> = {
   'kaisa-voidborn': { prefix: 'voidmoth', colors: ['#A78BFA', '#C4B0FD', '#7C3AED'], count: 11, anim: 'fx-drift', sizeMin: 4, sizeMax: 8 },
 }
 
-/** 横幅纱罩：每款皮肤按亮/暗取一套斜向渐变透明度（左浓右淡保文字可读）。 */
+/** 横幅纱罩：亮/暗各一套斜向渐变透明度（左浓右淡保文字可读）。 */
 const VEIL_LIGHT = [0.86, 0.72, 0.38, 0.05] as const
 const VEIL_DARK = [0.90, 0.78, 0.46, 0.08] as const
 
-/** 皮肤 id → 纱罩基色 RGB（各主题底色）。 */
-const BANNER_VEIL: Record<string, { rgb: [number, number, number]; dark: boolean }> = {
-  'mupeiling-blossom': { rgb: [253, 243, 247], dark: false },
-  'hanli-daoist': { rgb: [244, 248, 236], dark: false },
-  'yinyue-lunar': { rgb: [15, 27, 46], dark: true },
-  'nangongwan-moon': { rgb: [250, 250, 250], dark: false },
-  'ziling-mystic': { rgb: [34, 26, 46], dark: true },
-  'seraphine-anthem': { rgb: [246, 239, 252], dark: false },
-  'jinx-mayhem': { rgb: [23, 15, 46], dark: true },
-  'lux-radiance': { rgb: [250, 246, 236], dark: false },
-  'yasuo-gale': { rgb: [238, 245, 244], dark: false },
-  'vayne-nightfall': { rgb: [23, 18, 40], dark: true },
-  'ezreal-relicrun': { rgb: [242, 246, 250], dark: false },
-  'sona-etwahl': { rgb: [244, 240, 250], dark: false },
-  'mf-bountyhunter': { rgb: [34, 16, 23], dark: true },
-  'ahri-ninefold': { rgb: [253, 242, 244], dark: false },
-  'kaisa-voidborn': { rgb: [21, 13, 34], dark: true },
-}
+/** 暗色皮肤集合（其余带光标的皮肤按亮色纱罩）。 */
+const DARK_SKINS = new Set(['yinyue-lunar', 'ziling-mystic', 'jinx-mayhem', 'vayne-nightfall', 'mf-bountyhunter', 'kaisa-voidborn'])
 
 /** 背景装饰的 base CSS（表驱动横幅 + 装饰结构，reduced-motion 由 JS 端控制）。 */
 function buildDecorCss(): string {
   const rules: string[] = []
-  for (const [skinId, v] of Object.entries(BANNER_VEIL)) {
+  // 纱罩基色直接取 PANEL_VEIL 的 base RGB（同一张表，不再重复维护）
+  for (const skinId of Object.keys(PANEL_VEIL)) {
     const cssClass = SKIN_CURSORS[skinId]?.cssClass
     if (cssClass === undefined) continue
-    const [a0, a1, a2, a3] = v.dark ? VEIL_DARK : VEIL_LIGHT
-    const c = v.rgb.join(' ')
+    const [a0, a1, a2, a3] = DARK_SKINS.has(skinId) ? VEIL_DARK : VEIL_LIGHT
+    const c = PANEL_VEIL[skinId]?.base.join(' ') ?? ''
     rules.push(
       `body.${cssClass} {`,
       `  background-color: rgb(${c});`,
@@ -249,7 +234,21 @@ function buildDecorCss(): string {
   return rules.join('\n')
 }
 
-// ── 按钮特效（第一版：作用在皮肤中心自身 UI + body.xl-skin-* 全局选择器） ──
+// ── 按钮特效（凡人 5 款手工规则 + LOL 10 款表驱动辉光/涟漪） ─────────────
+
+/** LOL 系列按钮特效色：hover 外发光双色 + 点击涟漪描边（均取主题强调色）。 */
+const LOL_BUTTON_FX: Record<string, { glow: [string, string]; ripple: string }> = {
+  'xl-skin-anthem': { glow: ['rgb(168 85 247 / .35)', 'rgb(245 215 110 / .28)'], ripple: 'rgb(199 125 255 / .85)' },
+  'xl-skin-mayhem': { glow: ['rgb(34 211 238 / .4)', 'rgb(244 114 182 / .3)'], ripple: 'rgb(34 211 238 / .85)' },
+  'xl-skin-radiance': { glow: ['rgb(217 154 27 / .4)', 'rgb(245 215 110 / .32)'], ripple: 'rgb(217 154 27 / .8)' },
+  'xl-skin-gale': { glow: ['rgb(14 147 148 / .4)', 'rgb(127 184 180 / .3)'], ripple: 'rgb(14 147 148 / .8)' },
+  'xl-skin-nightfall': { glow: ['rgb(139 123 216 / .45)', 'rgb(230 225 250 / .25)'], ripple: 'rgb(139 123 216 / .85)' },
+  'xl-skin-relicrun': { glow: ['rgb(46 134 217 / .4)', 'rgb(224 169 59 / .3)'], ripple: 'rgb(46 134 217 / .8)' },
+  'xl-skin-etwahl': { glow: ['rgb(124 92 191 / .4)', 'rgb(212 179 106 / .3)'], ripple: 'rgb(124 92 191 / .8)' },
+  'xl-skin-bounty': { glow: ['rgb(224 64 90 / .4)', 'rgb(217 164 65 / .32)'], ripple: 'rgb(224 64 90 / .85)' },
+  'xl-skin-ninefold': { glow: ['rgb(232 106 146 / .4)', 'rgb(245 193 108 / .3)'], ripple: 'rgb(232 106 146 / .85)' },
+  'xl-skin-voidborn': { glow: ['rgb(167 139 250 / .45)', 'rgb(124 58 237 / .3)'], ripple: 'rgb(167 139 250 / .85)' },
+}
 
 /**
  * 按钮特效 base CSS。
@@ -309,34 +308,9 @@ function buildButtonCss(): string {
     `  }`,
     `  body.xl-skin-mystic :is(button, [role="button"]):hover::after { opacity:1; }`,
     ``,
-    `  /* 英雄联盟系列 · 神话辉光（hover 外发光，色取各主题强调色） */`,
-    `  body.xl-skin-anthem :is(button, [role="button"]):hover, body.xl-skin-radiance :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(168 85 247 / .35), 0 0 22px rgb(245 215 110 / .28);`,
-    `  }`,
-    `  body.xl-skin-mayhem :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(34 211 238 / .4), 0 0 22px rgb(244 114 182 / .3);`,
-    `  }`,
-    `  body.xl-skin-gale :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(14 147 148 / .4), 0 0 20px rgb(127 184 180 / .3);`,
-    `  }`,
-    `  body.xl-skin-nightfall :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(139 123 216 / .45), 0 0 20px rgb(230 225 250 / .25);`,
-    `  }`,
-    `  body.xl-skin-relicrun :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(46 134 217 / .4), 0 0 22px rgb(224 169 59 / .3);`,
-    `  }`,
-    `  body.xl-skin-etwahl :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(124 92 191 / .4), 0 0 22px rgb(212 179 106 / .3);`,
-    `  }`,
-    `  body.xl-skin-bounty :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(224 64 90 / .4), 0 0 22px rgb(217 164 65 / .32);`,
-    `  }`,
-    `  body.xl-skin-ninefold :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(232 106 146 / .4), 0 0 22px rgb(245 193 108 / .3);`,
-    `  }`,
-    `  body.xl-skin-voidborn :is(button, [role="button"]):hover {`,
-    `    box-shadow: 0 0 12px rgb(167 139 250 / .45), 0 0 22px rgb(124 58 237 / .3);`,
-    `  }`,
+    `  /* 英雄联盟系列 · 神话辉光（表驱动，色取各主题强调色） */`,
+    ...Object.entries(LOL_BUTTON_FX).map(([c, fx]) =>
+      `  body.${c} :is(button, [role="button"]):hover { box-shadow: 0 0 12px ${fx.glow[0]}, 0 0 22px ${fx.glow[1]}; }`),
     ``,
     `  @keyframes xl-slide-sheen { 0%{ background-position: 200% 0 } 100%{ background-position: -100% 0 } }`,
     ``,
@@ -345,16 +319,8 @@ function buildButtonCss(): string {
     `  body.xl-skin-lunar :is(button, [role="button"]) .xl-ripple,`,
     `  body.xl-skin-moon :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(226 75 74 / .8); }`,
     `  body.xl-skin-mystic :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(175 169 236 / .85); }`,
-    `  body.xl-skin-anthem :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(199 125 255 / .85); }`,
-    `  body.xl-skin-mayhem :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(34 211 238 / .85); }`,
-    `  body.xl-skin-radiance :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(217 154 27 / .8); }`,
-    `  body.xl-skin-gale :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(14 147 148 / .8); }`,
-    `  body.xl-skin-nightfall :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(139 123 216 / .85); }`,
-    `  body.xl-skin-relicrun :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(46 134 217 / .8); }`,
-    `  body.xl-skin-etwahl :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(124 92 191 / .8); }`,
-    `  body.xl-skin-bounty :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(224 64 90 / .85); }`,
-    `  body.xl-skin-ninefold :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(232 106 146 / .85); }`,
-    `  body.xl-skin-voidborn :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(167 139 250 / .85); }`,
+    ...Object.entries(LOL_BUTTON_FX).map(([c, fx]) =>
+      `  body.${c} :is(button, [role="button"]) .xl-ripple{ border:2px solid ${fx.ripple}; }`),
     `  .xl-ripple { position:absolute; pointer-events:none; border-radius:50%; transform:translate(-50%,-50%);`,
     `    animation: xl-ripple-out .45s ease-out forwards; }`,
     `  @keyframes xl-ripple-out { 0%{ width:10px;height:10px;opacity:.9 } 100%{ width:80px;height:80px;opacity:0 } }`,

@@ -41,7 +41,7 @@ function restoreSavedSkin(ctx: ClientContext): void {
 /** 内置偏好三值（adoption 顶回与用户切换的共同特征域）。 */
 const BUILT_IN_PREFERENCES = new Set(['light', 'dark', 'system'])
 
-/** 启动收敛窗口：官方 scope 的 adoption 只会在连接建立后的最初几秒到达。 */
+/** 启动收敛窗口：官方 scope 的 adoption 一般在连接建立后的最初几秒到达。 */
 const CONVERGE_WINDOW_MS = 15_000
 
 /**
@@ -55,14 +55,24 @@ export function apply(ctx: ClientContext): void {
 
     restoreSavedSkin(ctx)
 
-    // 窗口内：adoption 顶回（preference 与 active 同时变内置）→ 顶回皮肤；
-    // 窗口外：任何切换都按用户意图处理（皮肤 → 记忆；内置 → 清除）。
+    // adoption 顶回的判定：preference 与 active 同时变内置。时间窗口只是
+    // 下限——宿主重连场景下 adoption 可能远晚于窗口到达（实测撞见过），
+    // 而 adoption 是程序事件、用户换主题必先有输入：窗口外且用户从未
+    // 交互过的内置翻转仍按 adoption 顶回，只有用户动过（pointer/键盘）
+    // 之后的翻转才视为用户意图（皮肤 → 记忆；内置 → 清除）。
     // 判据用 snapshot.preference：试穿/应用时 preference 是皮肤 id（非内置），
     // 不会被误判为 adoption。
     let windowClosed = skinStudioSettings.getActiveSkin() === null
+    let userTouched = false
     const windowTimer = windowClosed ? undefined : window.setTimeout(() => {
       windowClosed = true
     }, CONVERGE_WINDOW_MS)
+    const markTouched = (): void => { userTouched = true }
+    const hasWindow = typeof window !== 'undefined'
+    if (hasWindow) {
+      window.addEventListener('pointerdown', markTouched, { capture: true })
+      window.addEventListener('keydown', markTouched, { capture: true })
+    }
 
     const off = ctx.on('theme/change', snapshot => {
       const id = snapshot.active.id
@@ -70,7 +80,7 @@ export function apply(ctx: ClientContext): void {
       if (id === saved) return
       const builtInFlip = BUILT_IN_PREFERENCES.has(snapshot.preference)
         && BUILT_IN_PREFERENCES.has(id)
-      if (saved !== null && builtInFlip && !windowClosed) {
+      if (saved !== null && builtInFlip && !(windowClosed && userTouched)) {
         // 启动 adoption 竞态：顶回皮肤（皮肤失效则顺手清记忆）。
         // 必须异步执行：在本监听器内同步 setTheme 会产生嵌套 publish，
         // 后注册的订阅者（皮肤特效层 / React 监听）会先收到嵌套事件、
@@ -86,6 +96,10 @@ export function apply(ctx: ClientContext): void {
     return () => {
       off()
       if (windowTimer !== undefined) window.clearTimeout(windowTimer)
+      if (hasWindow) {
+        window.removeEventListener('pointerdown', markTouched, { capture: true })
+        window.removeEventListener('keydown', markTouched, { capture: true })
+      }
       for (const dispose of disposers) dispose()
     }
   }, '@dsh-skin-studio/gallery: theme registration + preference restore')
