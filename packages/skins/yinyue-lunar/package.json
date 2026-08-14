@@ -1,0 +1,21 @@
+{
+  "name": "@dsh-skin-studio/skin-yinyue-lunar",
+  "version": "0.1.0",
+  "description": "Fanren Xiuxian Zhuan skin - Yin Yue lunar theme (银蓝仙光 · 月华冷辉)",
+  "type": "module",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --out-dir lib",
+    "dev": "tsdown src/index.ts --format esm --out-dir lib --watch"
+  },
+  "dsh": {
+    "client": {
+      "inject": ["@deepseek-ai/dsh-client-ui-theme"]
+    }
+  },
+  "devDependencies": {
+    "@dsh-skin-studio/types": "workspace:*",
+    "tsdown": "^0.0.1",
+    "typescript": "^5.5.0"
+  }
+}

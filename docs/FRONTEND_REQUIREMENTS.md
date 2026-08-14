@@ -183,10 +183,27 @@ function SkinCard({ skin, active, tryOn, onClick, onTryOn }: SkinCardProps) {
       className={`skin-card ${active ? 'skin-card--active' : ''} ${tryOn ? 'skin-card--try-on' : ''}`}
       onClick={onClick}
     >
-      <div className="skin-card__preview" style={{ background: skin.paletteCssGradient }}>
-        <span className="skin-card__preview-name" style={{ color: skin.palette.text }}>
-          {skin.name}
-        </span>
+      <div className="skin-card__preview">
+        {/* 预览图：优先用皮肤包的 preview.png（真实渲染图），无则回退配色渐变 */}
+        {skin.previewUrl ? (
+          <img
+            className="skin-card__preview-img"
+            src={skin.previewUrl}
+            alt={skin.name}
+            loading="lazy"
+          />
+        ) : (
+          <div className="skin-card__preview-fallback" style={{ background: skin.paletteCssGradient }} />
+        )}
+        {/* 吉祥物：若皮肤提供 sprite_anim.png，右下角播放 4 帧循环动画 */}
+        {skin.mascotUrl && (
+          <div
+            className="skin-card__mascot"
+            style={{ backgroundImage: `url(${skin.mascotUrl})` }}
+            role="img"
+            aria-label={`${skin.name} mascot animation`}
+          />
+        )}
         {active && <span className="skin-card__badge skin-card__badge--active">启用中</span>}
         {tryOn && <span className="skin-card__badge skin-card__badge--try-on">试穿中</span>}
       </div>
@@ -207,6 +224,44 @@ function SkinCard({ skin, active, tryOn, onClick, onTryOn }: SkinCardProps) {
       </button>
     </div>
   )
+}
+```
+
+#### 吉祥物动画 CSS（多帧 sprite sheet 播放）
+
+`sprite_anim.png` 是 **2×2 网格的 4 帧动画**（1536×1536，每帧 768×768）。用 `background-position` 步进切帧，`steps(1)` 硬切不补间：
+
+```css
+/* SkinCard.module.css */
+.skin-card__mascot {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 72px;
+  height: 72px;
+  background-size: 144px 144px;   /* 2x2 网格整体缩放到 2 倍显示尺寸 */
+  background-repeat: no-repeat;
+  animation: mascot-loop 1.2s steps(1) infinite;
+  pointer-events: none;
+}
+
+@keyframes mascot-loop {
+  0%   { background-position: 0% 0%; }    /* 左上 帧1 */
+  25%  { background-position: 100% 0%; }  /* 右上 帧2 */
+  50%  { background-position: 0% 100%; }  /* 左下 帧3 */
+  75%  { background-position: 100% 100%; }/* 右下 帧4 */
+}
+
+/* 无障碍：用户系统开启 reduce-motion 时只显示第一帧 */
+@media (prefers-reduced-motion: reduce) {
+  .skin-card__mascot { animation: none; }
+}
+
+.skin-card__preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 ```
 
@@ -333,14 +388,21 @@ function SkinDetailModal({ skin, ctx, onClose }: SkinDetailModalProps) {
     <Modal onClose={onClose} size="large">
       <div className="skin-detail">
 
-        {/* 顶部大预览区 */}
+        {/* 顶部大预览区：有 hero.png 立绘时用图片，否则回退纯色 */}
         <div
-          className="skin-detail__hero"
-          style={{
+          className={`skin-detail__hero ${skin.heroUrl ? 'skin-detail__hero--image' : ''}`}
+          style={skin.heroUrl ? undefined : {
             background: skin.palette.background,
             color: skin.palette.text
           }}
         >
+          {skin.heroUrl && (
+            <img
+              className="skin-detail__hero-img"
+              src={skin.heroUrl}
+              alt={skin.name}
+            />
+          )}
           <button className="skin-detail__close" onClick={onClose} aria-label="关闭">
             <CloseIcon />
           </button>
@@ -443,6 +505,11 @@ interface SkinEntry {
   homepage?: string
   keywords?: string[]
   preview?: string
+
+  /** 图片资源 URL（由皮肤包提供，SkinRegistry 解析后填充；可选） */
+  previewUrl?: string    // preview.png  画廊缩略图 800x600（4:3）
+  heroUrl?: string       // hero.png     竖版主立绘 1024x1536（详情页大图）
+  mascotUrl?: string     // sprite_anim.png  2x2 网格 4 帧动画（卡片右下角吉祥物）
 
   /** 配色摘要（用于卡片背景渐变） */
   palette: {
@@ -636,7 +703,12 @@ packages/gallery/src/client/
 
 ### 功能验收
 
-- [ ] 画廊正确显示内置皮肤列表（aurora、midnight）
+- [ ] 画廊正确显示内置皮肤列表（aurora、midnight + 凡人修仙传 5 款）
+- [ ] 有 preview.png 的皮肤显示真实缩略图，无图的回退配色渐变
+- [ ] 卡片右下角吉祥物动画正常播放（4 帧循环，1.2s 周期）
+- [ ] 详情页有 hero.png 时显示大立绘
+- [ ] 应用皮肤后主界面右下角出现吉祥物浮层
+- [ ] 开启 prefers-reduced-motion 时吉祥物停止动画
 - [ ] 三个 Tab 切换正常（内置/我的/已上传）
 - [ ] 搜索框可按名称/关键词过滤
 - [ ] 点击卡片弹出详情面板
@@ -678,6 +750,76 @@ packages/gallery/src/client/
 如有 Cordis 插件注册相关的疑问，参考 DSH 官方源码：
 - `deepseek-harness/packages/client/ui-settings/`（一个完整的设置面板插件范例）
 - `deepseek-harness/packages/client/ui-sidebar/`（侧边栏 slot 注册方式）
+
+---
+
+## 内置皮肤资源清单（凡人修仙传系列）
+
+首批内置 7 款皮肤：aurora、midnight（基础款）+ 凡人修仙传 5 款角色皮肤。图片资源已生成完毕，位于 `assets/skins/{id}/`，前端直接引用：
+
+### 资源文件规格
+
+| 文件 | 尺寸 | 用途 |
+|------|------|------|
+| `hero.png` | 1024×1536 竖版 | 详情页大图（`heroUrl`） |
+| `preview.png` | 800×600 4:3 | 画廊卡片缩略图（`previewUrl`） |
+| `sprite.png` | 1024×1024 透明 | 单帧静态吉祥物（备用） |
+| `sprite_anim.png` | 1536×1536 2×2 网格 | 4 帧循环动画吉祥物（`mascotUrl`） |
+
+### 五款皮肤清单
+
+| id | name | colorScheme | 主题 | mascot 动作 |
+|----|------|-------------|------|------------|
+| `mupeiling-blossom` | 慕沛灵 · 桃夭 | light | 粉白国风 · 桃花薄雾 | 饮茶（端杯→吹茶→抿茶→放下） |
+| `hanli-daoist` | 韩立 · 青竹 | light | 青绿道风 · 翠竹雷光 | 舞剑（起手→举剑→挥砍→收势） |
+| `yinyue-lunar` | 银月 · 月华 | dark | 银蓝仙光 · 月华冷辉 | 跳舞（展袖→旋转→抛袖→收势） |
+| `nangongwan-moon` | 南宫婉 · 寒梅 | light | 月白清辉 · 朱雀赤纹 | 抚琴（抬手→按弦→拨弦→抬手） |
+| `ziling-mystic` | 紫灵 · 紫霞 | dark | 暗紫妖魅 · 紫纱流霞 | 打坐（闭目→结印→灵气升→睁眼） |
+
+### 皮肤包内的资源映射
+
+SkinRegistry 扫描皮肤包时应把以下路径映射到 `SkinEntry` 字段：
+
+```
+packages/skins/{pkg}/assets/
+├── preview.png      → skin.previewUrl
+├── hero.png         → skin.heroUrl
+└── sprite_anim.png  → skin.mascotUrl
+```
+
+### 皮肤激活时的吉祥物浮层（增强需求）
+
+当凡人修仙传皮肤被**应用**（非试穿）时，在 DSH 主界面右下角渲染一个更大的吉祥物浮层（160×160），动画规格同上：
+
+```css
+.skin-mascot-float {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 160px;
+  height: 160px;
+  background-size: 320px 320px;
+  background-repeat: no-repeat;
+  animation: mascot-loop 1.2s steps(1) infinite;
+  opacity: 0.9;
+  z-index: 999;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.skin-mascot-float:hover {
+  transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skin-mascot-float { animation: none; }
+}
+```
+
+吉祥物浮层要求：
+- 点击浮层弹出一个小气泡，随机显示该角色的一句台词（台词表在 `packages/types/src/quotes.ts`，本迭代可不实现，先留 TODO）
+- 切换皮肤时浮层淡出淡入（`opacity` 过渡 300ms）
+- 用户可在皮肤中心设置里关闭浮层（`settings.mascotEnabled`，默认 true）
 
 ---
 

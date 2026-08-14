@@ -1,0 +1,35 @@
+{
+  "id": "yinyue-lunar",
+  "name": "银月 · 月华",
+  "description": "银蓝仙光 · 月华冷辉 — 银月狼族器灵的星河意境，月牙法器光标 + 星辉流转特效。",
+  "keywords": [
+    "fanren",
+    "xianxia",
+    "lunar",
+    "silver-blue",
+    "dark"
+  ],
+  "colorScheme": "dark",
+  "palette": {
+    "primary": "#85B7EB",
+    "background": "#042C53",
+    "surface": "#0C447C",
+    "text": "#E6F1FB",
+    "border": "#185FA5"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

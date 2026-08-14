@@ -1,0 +1,35 @@
+{
+  "id": "ziling-mystic",
+  "name": "紫灵 · 紫霞",
+  "description": "暗紫妖魅 · 紫纱流霞 — 妙音门第一美女的紫雾意境，紫纱面饰光标 + 妙音声波特效。",
+  "keywords": [
+    "fanren",
+    "xianxia",
+    "mystic",
+    "purple",
+    "dark"
+  ],
+  "colorScheme": "dark",
+  "palette": {
+    "primary": "#AFA9EC",
+    "background": "#26215C",
+    "surface": "#3C3489",
+    "text": "#EEEDFE",
+    "border": "#534AB7"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

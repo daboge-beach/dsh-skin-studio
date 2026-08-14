@@ -1,0 +1,21 @@
+{
+  "name": "@dsh-skin-studio/skin-ziling-mystic",
+  "version": "0.1.0",
+  "description": "Fanren Xiuxian Zhuan skin - Zi Ling mystic theme (暗紫妖魅 · 紫纱流霞)",
+  "type": "module",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --out-dir lib",
+    "dev": "tsdown src/index.ts --format esm --out-dir lib --watch"
+  },
+  "dsh": {
+    "client": {
+      "inject": ["@deepseek-ai/dsh-client-ui-theme"]
+    }
+  },
+  "devDependencies": {
+    "@dsh-skin-studio/types": "workspace:*",
+    "tsdown": "^0.0.1",
+    "typescript": "^5.5.0"
+  }
+}

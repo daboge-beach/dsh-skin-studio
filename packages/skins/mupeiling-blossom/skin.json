@@ -1,0 +1,35 @@
+{
+  "id": "mupeiling-blossom",
+  "name": "慕沛灵 · 桃夭",
+  "description": "粉白国风 · 桃花薄雾 — 落云宗药园女修的柔美桃花意境，花瓣法宝光标 + 灵气涟漪特效。",
+  "keywords": [
+    "fanren",
+    "xianxia",
+    "guofeng",
+    "pink",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#D4537E",
+    "background": "#FBEAF0",
+    "surface": "#FFFFFF",
+    "text": "#993556",
+    "border": "#F4C0D1"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}
