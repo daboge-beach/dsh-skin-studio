@@ -1,0 +1,35 @@
+{
+  "id": "lux-radiance",
+  "name": "拉克丝 · 光棱圣辉",
+  "description": "圣光暖金 · 彩虹折射 — 德玛西亚的光之魔法少女，星光法杖光标 + 圣光辉环特效。",
+  "keywords": [
+    "lol",
+    "lux",
+    "light",
+    "gold",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#D99A1B",
+    "background": "#FAF6EC",
+    "surface": "#FFFFFF",
+    "text": "#6E5210",
+    "border": "#EED9A0"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

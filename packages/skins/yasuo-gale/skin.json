@@ -1,0 +1,35 @@
+{
+  "id": "yasuo-gale",
+  "name": "亚索 · 斩风疾影",
+  "description": "疾风青蓝 · 斩击光轨 — 艾欧尼亚的流浪剑客，风刃光标 + 疾风残影特效。",
+  "keywords": [
+    "lol",
+    "yasuo",
+    "wind",
+    "samurai",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#0E9394",
+    "background": "#EEF5F4",
+    "surface": "#FFFFFF",
+    "text": "#0F4E4E",
+    "border": "#B7DEDB"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

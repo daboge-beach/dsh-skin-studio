@@ -1,0 +1,35 @@
+{
+  "id": "ezreal-relicrun",
+  "name": "伊泽瑞尔 · 符文远征",
+  "description": "符文蓝金 · 远征之光 — 皮尔特沃夫的天才探险家，符文护手光标 + 遗迹金辉特效。",
+  "keywords": [
+    "lol",
+    "ezreal",
+    "adventure",
+    "rune",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#2E86D9",
+    "background": "#F2F6FA",
+    "surface": "#FFFFFF",
+    "text": "#1C4F7C",
+    "border": "#BBD6EE"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

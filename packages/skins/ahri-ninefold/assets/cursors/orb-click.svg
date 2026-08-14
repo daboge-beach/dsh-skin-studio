@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 阿狸 · 狐火宝珠 点击态 -->
+  <g transform="translate(16 16)">
+    
+    <circle r="9" fill="#E86A92" fill-opacity="0.16" />
+    <g stroke="#E86A92" stroke-width="1.3" stroke-linecap="round">
+      <line x1="0" y1="-14" x2="0" y2="-10.5" /><line x1="0" y1="10.5" x2="0" y2="14" />
+      <line x1="-14" y1="0" x2="-10.5" y2="0" /><line x1="10.5" y1="0" x2="14" y2="0" />
+      <line x1="-10" y1="-10" x2="-7.4" y2="-7.4" /><line x1="7.4" y1="7.4" x2="10" y2="10" />
+      <line x1="10" y1="-10" x2="7.4" y2="-7.4" /><line x1="-7.4" y1="7.4" x2="-10" y2="10" />
+    </g>
+    <circle r="6.4" fill="#E86A92" fill-opacity=".92" stroke="#F5C16C" stroke-width="1.2" />
+    <circle cx="-1.8" cy="-2" r="1.7" fill="#fff" fill-opacity=".9" />
+    <path d="M 5.4 -3.4 Q 10 -6 11.4 -1.4 Q 8 -2 5.8 -0.6 Z" fill="#F5C16C" />
+    <path d="M 5.2 3.6 Q 9.6 6.4 8.2 10.2 Q 6.4 6.8 4 6.2 Z" fill="#F5C16C" fill-opacity=".8" />
+  </g>
+</svg>

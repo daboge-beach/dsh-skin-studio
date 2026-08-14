@@ -1,0 +1,35 @@
+{
+  "id": "seraphine-anthem",
+  "name": "萨勒芬妮 · 星颂",
+  "description": "星尘紫粉 · 全息颂歌 — 走出皮尔特沃夫的声音魔法师，星光音符光标 + 声波涟漪特效。",
+  "keywords": [
+    "lol",
+    "seraphine",
+    "popstar",
+    "purple",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#A855F7",
+    "background": "#F6EFFC",
+    "surface": "#FFFFFF",
+    "text": "#5B1E96",
+    "border": "#DDC9F5"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

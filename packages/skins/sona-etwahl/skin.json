@@ -1,0 +1,35 @@
+{
+  "id": "sona-etwahl",
+  "name": "娑娜 · 弦语仙音",
+  "description": "琴音紫金 · 音波涟漪 — 艾欧尼亚的琴瑟仙女，竖琴拨光标 + 音符流转特效。",
+  "keywords": [
+    "lol",
+    "sona",
+    "music",
+    "elegant",
+    "light"
+  ],
+  "colorScheme": "light",
+  "palette": {
+    "primary": "#7C5CBF",
+    "background": "#F4F0FA",
+    "surface": "#FFFFFF",
+    "text": "#442F73",
+    "border": "#CFC2E8"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "vayne-nightfall",
+  "name": "维恩 · 夜狩",
+  "description": "夜幕紫银 · 圣银弩光 — 德玛西亚的暗夜猎手，十字弩箭光标 + 夜狩银光特效。",
+  "keywords": [
+    "lol",
+    "vayne",
+    "night",
+    "hunter",
+    "dark"
+  ],
+  "colorScheme": "dark",
+  "palette": {
+    "primary": "#8B7BD8",
+    "background": "#171228",
+    "surface": "#241D3E",
+    "text": "#E6E1FA",
+    "border": "#3B3158"
+  },
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "preview": "preview.png",
+  "assets": {
+    "hero": "assets/hero.png",
+    "preview": "assets/preview.png",
+    "mascot": "assets/sprite_anim.png"
+  },
+  "specVersion": "0.2.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

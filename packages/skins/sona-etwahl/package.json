@@ -1,0 +1,23 @@
+{
+  "name": "@dsh-skin-studio/skin-sona-etwahl",
+  "version": "0.1.0",
+  "description": "League of Legends champion skin - Sona · Etwahl",
+  "type": "module",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --out-dir lib",
+    "dev": "tsdown src/index.ts --format esm --out-dir lib --watch"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@dsh-skin-studio/types": "workspace:*",
+    "tsdown": "^0.0.1",
+    "typescript": "^5.5.0"
+  }
+}

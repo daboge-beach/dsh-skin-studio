@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 厄运小姐 · 金色弹头 悬停态 -->
+  <g transform="translate(16 16)">
+    <circle r="11" fill="none" stroke="#E0405A" stroke-width="1.4" stroke-dasharray="2.6 3" stroke-linecap="round" />
+    <path d="M -9 0 Q -9 -3.6 -5 -3.6 L 4 -3.6 L 4 3.6 L -5 3.6 Q -9 3.6 -9 0 Z" fill="#D9A441" />
+    <path d="M 4 -3.6 L 10.6 0 L 4 3.6 Z" fill="#E0405A" />
+    <line x1="-6" y1="0" x2="2" y2="0" stroke="#fff" stroke-opacity=".65" stroke-width="1" />
+  </g>
+</svg>

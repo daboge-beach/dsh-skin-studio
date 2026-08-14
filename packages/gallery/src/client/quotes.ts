@@ -13,12 +13,25 @@ import { daoist } from './quotes/daoist.ts'
 import { lunar } from './quotes/lunar.ts'
 import { moon } from './quotes/moon.ts'
 import { mystic } from './quotes/mystic.ts'
+import { seraphine } from './quotes/seraphine.ts'
+import { jinx } from './quotes/jinx.ts'
+import { lux } from './quotes/lux.ts'
+import { yasuo } from './quotes/yasuo.ts'
+import { vayne } from './quotes/vayne.ts'
+import { ezreal } from './quotes/ezreal.ts'
+import { sona } from './quotes/sona.ts'
+import { mf } from './quotes/mf.ts'
+import { ahri } from './quotes/ahri.ts'
+import { kaisa } from './quotes/kaisa.ts'
 
 export type { QuoteLang } from './quotes/types.ts'
 export { TARGET_LINES } from './quotes/builder.ts'
 
-/** 凡人 5 款皮肤的角色语录定义。 */
-const CHARACTER_DEFS = [blossom, daoist, lunar, moon, mystic] as const
+/** 全部 15 款带语录的皮肤（凡人 5 款 + 英雄联盟 10 款）。 */
+const CHARACTER_DEFS = [
+  blossom, daoist, lunar, moon, mystic,
+  seraphine, jinx, lux, yasuo, vayne, ezreal, sona, mf, ahri, kaisa,
+] as const
 
 /** 未知皮肤的双语回退池。 */
 const FALLBACK: Record<QuoteLang, readonly string[]> = {

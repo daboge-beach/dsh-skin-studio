@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 拉克丝 · 星光法杖 悬停态 -->
+  <g transform="translate(16 16)">
+    <circle r="11" fill="none" stroke="#D99A1B" stroke-width="1.4" stroke-dasharray="2.6 3" stroke-linecap="round" />
+    <line x1="-10" y1="10" x2="3" y2="-3" stroke="#D99A1B" stroke-width="2.4" stroke-linecap="round" />
+    <path d="M 3 -3 L 4.4 -8 L 6 -3.2 L 10.6 -2 L 6.2 -0.6 L 4.8 3.6 L 3 -0.6 L -1.6 -1.8 Z" fill="#F5D76E" stroke="#D99A1B" stroke-width="0.7" />
+    <circle cx="4.6" cy="-2.2" r="1" fill="#fff" fill-opacity=".95" />
+  </g>
+</svg>

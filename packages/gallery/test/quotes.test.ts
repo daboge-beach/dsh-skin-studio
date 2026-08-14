@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { TARGET_LINES, quotesForSkin, randomGreeting, randomQuote } from '../src/client/quotes.ts'
 
-const SKIN_IDS = ['mupeiling-blossom', 'hanli-daoist', 'yinyue-lunar', 'nangongwan-moon', 'ziling-mystic'] as const
+const SKIN_IDS = [
+  'mupeiling-blossom', 'hanli-daoist', 'yinyue-lunar', 'nangongwan-moon', 'ziling-mystic',
+  'seraphine-anthem', 'jinx-mayhem', 'lux-radiance', 'yasuo-gale', 'vayne-nightfall',
+  'ezreal-relicrun', 'sona-etwahl', 'mf-bountyhunter', 'ahri-ninefold', 'kaisa-voidborn',
+] as const
 const LANGS = ['zh', 'en'] as const
 
 describe('quotes（吉祥物语录池 · 中英双语 ×200）', () => {

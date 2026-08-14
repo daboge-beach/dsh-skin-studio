@@ -28,13 +28,23 @@ export interface SkinVisual {
   hotspot: [number, number]
 }
 
-/** 凡人修仙传 5 款皮肤的光标元数据（aurora/midnight 无光标，跟随系统）。 */
+/** 凡人 5 款 + 英雄联盟 10 款皮肤的光标/视觉元数据（aurora/midnight 无光标，跟随系统）。 */
 export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'mupeiling-blossom': { cssClass: 'xl-skin-blossom', cursorPrefix: 'blossom', hotspot: [16, 16] },
   'hanli-daoist': { cssClass: 'xl-skin-daoist', cursorPrefix: 'sword', hotspot: [11, 9] },
   'yinyue-lunar': { cssClass: 'xl-skin-lunar', cursorPrefix: 'moon', hotspot: [16, 15] },
   'nangongwan-moon': { cssClass: 'xl-skin-moon', cursorPrefix: 'hairpin', hotspot: [16, 4] },
   'ziling-mystic': { cssClass: 'xl-skin-mystic', cursorPrefix: 'veil', hotspot: [15, 12] },
+  'seraphine-anthem': { cssClass: 'xl-skin-anthem', cursorPrefix: 'note', hotspot: [16, 16] },
+  'jinx-mayhem': { cssClass: 'xl-skin-mayhem', cursorPrefix: 'rocket', hotspot: [14, 16] },
+  'lux-radiance': { cssClass: 'xl-skin-radiance', cursorPrefix: 'wand', hotspot: [6, 16] },
+  'yasuo-gale': { cssClass: 'xl-skin-gale', cursorPrefix: 'galeblade', hotspot: [6, 16] },
+  'vayne-nightfall': { cssClass: 'xl-skin-nightfall', cursorPrefix: 'bolt', hotspot: [4, 16] },
+  'ezreal-relicrun': { cssClass: 'xl-skin-relicrun', cursorPrefix: 'gauntlet', hotspot: [16, 16] },
+  'sona-etwahl': { cssClass: 'xl-skin-etwahl', cursorPrefix: 'harp', hotspot: [16, 16] },
+  'mf-bountyhunter': { cssClass: 'xl-skin-bounty', cursorPrefix: 'bullet', hotspot: [16, 12] },
+  'ahri-ninefold': { cssClass: 'xl-skin-ninefold', cursorPrefix: 'orb', hotspot: [16, 16] },
+  'kaisa-voidborn': { cssClass: 'xl-skin-voidborn', cursorPrefix: 'voidfly', hotspot: [16, 16] },
 }
 
 const CURSOR_STYLE_TAG = '@dsh-skin-studio/gallery/skin-cursors'
@@ -108,6 +118,17 @@ const PANEL_VEIL: Record<string, PanelVeilSpec> = {
   'yinyue-lunar': { base: [4, 44, 83], layer1: [12, 68, 124], layer2: [24, 95, 165], sidebar: [4, 44, 83], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
   'nangongwan-moon': { base: [241, 239, 232], layer1: [255, 255, 255], layer2: [211, 209, 199], sidebar: [241, 239, 232], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
   'ziling-mystic': { base: [38, 33, 92], layer1: [60, 52, 137], layer2: [83, 74, 183], sidebar: [38, 33, 92], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+  // 英雄联盟系列（亮色 .36 / 暗色 .50）
+  'seraphine-anthem': { base: [246, 239, 252], layer1: [255, 255, 255], layer2: [221, 201, 245], sidebar: [246, 239, 252], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'jinx-mayhem': { base: [23, 15, 46], layer1: [36, 25, 69], layer2: [59, 42, 99], sidebar: [23, 15, 46], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+  'lux-radiance': { base: [250, 246, 236], layer1: [255, 255, 255], layer2: [238, 217, 160], sidebar: [250, 246, 236], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'yasuo-gale': { base: [238, 245, 244], layer1: [255, 255, 255], layer2: [183, 222, 219], sidebar: [238, 245, 244], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'vayne-nightfall': { base: [23, 18, 40], layer1: [36, 29, 62], layer2: [59, 49, 88], sidebar: [23, 18, 40], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+  'ezreal-relicrun': { base: [242, 246, 250], layer1: [255, 255, 255], layer2: [187, 214, 238], sidebar: [242, 246, 250], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'sona-etwahl': { base: [244, 240, 250], layer1: [255, 255, 255], layer2: [207, 194, 232], sidebar: [244, 240, 250], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'mf-bountyhunter': { base: [34, 16, 23], layer1: [53, 27, 36], layer2: [92, 42, 51], sidebar: [34, 16, 23], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+  'ahri-ninefold': { base: [253, 242, 244], layer1: [255, 255, 255], layer2: [243, 207, 218], sidebar: [253, 242, 244], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'kaisa-voidborn': { base: [21, 13, 34], layer1: [36, 22, 56], layer2: [62, 45, 99], sidebar: [21, 13, 34], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
 }
 
 /** 生成面板半透明 token 覆盖（作用域 body.xl-skin-* #root）。 */
@@ -145,54 +166,71 @@ interface DecorSpec {
   sizeMax: number
 }
 
-/** 皮肤 id → 装饰规格（与 FANREN §二/§三 背景图层对应）。 */
+/** 皮肤 id → 装饰规格（与 FANREN §二/§三 及 LOL 系列背景图层对应）。 */
 const DECOR: Record<string, DecorSpec> = {
   'mupeiling-blossom': { prefix: 'petal', colors: ['#ED93B1', '#D4537E', '#F4C0D1'], count: 14, anim: 'fx-fall', sizeMin: 6, sizeMax: 13 },
   'hanli-daoist': { prefix: 'bamboo-leaf', colors: ['#C0DD97', '#97C459', '#639922'], count: 9, anim: 'fx-fall-slow', sizeMin: 8, sizeMax: 14 },
   'yinyue-lunar': { prefix: 'star', colors: ['#FFFFFF', '#B5D4F4'], count: 16, anim: 'fx-twinkle', sizeMin: 2, sizeMax: 5 },
   'nangongwan-moon': { prefix: 'plum', colors: ['#E8E6E0', '#D3D1C7', '#FFFFFF'], count: 12, anim: 'fx-fall-slow', sizeMin: 5, sizeMax: 11 },
   'ziling-mystic': { prefix: 'zixia', colors: ['#AFA9EC', '#7F77DD', '#FBBF24'], count: 10, anim: 'fx-drift', sizeMin: 3, sizeMax: 9 },
+  // 英雄联盟系列
+  'seraphine-anthem': { prefix: 'note', colors: ['#C77DFF', '#A855F7', '#F0ABFC'], count: 15, anim: 'fx-twinkle', sizeMin: 3, sizeMax: 6 },
+  'jinx-mayhem': { prefix: 'spark', colors: ['#22D3EE', '#F472B6', '#FDE68A'], count: 16, anim: 'fx-fall', sizeMin: 3, sizeMax: 7 },
+  'lux-radiance': { prefix: 'mote', colors: ['#F5D76E', '#FFFFFF', '#FBBF24'], count: 18, anim: 'fx-twinkle', sizeMin: 2, sizeMax: 5 },
+  'yasuo-gale': { prefix: 'windleaf', colors: ['#7FB8B4', '#0E9394', '#B7DEDB'], count: 12, anim: 'fx-fall-slow', sizeMin: 6, sizeMax: 12 },
+  'vayne-nightfall': { prefix: 'moth', colors: ['#B3A7EC', '#8B7BD8', '#E6E1FA'], count: 10, anim: 'fx-fall-slow', sizeMin: 4, sizeMax: 8 },
+  'ezreal-relicrun': { prefix: 'rune', colors: ['#E0A93B', '#2E86D9', '#F5D76E'], count: 14, anim: 'fx-twinkle', sizeMin: 3, sizeMax: 6 },
+  'sona-etwahl': { prefix: 'chord', colors: ['#A88FD4', '#D4B36A', '#7C5CBF'], count: 13, anim: 'fx-drift', sizeMin: 4, sizeMax: 8 },
+  'mf-bountyhunter': { prefix: 'shell', colors: ['#D9A441', '#E0405A', '#B45309'], count: 14, anim: 'fx-fall', sizeMin: 4, sizeMax: 8 },
+  'ahri-ninefold': { prefix: 'foxflame', colors: ['#E86A92', '#F5C16C', '#F9A8D4'], count: 12, anim: 'fx-drift', sizeMin: 4, sizeMax: 9 },
+  'kaisa-voidborn': { prefix: 'voidmoth', colors: ['#A78BFA', '#C4B0FD', '#7C3AED'], count: 11, anim: 'fx-drift', sizeMin: 4, sizeMax: 8 },
 }
 
-/** 背景装饰的 base CSS（作用域在 body.xl-skin-* 下，reduced-motion 全关）。 */
+/** 横幅纱罩：每款皮肤按亮/暗取一套斜向渐变透明度（左浓右淡保文字可读）。 */
+const VEIL_LIGHT = [0.86, 0.72, 0.38, 0.05] as const
+const VEIL_DARK = [0.90, 0.78, 0.46, 0.08] as const
+
+/** 皮肤 id → 纱罩基色 RGB（各主题底色）。 */
+const BANNER_VEIL: Record<string, { rgb: [number, number, number]; dark: boolean }> = {
+  'mupeiling-blossom': { rgb: [253, 243, 247], dark: false },
+  'hanli-daoist': { rgb: [244, 248, 236], dark: false },
+  'yinyue-lunar': { rgb: [15, 27, 46], dark: true },
+  'nangongwan-moon': { rgb: [250, 250, 250], dark: false },
+  'ziling-mystic': { rgb: [34, 26, 46], dark: true },
+  'seraphine-anthem': { rgb: [246, 239, 252], dark: false },
+  'jinx-mayhem': { rgb: [23, 15, 46], dark: true },
+  'lux-radiance': { rgb: [250, 246, 236], dark: false },
+  'yasuo-gale': { rgb: [238, 245, 244], dark: false },
+  'vayne-nightfall': { rgb: [23, 18, 40], dark: true },
+  'ezreal-relicrun': { rgb: [242, 246, 250], dark: false },
+  'sona-etwahl': { rgb: [244, 240, 250], dark: false },
+  'mf-bountyhunter': { rgb: [34, 16, 23], dark: true },
+  'ahri-ninefold': { rgb: [253, 242, 244], dark: false },
+  'kaisa-voidborn': { rgb: [21, 13, 34], dark: true },
+}
+
+/** 背景装饰的 base CSS（表驱动横幅 + 装饰结构，reduced-motion 由 JS 端控制）。 */
 function buildDecorCss(): string {
-  return [
-    // ── 主背景：人物立绘整页铺满 + 皮肤色斜向纱罩（FANREN §二「背景图层」）──
-    // 竖版立绘 cover 在横屏会裁上下，position 偏上保住人物上半身；
-    // 纱罩在中左侧（聊天栏）浓、右上淡出，文字可读且人物透出来。
-    // background-color 为立绘加载前的渐变兜底。
-    `body.xl-skin-blossom {`,
-    `  background-color: #FDF3F7;`,
-    `  background-image: linear-gradient(100deg, rgb(253 243 247 / .86) 0%, rgb(253 243 247 / .72) 30%, rgb(253 243 247 / .38) 55%, rgb(253 243 247 / .05) 100%), url('/skins/mupeiling-blossom/assets/bg.png');`,
-    `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
-    `}`,
-    `body.xl-skin-daoist {`,
-    `  background-color: #F4F8EC;`,
-    `  background-image: linear-gradient(100deg, rgb(244 248 236 / .86) 0%, rgb(244 248 236 / .72) 30%, rgb(244 248 236 / .38) 55%, rgb(244 248 236 / .05) 100%), url('/skins/hanli-daoist/assets/bg.png');`,
-    `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
-    `}`,
-    `body.xl-skin-lunar {`,
-    `  background-color: #0F1B2E;`,
-    `  background-image: linear-gradient(100deg, rgb(15 27 46 / .90) 0%, rgb(15 27 46 / .78) 32%, rgb(15 27 46 / .46) 58%, rgb(15 27 46 / .08) 100%), url('/skins/yinyue-lunar/assets/bg.png');`,
-    `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
-    `}`,
-    `body.xl-skin-moon {`,
-    `  background-color: #FAFAFA;`,
-    `  background-image: linear-gradient(100deg, rgb(250 250 250 / .86) 0%, rgb(250 250 250 / .72) 30%, rgb(250 250 250 / .38) 55%, rgb(250 250 250 / .05) 100%), url('/skins/nangongwan-moon/assets/bg.png');`,
-    `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
-    `}`,
-    `body.xl-skin-mystic {`,
-    `  background-color: #221A2E;`,
-    `  background-image: linear-gradient(100deg, rgb(34 26 46 / .90) 0%, rgb(34 26 46 / .78) 32%, rgb(34 26 46 / .46) 58%, rgb(34 26 46 / .08) 100%), url('/skins/ziling-mystic/assets/bg.png');`,
-    `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
-    `}`,
-    // 装饰层：全屏、不拦截鼠标、置于最前（前景飘落，不被应用面板遮住）
-    `body.xl-skin-blossom [data-xl-decor], body.xl-skin-daoist [data-xl-decor], `,
-    `body.xl-skin-lunar [data-xl-decor], body.xl-skin-moon [data-xl-decor], body.xl-skin-mystic [data-xl-decor] {`,
+  const rules: string[] = []
+  for (const [skinId, v] of Object.entries(BANNER_VEIL)) {
+    const cssClass = SKIN_CURSORS[skinId]?.cssClass
+    if (cssClass === undefined) continue
+    const [a0, a1, a2, a3] = v.dark ? VEIL_DARK : VEIL_LIGHT
+    const c = v.rgb.join(' ')
+    rules.push(
+      `body.${cssClass} {`,
+      `  background-color: rgb(${c});`,
+      `  background-image: linear-gradient(100deg, rgb(${c} / ${a0}) 0%, rgb(${c} / ${a1}) 30%, rgb(${c} / ${a2}) 55%, rgb(${c} / ${a3}) 100%), url('/skins/${skinId}/assets/bg.png');`,
+      `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
+      `}`,
+    )
+  }
+  // 装饰层：全屏、不拦截鼠标、置于最前（容器只在皮肤激活期间存在）
+  rules.push(
+    `[data-xl-decor] {`,
     `  position: fixed; inset: 0; pointer-events: none; z-index: 2147483000; overflow: hidden;`,
     `}`,
-    `body.xl-skin-blossom [data-xl-decor] i, body.xl-skin-daoist [data-xl-decor] i, `,
-    `body.xl-skin-lunar [data-xl-decor] i, body.xl-skin-moon [data-xl-decor] i, body.xl-skin-mystic [data-xl-decor] i {`,
+    `[data-xl-decor] i {`,
     `  position: absolute; display: block; opacity: .75; will-change: transform, opacity;`,
     `}`,
     // keyframes 无条件全局定义（media 包裹在部分环境下不生效，元素会停在
@@ -203,9 +241,12 @@ function buildDecorCss(): string {
     `@keyframes fx-twinkle { 0%,100%{ opacity:.15; transform: scale(.7) } 50%{ opacity:1; transform: scale(1.15) } }`,
     `@keyframes fx-drift { 0%{ transform: translate(8vw,104vh) scale(.6); opacity:0 } 12%{opacity:.8} 100%{ transform: translate(-8vw,-6vh) scale(1); opacity:0 } }`,
     `body.xl-skin-blossom [data-xl-decor] i{ border-radius:50% 0 50% 50% }`,
-    `body.xl-skin-daoist [data-xl-decor] i{ border-radius:2px 60% 2px 60% }`,
+    `body.xl-skin-daoist [data-xl-decor] i, body.xl-skin-gale [data-xl-decor] i{ border-radius:2px 60% 2px 60% }`,
     `body.xl-skin-moon [data-xl-decor] i{ border-radius:50% }`,
-  ].join('\n')
+    `body.xl-skin-bounty [data-xl-decor] i{ border-radius:2px }`,
+    `body.xl-skin-voidborn [data-xl-decor] i{ border-radius:50% 0 50% 50% }`,
+  )
+  return rules.join('\n')
 }
 
 // ── 按钮特效（第一版：作用在皮肤中心自身 UI + body.xl-skin-* 全局选择器） ──
@@ -268,6 +309,35 @@ function buildButtonCss(): string {
     `  }`,
     `  body.xl-skin-mystic :is(button, [role="button"]):hover::after { opacity:1; }`,
     ``,
+    `  /* 英雄联盟系列 · 神话辉光（hover 外发光，色取各主题强调色） */`,
+    `  body.xl-skin-anthem :is(button, [role="button"]):hover, body.xl-skin-radiance :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(168 85 247 / .35), 0 0 22px rgb(245 215 110 / .28);`,
+    `  }`,
+    `  body.xl-skin-mayhem :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(34 211 238 / .4), 0 0 22px rgb(244 114 182 / .3);`,
+    `  }`,
+    `  body.xl-skin-gale :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(14 147 148 / .4), 0 0 20px rgb(127 184 180 / .3);`,
+    `  }`,
+    `  body.xl-skin-nightfall :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(139 123 216 / .45), 0 0 20px rgb(230 225 250 / .25);`,
+    `  }`,
+    `  body.xl-skin-relicrun :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(46 134 217 / .4), 0 0 22px rgb(224 169 59 / .3);`,
+    `  }`,
+    `  body.xl-skin-etwahl :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(124 92 191 / .4), 0 0 22px rgb(212 179 106 / .3);`,
+    `  }`,
+    `  body.xl-skin-bounty :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(224 64 90 / .4), 0 0 22px rgb(217 164 65 / .32);`,
+    `  }`,
+    `  body.xl-skin-ninefold :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(232 106 146 / .4), 0 0 22px rgb(245 193 108 / .3);`,
+    `  }`,
+    `  body.xl-skin-voidborn :is(button, [role="button"]):hover {`,
+    `    box-shadow: 0 0 12px rgb(167 139 250 / .45), 0 0 22px rgb(124 58 237 / .3);`,
+    `  }`,
+    ``,
     `  @keyframes xl-slide-sheen { 0%{ background-position: 200% 0 } 100%{ background-position: -100% 0 } }`,
     ``,
     `  /* 点击涟漪（JS 注入 .xl-ripple） */`,
@@ -275,6 +345,16 @@ function buildButtonCss(): string {
     `  body.xl-skin-lunar :is(button, [role="button"]) .xl-ripple,`,
     `  body.xl-skin-moon :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(226 75 74 / .8); }`,
     `  body.xl-skin-mystic :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(175 169 236 / .85); }`,
+    `  body.xl-skin-anthem :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(199 125 255 / .85); }`,
+    `  body.xl-skin-mayhem :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(34 211 238 / .85); }`,
+    `  body.xl-skin-radiance :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(217 154 27 / .8); }`,
+    `  body.xl-skin-gale :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(14 147 148 / .8); }`,
+    `  body.xl-skin-nightfall :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(139 123 216 / .85); }`,
+    `  body.xl-skin-relicrun :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(46 134 217 / .8); }`,
+    `  body.xl-skin-etwahl :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(124 92 191 / .8); }`,
+    `  body.xl-skin-bounty :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(224 64 90 / .85); }`,
+    `  body.xl-skin-ninefold :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(232 106 146 / .85); }`,
+    `  body.xl-skin-voidborn :is(button, [role="button"]) .xl-ripple{ border:2px solid rgb(167 139 250 / .85); }`,
     `  .xl-ripple { position:absolute; pointer-events:none; border-radius:50%; transform:translate(-50%,-50%);`,
     `    animation: xl-ripple-out .45s ease-out forwards; }`,
     `  @keyframes xl-ripple-out { 0%{ width:10px;height:10px;opacity:.9 } 100%{ width:80px;height:80px;opacity:0 } }`,
