@@ -18,7 +18,7 @@ export function apply(ctx: Context): void {
         '--dsw-alias-bg-base':          '#FBEAF0',  // 桃花薄雾底色
         '--dsw-alias-bg-layer-1':       '#FFFFFF',  // 雪白卡片
         '--dsw-alias-bg-layer-2':       '#F4C0D1',  // 粉纱层
-        '--dsw-alias-bg-overlay':       '#FFFFFF',
+        '--dsw-alias-bg-overlay':       '#FBEAF0',  // 弹层用主题底色（桃夭粉）
 
         '--dsw-alias-border-l1':        '#F4C0D1',
         '--dsw-alias-border-l2':        '#ED93B1',

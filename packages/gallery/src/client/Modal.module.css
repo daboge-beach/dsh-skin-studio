@@ -23,7 +23,9 @@
   max-width: 520px;
   overflow-y: auto;
   border-radius: 14px;
-  background: var(--dsw-alias-bg-layer-1);
+  /* overlay：主题弹层色（各皮肤注册为自己的主题背景色；该 token 不在
+     skinEffects 半透明面板覆盖清单里，弹窗保持不透明、内容可读） */
+  background: var(--dsw-alias-bg-overlay);
   border: 0.5px solid var(--dsw-alias-border-l1);
   box-shadow: 0 16px 48px rgb(0 0 0 / 28%);
   outline: none;

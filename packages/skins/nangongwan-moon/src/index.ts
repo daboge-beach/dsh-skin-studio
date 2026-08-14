@@ -18,7 +18,7 @@ export function apply(ctx: Context): void {
         '--dsw-alias-bg-base':          '#F1EFE8',  // 月白宣纸
         '--dsw-alias-bg-layer-1':       '#FFFFFF',
         '--dsw-alias-bg-layer-2':       '#D3D1C7',  // 暖灰玉色
-        '--dsw-alias-bg-overlay':       '#FFFFFF',
+        '--dsw-alias-bg-overlay':       '#F1EFE8',  // 弹层用主题底色（月白）
 
         '--dsw-alias-border-l1':        '#D3D1C7',
         '--dsw-alias-border-l2':        '#B4B2A9',
