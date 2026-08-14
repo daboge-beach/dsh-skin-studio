@@ -1,0 +1,16 @@
+{
+  "name": "@dsh-skin-studio/skin-midnight",
+  "version": "0.1.0",
+  "description": "Midnight skin — minimal dark theme for DeepSeek Harness",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --out-dir lib",
+    "dev": "tsdown src/index.ts --format esm --out-dir lib --watch"
+  },
+  "devDependencies": {
+    "@dsh-skin-studio/types": "workspace:*",
+    "tsdown": "^0.0.1",
+    "typescript": "^5.5.0"
+  }
+}

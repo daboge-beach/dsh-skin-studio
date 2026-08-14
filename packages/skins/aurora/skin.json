@@ -1,0 +1,36 @@
+{
+  "id": "aurora",
+  "name": "Aurora",
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "description": "极光 — 极简亮色皮肤，柔和的晨光配色，长时间使用不刺眼。",
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "keywords": ["minimal", "light", "clean"],
+  "variants": ["light"],
+  "client": "lib/client.js",
+  "preview": "preview.png",
+  "capabilities": {
+    "customBackground": false,
+    "customScrollbars": true,
+    "customTitleBar": false,
+    "consumePlugins": []
+  },
+  "palette": {
+    "primary": "#3b82f6",
+    "secondary": "#8b5cf6",
+    "background": "#f8fafc",
+    "surface": "#ffffff",
+    "text": "#0f172a",
+    "textMuted": "#64748b",
+    "border": "#e2e8f0",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "error": "#ef4444"
+  },
+  "specVersion": "0.1.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}

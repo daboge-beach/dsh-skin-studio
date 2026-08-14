@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+lib/
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Test output
+coverage/
+.nyc_output/
+test-results/
+
+# Cache
+.cache/
+.turbo/
+.tsdout/
+
+# OS
+.DS_Store
+
+# 本地皮肤开发（用户上传的临时皮肤不入库）
+packages/uploads/
+
+# Token 文件（防止误提交）
+**/gittoken*
+**/.github_token*
+**/.env.secret

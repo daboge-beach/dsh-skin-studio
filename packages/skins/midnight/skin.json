@@ -1,0 +1,36 @@
+{
+  "id": "midnight",
+  "name": "Midnight",
+  "version": "0.1.0",
+  "author": {
+    "name": "DSH Skin Studio",
+    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+  },
+  "description": "午夜 — 极简暗色皮肤，深邃的夜空配色，护眼专注。",
+  "license": "MIT",
+  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "keywords": ["minimal", "dark", "focus"],
+  "variants": ["dark"],
+  "client": "lib/client.js",
+  "preview": "preview.png",
+  "capabilities": {
+    "customBackground": false,
+    "customScrollbars": true,
+    "customTitleBar": false,
+    "consumePlugins": []
+  },
+  "palette": {
+    "primary": "#60a5fa",
+    "secondary": "#a78bfa",
+    "background": "#0f172a",
+    "surface": "#1e293b",
+    "text": "#f1f5f9",
+    "textMuted": "#94a3b8",
+    "border": "#334155",
+    "success": "#34d399",
+    "warning": "#fbbf24",
+    "error": "#f87171"
+  },
+  "specVersion": "0.1.0",
+  "dshVersion": ">=0.1.0-rc.5"
+}
