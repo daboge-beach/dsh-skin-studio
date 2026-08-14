@@ -3,9 +3,12 @@
 > DeepSeek Harness 皮肤工作室 —— 内置精选皮肤 · 用户上传皮肤中心 · 让每个 agent 都有专属面孔。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
+[![Skins: 7](https://img.shields.io/badge/skins-7-ff69b4)](#-内置皮肤)
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#项目状态)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
 > ⚠️ **DSH 本身处于 v0.1 开发者预览阶段**，插件 API 尚不稳定。本项目跟随上游版本演进，暂不保证跨版本兼容。
 
@@ -184,9 +187,11 @@ MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 
 ## 🙏 致谢
 
-- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — 提供了"万物皆插件"的运行时
+- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — 感谢 DeepSeek 团队提供"万物皆插件"的运行时框架，本项目得以在其之上构建皮肤生态
 - [dsh-web-ui](https://github.com/zhu1090093659/dsh-web-ui) — 皮肤格式和 ThemePresenter 抽象的开拓者，本项目借鉴了大量设计
 - 所有贡献皮肤的用户
+
+> 🎨 凡人修仙传系列皮肤为 AI 生成的同人创作，基于《凡人修仙传》（作者：忘语）角色形象，仅供个人欣赏与学习交流。
 
 ---
 
