@@ -68,6 +68,66 @@ function buildCursorCss(): string {
   return rules.join('\n')
 }
 
+// ── 面板半透明化（让整页人物海报透出来） ────────────────────────────────
+
+/**
+ * DSH 的 ThemePresenter 把皮肤 token 以 body 内联 style 写入
+ * （ui-layout/theme-presenter.ts 的 body.style.setProperty），而 AppFrame
+ * 等组件用不透明的 var(--dsw-alias-bg-base) 铺满整个视口 → body 上的
+ * 海报背景被完全盖住。
+ *
+ * 解法：在 `body.xl-skin-{c} #root` 上重定义背景 token。#root 是 body 的
+ * 后代，自定义属性按「最近继承源」解析，#root 上的值天然覆盖从 body 内联
+ * style 继承来的值（不是同元素争优先级，内联打不进来）；皮肤 class 摘掉
+ * 后选择器失配，立即回到官方值，完全可逆。模态/弹层 portal 渲染在 #root
+ * 之外，保持官方不透明值，可读性更好。
+ */
+interface PanelVeilSpec {
+  /** bg-base 的 RGB（与 builtinSkins 注册值一致）。 */
+  base: [number, number, number]
+  /** bg-layer-1 的 RGB。 */
+  layer1: [number, number, number]
+  /** bg-layer-2 的 RGB。 */
+  layer2: [number, number, number]
+  /** sidebar-fill 的 RGB。 */
+  sidebar: [number, number, number]
+  /** 主画布（frame）alpha — 海报透出程度主要看这里。 */
+  aBase: number
+  /** 侧栏/主面板填充 alpha。 */
+  aSidebar: number
+  /** 浮起表面（气泡/卡片）alpha。 */
+  aLayer1: number
+  /** 嵌套表面 alpha。 */
+  aLayer2: number
+}
+
+/** 每款皮肤的半透明面板规格（暗色款 alpha 略高保文字可读）。 */
+const PANEL_VEIL: Record<string, PanelVeilSpec> = {
+  'mupeiling-blossom': { base: [251, 234, 240], layer1: [255, 255, 255], layer2: [244, 192, 209], sidebar: [251, 234, 240], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'hanli-daoist': { base: [234, 243, 222], layer1: [244, 248, 236], layer2: [192, 221, 151], sidebar: [234, 243, 222], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'yinyue-lunar': { base: [4, 44, 83], layer1: [12, 68, 124], layer2: [24, 95, 165], sidebar: [4, 44, 83], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+  'nangongwan-moon': { base: [241, 239, 232], layer1: [255, 255, 255], layer2: [211, 209, 199], sidebar: [241, 239, 232], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'ziling-mystic': { base: [38, 33, 92], layer1: [60, 52, 137], layer2: [83, 74, 183], sidebar: [38, 33, 92], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
+}
+
+/** 生成面板半透明 token 覆盖（作用域 body.xl-skin-* #root）。 */
+function buildPanelVeilCss(): string {
+  const rules: string[] = []
+  for (const [skinId, v] of Object.entries(PANEL_VEIL)) {
+    const cssClass = SKIN_CURSORS[skinId]?.cssClass
+    if (cssClass === undefined) continue
+    rules.push(
+      `body.${cssClass} #root {`,
+      `  --dsw-alias-bg-base: rgb(${v.base.join(' ')} / ${v.aBase});`,
+      `  --dsw-alias-bg-layer-1: rgb(${v.layer1.join(' ')} / ${v.aLayer1});`,
+      `  --dsw-alias-bg-layer-2: rgb(${v.layer2.join(' ')} / ${v.aLayer2});`,
+      `  --dsw-specific-sidebar-fill: rgb(${v.sidebar.join(' ')} / ${v.aSidebar});`,
+      `}`,
+    )
+  }
+  return rules.join('\n')
+}
+
 // ── 装饰背景层（每款皮肤一种飘落/闪烁装饰） ─────────────────────────────
 
 interface DecorSpec {
@@ -103,27 +163,27 @@ function buildDecorCss(): string {
     // background-color 为立绘加载前的渐变兜底。
     `body.xl-skin-blossom {`,
     `  background-color: #FDF3F7;`,
-    `  background-image: linear-gradient(100deg, rgb(253 243 247 / .88) 0%, rgb(253 243 247 / .74) 32%, rgb(253 243 247 / .44) 58%, rgb(253 243 247 / .10) 100%), url('/skins/mupeiling-blossom/assets/bg.png');`,
+    `  background-image: linear-gradient(100deg, rgb(253 243 247 / .86) 0%, rgb(253 243 247 / .72) 30%, rgb(253 243 247 / .38) 55%, rgb(253 243 247 / .05) 100%), url('/skins/mupeiling-blossom/assets/bg.png');`,
     `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
     `}`,
     `body.xl-skin-daoist {`,
     `  background-color: #F4F8EC;`,
-    `  background-image: linear-gradient(100deg, rgb(244 248 236 / .88) 0%, rgb(244 248 236 / .74) 32%, rgb(244 248 236 / .44) 58%, rgb(244 248 236 / .10) 100%), url('/skins/hanli-daoist/assets/bg.png');`,
+    `  background-image: linear-gradient(100deg, rgb(244 248 236 / .86) 0%, rgb(244 248 236 / .72) 30%, rgb(244 248 236 / .38) 55%, rgb(244 248 236 / .05) 100%), url('/skins/hanli-daoist/assets/bg.png');`,
     `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
     `}`,
     `body.xl-skin-lunar {`,
     `  background-color: #0F1B2E;`,
-    `  background-image: linear-gradient(100deg, rgb(15 27 46 / .90) 0%, rgb(15 27 46 / .78) 32%, rgb(15 27 46 / .48) 58%, rgb(15 27 46 / .12) 100%), url('/skins/yinyue-lunar/assets/bg.png');`,
+    `  background-image: linear-gradient(100deg, rgb(15 27 46 / .90) 0%, rgb(15 27 46 / .78) 32%, rgb(15 27 46 / .46) 58%, rgb(15 27 46 / .08) 100%), url('/skins/yinyue-lunar/assets/bg.png');`,
     `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
     `}`,
     `body.xl-skin-moon {`,
     `  background-color: #FAFAFA;`,
-    `  background-image: linear-gradient(100deg, rgb(250 250 250 / .87) 0%, rgb(250 250 250 / .72) 32%, rgb(250 250 250 / .42) 58%, rgb(250 250 250 / .09) 100%), url('/skins/nangongwan-moon/assets/bg.png');`,
+    `  background-image: linear-gradient(100deg, rgb(250 250 250 / .86) 0%, rgb(250 250 250 / .72) 30%, rgb(250 250 250 / .38) 55%, rgb(250 250 250 / .05) 100%), url('/skins/nangongwan-moon/assets/bg.png');`,
     `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
     `}`,
     `body.xl-skin-mystic {`,
     `  background-color: #221A2E;`,
-    `  background-image: linear-gradient(100deg, rgb(34 26 46 / .90) 0%, rgb(34 26 46 / .78) 32%, rgb(34 26 46 / .48) 58%, rgb(34 26 46 / .12) 100%), url('/skins/ziling-mystic/assets/bg.png');`,
+    `  background-image: linear-gradient(100deg, rgb(34 26 46 / .90) 0%, rgb(34 26 46 / .78) 32%, rgb(34 26 46 / .46) 58%, rgb(34 26 46 / .08) 100%), url('/skins/ziling-mystic/assets/bg.png');`,
     `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
     `}`,
     // 装饰层：全屏、不拦截鼠标、置于最前（前景飘落，不被应用面板遮住）
@@ -222,10 +282,11 @@ function buildButtonCss(): string {
   ].join('\n')
 }
 
-/** 汇总注入的全局特效 CSS（光标 + 装饰结构 + 按钮）。 */
+/** 汇总注入的全局特效 CSS（光标 + 面板半透明 + 装饰结构 + 按钮）。 */
 function buildGlobalCss(): string {
   return [
     buildCursorCss(),
+    buildPanelVeilCss(),
     buildDecorCss(),
     buildButtonCss(),
     // 按钮伪元素定位需 relative 容器：不强制改 DSH，这里给皮肤中心自己的按钮容器
