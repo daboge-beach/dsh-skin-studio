@@ -10,27 +10,15 @@
   "license": "MIT",
   "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
   "keywords": ["minimal", "dark", "focus"],
-  "variants": ["dark"],
-  "client": "lib/client.js",
+  "colorScheme": "dark",
   "preview": "preview.png",
-  "capabilities": {
-    "customBackground": false,
-    "customScrollbars": true,
-    "customTitleBar": false,
-    "consumePlugins": []
-  },
   "palette": {
     "primary": "#60a5fa",
-    "secondary": "#a78bfa",
     "background": "#0f172a",
     "surface": "#1e293b",
     "text": "#f1f5f9",
-    "textMuted": "#94a3b8",
-    "border": "#334155",
-    "success": "#34d399",
-    "warning": "#fbbf24",
-    "error": "#f87171"
+    "border": "#334155"
   },
-  "specVersion": "0.1.0",
+  "specVersion": "0.2.0",
   "dshVersion": ">=0.1.0-rc.5"
 }

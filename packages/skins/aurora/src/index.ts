@@ -1,73 +1,46 @@
 /**
  * Aurora skin — 极简亮色
  *
- * 设计目标：
- * - 柔和的晨光配色，长时间使用不刺眼
- * - 所有视觉变化通过 CSS 变量实现，不碰 DOM，回滚零残留
- * - 作为教学示例，代码尽量简单直白
+ * 实现方式：注册一个 colorScheme='light' 的主题，
+ * 覆盖官方 --dsw-alias-* token。不直接操作 DOM。
  *
- * 这是 DSH Skin Studio 的默认皮肤之一。
+ * 这是 DSH Skin Studio 的默认皮肤之一，基于官方 ThemeRuntime API。
  */
 
-import type { ThemePresenter, SkinContext } from '@dsh-skin-studio/types';
+import type { Context } from '@deepseek-ai/cordis';
 
-const auroraPresenter: ThemePresenter = {
-  present(ctx: SkinContext, _options) {
-    // 通过注入 CSS 变量实现换色，不碰 DOM，回滚最干净
-    ctx.injectCSS(`
-      :root {
-        /* Aurora 配色 - 柔和晨光 */
-        --dsh-bg: #f8fafc;
-        --dsh-bg-secondary: #f1f5f9;
-        --dsh-surface: #ffffff;
-        --dsh-surface-hover: #f8fafc;
-        --dsh-text: #0f172a;
-        --dsh-text-muted: #64748b;
-        --dsh-text-subtle: #94a3b8;
-        --dsh-border: #e2e8f0;
-        --dsh-border-strong: #cbd5e1;
+export function apply(ctx: Context): void {
+  // 声明依赖 ui-theme 服务，DSH 会保证 ctx.theme 可用后再激活本插件
+  ctx.inject(['theme'], (themeCtx) => {
+    const dispose = themeCtx.theme.register({
+      id: 'aurora',
+      colorScheme: 'light',
+      tokens: {
+        // Aurora 柔和晨光配色
+        '--dsw-alias-bg-base':          '#f8fafc',
+        '--dsw-alias-bg-layer-1':       '#ffffff',
+        '--dsw-alias-bg-layer-2':       '#f1f5f9',
+        '--dsw-alias-bg-overlay':       '#ffffff',
 
-        --dsh-primary: #3b82f6;
-        --dsh-primary-hover: #2563eb;
-        --dsh-primary-subtle: #dbeafe;
+        '--dsw-alias-border-l1':        '#e2e8f0',
+        '--dsw-alias-border-l2':        '#cbd5e1',
 
-        --dsh-accent: #8b5cf6;
-        --dsh-success: #10b981;
-        --dsh-warning: #f59e0b;
-        --dsh-error: #ef4444;
+        '--dsw-alias-brand-primary':    '#3b82f6',
 
-        /* 圆角节奏 */
-        --dsh-radius-sm: 6px;
-        --dsh-radius-md: 10px;
-        --dsh-radius-lg: 14px;
+        '--dsw-alias-label-primary':    '#0f172a',
+        '--dsw-alias-label-secondary':  '#64748b',
 
-        /* 阴影 */
-        --dsh-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
-        --dsh-shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.08);
-        --dsh-shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08);
+        '--dsw-alias-state-error-primary':   '#ef4444',
+        '--dsw-alias-state-success-primary': '#10b981',
+        '--dsw-alias-state-warn-primary':    '#f59e0b',
+
+        '--dsw-specific-sidebar-fill':  '#f1f5f9',
       }
+    });
 
-      /* 自定义滚动条 */
-      ::-webkit-scrollbar { width: 10px; height: 10px; }
-      ::-webkit-scrollbar-track { background: var(--dsh-bg-secondary); }
-      ::-webkit-scrollbar-thumb {
-        background: var(--dsh-border-strong);
-        border-radius: 5px;
-        border: 2px solid var(--dsh-bg-secondary);
-      }
-      ::-webkit-scrollbar-thumb:hover { background: var(--dsh-text-subtle); }
-    `);
+    // 热插拔安全：插件卸载时反注册
+    themeCtx.on('dispose', dispose);
+  });
+}
 
-    // 纯 CSS 皮肤，没有手动创建任何资源
-    // injectCSS 注入的样式会在 retraction 时自动移除
-    return () => {
-      ctx.log.info('Aurora skin retracted');
-    };
-  },
-
-  retraction() {
-    // 兜底清理（无额外资源需要清理）
-  }
-};
-
-export default auroraPresenter;
+export const name = 'aurora';

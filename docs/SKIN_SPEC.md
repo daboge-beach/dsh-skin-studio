@@ -1,258 +1,274 @@
 # 皮肤规范 (Skin Specification)
 
-> 本文档是 DSH Skin Studio 皮肤格式的**权威定义**。所有内置皮肤、用户上传皮肤、第三方皮肤包都必须遵循本规范。
+> 本文档是 DSH Skin Studio 皮肤格式的**权威定义**，基于 DeepSeek Harness v0.1.0-rc.5 的官方主题系统（`@deepseek-ai/dsh-client-ui-theme` + `dsh-client-ui-layout`）抽象。
 >
-> 本规范与 [`dsh-web-ui`](https://github.com/zhu1090093659/dsh-web-ui) 的皮肤格式保持兼容，已有 `dsh-web-ui` 皮肤可直接迁移。
+> **重要**：DSH 仍处于开发者预览阶段，主题 API 可能跨版本变更。本规范跟随上游演进。
 
 ---
 
-## 1. 术语
+## 1. 主题系统的官方架构
 
-| 术语 | 含义 |
-|---|---|
-| **皮肤 (Skin)** | 一种 DSH UI 插件，通过 `ThemePresenter` 接口改变 Harness Web UI 的视觉外观 |
-| **皮肤包 (Skin Package)** | 一个自包含的目录或 `.zip` 文件，包含皮肤的所有资源 |
-| **变体 (Variant)** | 同一皮肤的视觉变体，如 `light` / `dark` |
-| **画廊 (Gallery)** | 皮肤中心的可视化界面，用于浏览、试穿、应用皮肤 |
-| **试穿 (Try-on)** | 临时应用皮肤，可随时完全回滚 |
-| **ThemePresenter** | 皮肤运行时接口，定义 `present()` 和 `retraction()` 两个生命周期方法 |
+DSH 的主题系统分为三层（详见架构图）：
 
-## 2. 目录结构
-
-### 2.1 标准皮肤包
-
-```
-<skin-id>/
-├── skin.json              # 皮肤清单（必填）
-├── preview.png            # 画廊预览图（必填，1280×800，PNG）
-├── preview-dark.png       # 暗色变体预览图（可选，有 dark 变体时建议提供）
-├── README.md              # 皮肤介绍（可选）
-├── LICENSE                # 许可证（可选，默认跟随项目 MIT）
-├── assets/                # 静态资源（图片、字体、音效等）
-│   ├── background.png
-│   └── icon.svg
-└── lib/
-    └── client.js          # 客户端 bundle（必填，UMD 或 ESM）
-```
-
-### 2.2 zip 打包格式
-
-上传 `.zip` 时，压缩包**根目录**必须包含 `skin.json`：
-
-```
-my-skin.zip
-└── my-skin/               # （可选）一级子目录
-    ├── skin.json
-    ├── preview.png
-    └── lib/client.js
-```
-
-校验器会自动识别压缩包根目录或一级子目录中的 `skin.json`。
-
-## 3. `skin.json` 字段定义
-
-### 3.1 必填字段
-
-| 字段 | 类型 | 说明 |
+| 层 | 包 | 职责 |
 |---|---|---|
-| `id` | string | 皮肤唯一标识符，`kebab-case`，正则 `^[a-z][a-z0-9-]{1,62}[a-z0-9]$` |
-| `name` | string | 显示名，1–40 字符 |
-| `version` | string | 语义化版本号，遵循 [SemVer](https://semver.org/) |
-| `author` | string \| object | 作者信息，字符串或 `{ name, email, url }` |
-| `description` | string | 一句话描述，≤140 字符 |
-| `client` | string | 客户端 bundle 相对路径，默认 `lib/client.js` |
+| **Layer 1 · Base Palette** | `@deepseek-ai/dsh-client-ui-theme/styles/design-platform.css` | ~150 个 `--dsw-static-*` 基础色 token，亮/暗双套，**不可被插件修改** |
+| **Layer 2 · ThemeRuntime** | `@deepseek-ai/dsh-client-ui-theme/client` | 维护主题注册表、偏好持久化、`prefers-color-scheme` 监听、发布 `ThemeSnapshot` |
+| **Layer 3 · ThemePresenter** | `@deepseek-ai/dsh-client-ui-layout/client` | 订阅 `theme/change` 事件，把 snapshot 投射到 DOM（`color-scheme`、`body[data-ds-dark-theme]`、`body.style` 上的 `--dsw-alias-*` 变量） |
 
-### 3.2 可选字段
+**皮肤插件接入点在 Layer 2**：通过 `ctx.theme.register()` 注册一个主题，或用 `ctx.theme.overrideTokens()` 叠加 token 覆盖层。皮肤**不需要**直接操作 DOM —— 这是官方和 `dsh-web-ui` 第三方实现的关键差异。
 
-| 字段 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `license` | string | `"MIT"` | SPDX 许可证标识符 |
-| `homepage` | string | — | 项目主页 URL |
-| `repository` | string \| object | — | 代码仓库地址 |
-| `keywords` | string[] | `[]` | 搜索关键词 |
-| `variants` | string[] | `["light"]` | 视觉变体列表，可选值：`light`、`dark` |
-| `preview` | string \| object | `"preview.png"` | 预览图路径，多变体时为 `{ light, dark }` |
-| `palette` | object | — | 调色板，用于画廊配色预览 |
-| `capabilities` | object | `{}` | 皮肤能力声明（见 3.4） |
-| `dshVersion` | string | — | 兼容的 DSH 版本范围（SemVer range） |
-| `themePresenter` | string | `"default"` | ThemePresenter 实现类型 |
+## 2. 皮肤的本质
 
-### 3.3 `palette` 字段
+皮肤是一个 **Cordis 插件**，在 `apply(ctx)` 中调用 `ctx.theme.register()` 注册一个 `ThemeDefinition`，定义 alias token 覆盖。用户切换主题时，`ThemeRuntime` 通过 `theme/change` 事件广播 snapshot，`ThemePresenter` 自动把 token 投射到 DOM。
+
+```typescript
+// 最小皮肤插件
+import type { Context } from '@deepseek-ai/cordis'
+
+export function apply(ctx: Context) {
+  // 依赖注入：声明需要 ui-theme 服务
+  ctx.inject(['theme'], (themeCtx) => {
+    const dispose = themeCtx.theme.register({
+      id: 'my-skin',
+      colorScheme: 'dark',
+      tokens: {
+        '--dsw-alias-bg-base': '#0f172a',
+        '--dsw-alias-brand-primary': '#60a5fa',
+        // ...更多 alias token
+      }
+    })
+
+    // 卸载时反注册（热插拔安全）
+    themeCtx.on('dispose', dispose)
+  })
+}
+```
+
+## 3. 核心 API
+
+### 3.1 `ThemeDefinition`（皮肤的核心数据结构）
+
+```typescript
+interface ThemeDefinition {
+  /** 主题唯一 ID（不可为 'system'、'light'、'dark'，这三个被内置占用） */
+  id: string
+  /** 这个主题建立在哪个基础调色板上 */
+  colorScheme: 'light' | 'dark'
+  /** alias token 覆盖（key 是 --dsw-alias-*，value 是 CSS 值） */
+  tokens: Record<string, string>
+}
+```
+
+### 3.2 `ctx.theme.register(definition)`
+
+注册一个主题。重复 ID 抛错。返回 disposer —— 调用即反注册。
+
+### 3.3 `ctx.theme.overrideTokens(source, tokens)`
+
+叠加 token 覆盖层（不新建主题，只改当前主题的某些 token）。
+
+```typescript
+ctx.theme.overrideTokens('my-plugin', {
+  '--dsw-alias-brand-primary': {
+    light: '#3b82f6',
+    dark:  '#60a5fa'
+  }
+})
+```
+
+`source` 是层身份（动态插件传自己的包 ID），后注册的层覆盖先注册的。返回 disposer。
+
+### 3.4 `ctx.theme.setTheme(id)`
+
+切换当前主题。ID 必须已注册，或为 `'system'`。
+
+### 3.5 `theme/change` 事件
+
+```typescript
+ctx.on('theme/change', (snapshot: ThemeSnapshot) => {
+  // snapshot.active 是当前生效的 ThemeDefinition（已 fold 所有 override 层）
+  // snapshot.preference 是用户偏好（可能是 'system'）
+})
+```
+
+## 4. 可覆盖的 Alias Token
+
+DSH 把 token 分两层：
+- **static token**（`--dsw-static-*`）：原始色值，如 `--dsw-static-blue-500: rgb(59, 130, 246)`，~150 个，**不可修改**
+- **alias token**（`--dsw-alias-*`）：语义化的"角色色"，指向 static token，**皮肤可覆盖**
+
+### 4.1 内置可覆盖的 alias token
+
+| Token | 语义 |
+|---|---|
+| `--dsw-alias-bg-base` | 应用基础背景 |
+| `--dsw-alias-bg-layer-1` | 一级浮起表面（卡片、面板） |
+| `--dsw-alias-bg-layer-2` | 二级嵌套表面 |
+| `--dsw-alias-bg-overlay` | 覆盖层、popover |
+| `--dsw-alias-border-l1` | 一级细边框 |
+| `--dsw-alias-border-l2` | 二级强边框 |
+| `--dsw-alias-brand-primary` | 品牌主色 |
+| `--dsw-alias-label-primary` | 主文字色 |
+| `--dsw-alias-label-secondary` | 次要文字色 |
+| `--dsw-alias-state-error-primary` | 错误态主色 |
+| `--dsw-alias-state-success-primary` | 成功态主色 |
+| `--dsw-alias-state-warn-primary` | 警告态主色 |
+| `--dsw-specific-sidebar-fill` | 侧边栏填充色 |
+
+> 完整列表可通过 `ctx.theme.exportInspectTokens()` 在运行时获取，包括其他插件动态注册的 token。
+
+### 4.2 覆盖规则
+
+- 皮肤只需覆盖想改的 token，未覆盖的自动继承 base palette
+- `colorScheme: 'dark'` 的皮肤，其 token 值应当是暗色配色（base palette 会切到暗色档）
+- token 值可以是：直接色值（`#0f172a`、`rgb(15,23,42)`）、引用其他 static token（`var(--dsw-static-blue-400)`）、CSS 函数（`color-mix(in srgb, var(--dsw-alias-bg-base) 80%, black)`）
+
+## 5. `skin.json` 清单（皮肤包元数据）
+
+虽然 DSH 原生插件通过 `package.json` 的 `dsh` 字段注册，但我们额外引入 `skin.json` 用于**皮肤中心画廊**的元数据（预览图、作者、关键词等运行时无关信息）。
 
 ```jsonc
 {
+  "id": "aurora",                        // 必须与 ThemeDefinition.id 一致
+  "name": "Aurora",                      // 显示名
+  "version": "0.1.0",                    // SemVer
+  "author": "你的名字",
+  "description": "极简亮色皮肤",
+  "license": "MIT",
+
+  "colorScheme": "light",                // 必须与 ThemeDefinition.colorScheme 一致
+  "preview": "preview.png",              // 画廊预览图（1280×800）
+  "keywords": ["minimal", "light"],
+
+  // 皮肤的视觉摘要（画廊用这个生成配色预览，不参与运行时）
   "palette": {
-    "primary":    "#3b82f6",   // 主色
-    "secondary":  "#8b5cf6",   // 副色
-    "background": "#0f172a",   // 背景色
-    "surface":    "#1e293b",   // 卡片/面板背景
-    "text":       "#f1f5f9",   // 主文字色
-    "textMuted":  "#94a3b8",   // 次要文字色
-    "border":     "#334155",   // 边框色
-    "success":    "#10b981",
-    "warning":    "#f59e0b",
-    "error":      "#ef4444"
+    "primary": "#3b82f6",
+    "background": "#f8fafc",
+    "text": "#0f172a"
   }
 }
 ```
 
-`palette` 仅用于画廊预览和生成基础 CSS 变量，皮肤可以在 `client.js` 中覆盖任意样式。
+## 6. 皮肤包目录结构
 
-### 3.4 `capabilities` 字段
+```
+my-skin/
+├── package.json          # Cordis 插件包（dsh 字段声明插件元数据）
+├── skin.json             # 皮肤中心元数据（非运行时必需）
+├── preview.png           # 画廊预览图
+├── src/
+│   └── index.ts          # 插件入口，apply(ctx) 中调用 ctx.theme.register()
+├── lib/
+│   └── index.js          # 构建产物（DSH 加载这个）
+└── README.md
+```
+
+### `package.json` 关键字段
 
 ```jsonc
 {
-  "capabilities": {
-    "customTitleBar": true,        // 自定义标题栏（颜色、按钮、文字）
-    "customBackground": true,      // 自定义背景（图片、渐变、动画）
-    "customScrollbars": true,      // 自定义滚动条样式
-    "customFavicon": true,         // 动态 favicon
-    "customFonts": true,           // 自定义字体（注意：字体文件需自带或走 CDN）
-    "customCaret": false,          // 自定义光标
-    "fullScreenMode": false,       // 全屏沉浸模式
-    "consumePlugins": [            // 声明消费的其他 DSH 插件（软依赖，缺失时降级）
-      "dsh-fun-ticker",
-      "dsh-token-stats"
-    ]
+  "name": "@dsh-skin-studio/skin-my-skin",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./lib/index.js",
+  "dsh": {
+    "client": {
+      "inject": ["@deepseek-ai/dsh-client-ui-theme"]
+    }
   }
 }
 ```
 
-`consumePlugins` 中的插件是**软依赖**：皮肤应当能在这些插件未安装时优雅降级，不得因依赖缺失而崩溃。
+`dsh.client.inject` 声明了对 `ui-theme` 服务的依赖 —— DSH 启动时会保证 `ctx.theme` 可用后再激活本插件。
 
-## 4. `lib/client.js` 规范
+## 7. 高级能力
 
-### 4.1 模块格式
+### 7.1 同时覆盖亮/暗（不改主题，只叠加层）
 
-- **推荐**：ESM (`export default`)
-- **兼容**：UMD（挂载到 `window.DshSkin_<id>`）
-
-### 4.2 `ThemePresenter` 接口
-
-客户端 bundle 的默认导出必须是一个实现下列接口的对象或类：
+如果你的插件想根据当前 colorScheme 微调某些 token：
 
 ```typescript
-interface ThemePresenter {
-  /**
-   * 应用皮肤（试穿或正式应用时调用）
-   * @param ctx 运行时上下文，提供 DSH UI 的 DOM 根节点、CSS 变量注入 API、插件数据总线等
-   * @param options { variant: 'light' | 'dark', tryOn: boolean }
-   * @returns 卸载函数（调用即回滚）或 Promise<卸载函数>
-   */
-  present(
-    ctx: SkinContext,
-    options: { variant: 'light' | 'dark'; tryOn: boolean }
-  ): void | Promise<() => void>;
-
-  /**
-   * 完全回滚皮肤（卸载时调用）
-   * 必须清理所有注入的 DOM、CSS、事件监听、定时器、 MutationObserver
-   */
-  retraction?(): void;
-}
-```
-
-### 4.3 `SkinContext`
-
-```typescript
-interface SkinContext {
-  /** UI 根节点（注入 CSS 变量和样式的目标） */
-  root: HTMLElement;
-  /** 当前变体 */
-  variant: 'light' | 'dark';
-  /** 注入 CSS 文本（自动 scope 到本皮肤命名空间） */
-  injectCSS(css: string): void;
-  /** 注入 DOM 节点到指定位置 */
-  injectDOM(position: 'titlebar' | 'background' | 'statusbar', node: Node): void;
-  /** 读取其他插件暴露的数据（capabilities.consumePlugins 声明的） */
-  getPluginData<T = unknown>(pluginId: string): T | null;
-  /** 监听 DSH 主题变化 */
-  onThemeChange(cb: (variant: 'light' | 'dark') => void): () => void;
-  /** 获取皮肤自身的静态资源 URL */
-  asset(path: string): string;
-  /** 日志（会打到 DSH session log） */
-  log: { info(...args: unknown[]): void; warn(...args: unknown[]): void; error(...args: unknown[]): void };
-}
-```
-
-### 4.4 最小示例
-
-```javascript
-// lib/client.js（源码，构建前）
-export default {
-  present(ctx, { variant }) {
-    const colors = variant === 'dark'
-      ? { bg: '#0f172a', text: '#f1f5f9' }
-      : { bg: '#f8fafc', text: '#0f172a' };
-
-    ctx.injectCSS(`
-      background: ${colors.bg} !important;
-      color: ${colors.text} !important;
-    `);
-
-    // 返回清理函数
-    return () => {
-      // injectCSS 注入的样式会在 retraction 时自动移除
-      // 这里清理手动添加的定时器、事件监听等
-    };
-  },
-
-  retraction() {
-    // 兜底清理（injectCSS/injectDOM 的资源会自动回收）
+ctx.theme.overrideTokens('my-plugin', {
+  '--dsw-alias-brand-primary': {
+    light: '#3b82f6',  // 亮色时用这个
+    dark:  '#60a5fa'   // 暗色时用这个
   }
-};
+})
 ```
 
-## 5. 校验规则
+### 7.2 监听主题变化做联动
 
-上传或加载皮肤时，皮肤中心会执行以下校验：
+```typescript
+ctx.on('theme/change', (snapshot) => {
+  if (snapshot.active.id === 'my-skin') {
+    // 用户切到了我的皮肤，做点联动（比如更新 favicon）
+  }
+})
+```
 
-### 5.1 静态校验（加载前）
+### 7.3 注册多变体皮肤
+
+一个皮肤包可以注册多个 `ThemeDefinition`（亮+暗变体）：
+
+```typescript
+export function apply(ctx: Context) {
+  ctx.inject(['theme'], (themeCtx) => {
+    const disposeLight = themeCtx.theme.register({
+      id: 'my-skin-light',
+      colorScheme: 'light',
+      tokens: { /* ... */ }
+    })
+    const disposeDark = themeCtx.theme.register({
+      id: 'my-skin-dark',
+      colorScheme: 'dark',
+      tokens: { /* ... */ }
+    })
+    themeCtx.on('dispose', () => { disposeLight(); disposeDark() })
+  })
+}
+```
+
+## 8. 校验规则
 
 | 检查项 | 失败处理 |
 |---|---|
-| `skin.json` 存在且为合法 JSON | 拒绝加载 |
-| 必填字段齐全且类型正确 | 拒绝加载 |
-| `id` 符合命名规则且无冲突 | 冲突时拒绝加载 |
-| `version` 符合 SemVer | 拒绝加载 |
-| `client` 指向的文件存在 | 拒绝加载 |
-| `preview` 指向的图片存在 | 警告，仍可加载（画廊用占位图） |
+| `package.json` 有 `dsh.client.inject` 含 `ui-theme` | 拒绝加载（无 ctx.theme 会崩） |
+| `skin.json` 存在且 JSON 合法 | 警告，仍可加载（按 Cordis 原生插件处理） |
+| `skin.json.id` 与 `ThemeDefinition.id` 一致 | 警告 |
+| `skin.json.colorScheme` 与 `ThemeDefinition.colorScheme` 一致 | 警告 |
+| `lib/index.js` 存在且可加载 | 拒绝加载 |
+| `apply(ctx)` 不抛异常 | 拒绝激活，回滚 |
+| `register()` 抛错（如 ID 冲突） | 拒绝激活 |
 
-### 5.2 运行时校验（试穿时）
+## 9. 与 `dsh-web-ui` 的兼容
 
-| 检查项 | 失败处理 |
-|---|---|
-| `client.js` 可正常加载 | 拒绝试穿，显示错误 |
-| 默认导出有 `present` 方法 | 拒绝试穿 |
-| `present()` 不抛异常 | 自动回滚，显示错误 |
-| `present()` 返回的清理函数可正常调用 | 警告（试穿退出时可能有残留） |
-
-### 5.3 安全约束
-
-- 皮肤 JS 运行在**沙箱 iframe** 或 **Worker** 中（视 DSH 能力而定），无直接文件系统访问
-- 禁止 `eval`、`Function` 构造、动态 `<script>` 注入（CSP 拦截）
-- 网络请求仅允许 `capabilities.consumePlugins` 声明的数据源 + 皮肤 `homepage` 同域
-
-## 6. 版本兼容
-
-- 本规范版本：`0.1.0`
-- `skin.json` 可通过 `specVersion` 字段声明遵循的规范版本（缺省为 `0.1.0`）
-- 未来规范升级时，皮肤中心会根据 `specVersion` 选择对应的加载器，保证向后兼容
-
-## 7. 与 `dsh-web-ui` 的兼容性
-
-本规范基于 `dsh-web-ui` 的实际实现抽象，差异如下：
+`dsh-web-ui` 的皮肤用的是**自己的 ThemePresenter**（直接操作 DOM），不走官方 `ctx.theme` API。两者不冲突但也不互通：
 
 | 方面 | `dsh-web-ui` | 本规范 |
 |---|---|---|
-| 打包方式 | 单一 npm 聚合包 `@linxin666/dsh-skins` | npm 聚合包 + 本地目录 + zip 上传 三选一 |
-| 皮肤发现 | `listSkinDirCandidates` + pnpm virtual-store | 上述三种来源合并去重 |
-| ThemePresenter | `present()` + `retraction()` | 同上，增加返回清理函数的约定 |
-| `skin.json` 字段 | 未完整公开 | 本规范显式定义（见第 3 节） |
-| 软依赖 | 隐式（交易终端皮肤内部处理降级） | 显式声明在 `capabilities.consumePlugins` |
+| 接入点 | 自定义 ThemePresenter 注入 DOM | 官方 `ctx.theme.register()` |
+| 回滚 | 手写 retraction() 清理 | disposer 自动反注册 |
+| 试穿 | 自己实现 | 复用 `setTheme()` 切换 |
+| Token 层 | 任意 CSS | 只覆盖 `--dsw-alias-*`（安全沙箱） |
 
-已有的 `dsh-web-ui` 皮肤**无需修改**即可在本皮肤中心加载（通过兼容层适配字段差异）。
+**迁移**：`dsh-web-ui` 皮肤可通过适配层转换 —— 把它的 `client.js` 包装成调用 `overrideTokens` 的 Cordis 插件。
 
-## 8. 变更日志
+## 10. 安全约束
 
-- `0.1.0` (2026-08-14)：首版规范，对齐 `dsh-web-ui` 实际实现并显式化字段定义
+- 皮肤是 Cordis 插件，运行在主线程，**有完整 ctx 权限** —— 因此皮肤中心加载第三方皮肤前会扫描源码，拒绝包含以下模式的皮肤：
+  - `eval` / `Function` / 动态 `<script>`
+  - `fetch` / `XMLHttpRequest` 到 `skin.json.homepage` 以外的域
+  - 读写 `localStorage` / `indexedDB` 中非自身命名空间的数据
+  - 访问 `navigator.clipboard` / `navigator.geolocation` 等敏感 API
+- token 值经过 CSS 解析校验，拒绝非 CSS 合法值的注入
+
+## 11. 版本
+
+- 规范版本：`0.2.0`（基于 DSH v0.1.0-rc.5 官方实现重写）
+- 上一版：`0.1.0`（基于 `dsh-web-ui` 第三方实现，已废弃）
+
+## 变更日志
+
+- `0.2.0` (2026-08-14)：**重大重写**。基于官方源码（`packages/client/ui-theme`、`packages/client/ui-layout`）重新定义皮肤接入点。皮肤从"自带 ThemePresenter 的 DOM 操作器"改为"调用 `ctx.theme.register()` 的 Cordis 插件"。
+- `0.1.0` (2026-08-14)：首版，基于 `dsh-web-ui` 第三方实现。

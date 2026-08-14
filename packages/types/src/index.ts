@@ -1,158 +1,115 @@
 /**
  * DSH Skin Studio — 类型定义
  *
- * 本包导出皮肤开发所需的全部 TypeScript 类型：
- * - ThemePresenter：皮肤运行时接口
- * - SkinContext：运行时上下文
- * - SkinManifest：skin.json 的类型
- *
- * 皮肤开发者只需 `import type { ThemePresenter, SkinContext } from '@dsh-skin-studio/types'`
+ * 基于 DeepSeek Harness v0.1.0-rc.5 官方主题系统抽象。
+ * 皮肤插件通过 ctx.theme.register() 注册 ThemeDefinition，
+ * 不再需要自己实现 ThemePresenter 操作 DOM。
  */
 
-/** 皮肤变体 */
-export type SkinVariant = 'light' | 'dark';
+/** 主题色系 */
+export type ColorScheme = 'light' | 'dark';
 
-/** 皮肤能力声明 */
-export interface SkinCapabilities {
-  /** 自定义标题栏 */
-  customTitleBar?: boolean;
-  /** 自定义背景（图片、渐变、动画） */
-  customBackground?: boolean;
-  /** 自定义滚动条 */
-  customScrollbars?: boolean;
-  /** 动态 favicon */
-  customFavicon?: boolean;
-  /** 自定义字体 */
-  customFonts?: boolean;
-  /** 自定义光标 */
-  customCaret?: boolean;
-  /** 全屏沉浸模式 */
-  fullScreenMode?: boolean;
-  /** 声明消费的其他 DSH 插件（软依赖，缺失时降级） */
-  consumePlugins?: string[];
+/** 用户偏好（system 表示跟随系统） */
+export type ThemePreference = 'light' | 'dark' | 'system';
+
+/**
+ * 主题定义（皮肤的核心数据结构）
+ *
+ * 与官方 @deepseek-ai/dsh-client-ui-theme/client 的 ThemeDefinition 对齐。
+ */
+export interface ThemeDefinition {
+  /** 主题唯一 ID（不可为 'system'、'light'、'dark'，这三个被内置占用） */
+  id: string;
+  /** 建立在哪个基础调色板上 */
+  colorScheme: ColorScheme;
+  /** alias token 覆盖（key 是 --dsw-alias-*，value 是 CSS 值） */
+  tokens: Record<string, string>;
 }
 
-/** 调色板 */
-export interface SkinPalette {
-  primary?: string;
-  secondary?: string;
-  background?: string;
-  surface?: string;
-  text?: string;
-  textMuted?: string;
-  border?: string;
-  success?: string;
-  warning?: string;
-  error?: string;
-  [key: string]: string | undefined;
+/** alias token 覆盖层（overrideTokens 用，每个 token 同时给亮/暗值） */
+export interface ThemeTokenModes {
+  light: string;
+  dark: string;
 }
 
-/** 作者信息 */
-export interface SkinAuthor {
+/** 可覆盖的 alias token 字典 */
+export type ThemeTokenOverrides = Record<string, ThemeTokenModes>;
+
+/** Token 检查项（运行时可获取） */
+export interface ThemeTokenInspection {
   name: string;
-  email?: string;
-  url?: string;
+  description: string;
+  valueType: string;
+  requiresLightAndDark: boolean;
+  cssVariable?: string;
 }
 
-/** skin.json 清单 */
+/** 主题快照（theme/change 事件 payload） */
+export interface ThemeSnapshot {
+  preference: ThemePreference;
+  active: ThemeDefinition;
+  themes: readonly ThemeDefinition[];
+  revision: number;
+}
+
+/**
+ * 官方 ThemeRuntime 服务接口（ctx.theme）
+ *
+ * 皮肤插件通过 ctx.inject(['theme'], (ctx) => ctx.theme.register(...)) 使用。
+ */
+export interface ThemeRuntime {
+  getTheme(): ThemeSnapshot;
+  setTheme(id: string): void;
+  register(definition: ThemeDefinition): () => void;
+  overrideTokens(source: string, tokens: ThemeTokenOverrides): () => void;
+  exportInspectTokens(): ThemeTokenInspection[];
+}
+
+/**
+ * 皮肤包的 skin.json 元数据
+ *
+ * 非运行时必需，但皮肤中心画廊用它展示皮肤信息。
+ */
 export interface SkinManifest {
-  /** 皮肤唯一 ID（kebab-case） */
+  /** 皮肤 ID（必须与 ThemeDefinition.id 一致） */
   id: string;
   /** 显示名 */
   name: string;
-  /** 语义化版本 */
+  /** SemVer 版本 */
   version: string;
   /** 作者 */
-  author: string | SkinAuthor;
+  author: string | { name: string; email?: string; url?: string };
   /** 一句话描述 */
   description: string;
-  /** 客户端 bundle 相对路径 */
-  client: string;
 
-  /** SPDX 许可证 */
+  /** 色系（必须与 ThemeDefinition.colorScheme 一致） */
+  colorScheme: ColorScheme;
+  /** 预览图路径 */
+  preview?: string;
+  /** 许可证 SPDX */
   license?: string;
-  /** 主页 URL */
+  /** 主页 */
   homepage?: string;
-  /** 代码仓库 */
-  repository?: string | { url: string };
   /** 搜索关键词 */
   keywords?: string[];
-  /** 视觉变体 */
-  variants?: SkinVariant[];
-  /** 预览图路径 */
-  preview?: string | { light: string; dark: string };
-  /** 调色板 */
-  palette?: SkinPalette;
-  /** 能力声明 */
-  capabilities?: SkinCapabilities;
+  /** 配色摘要（画廊用，不参与运行时） */
+  palette?: {
+    primary?: string;
+    background?: string;
+    surface?: string;
+    text?: string;
+    border?: string;
+  };
   /** 兼容的 DSH 版本范围 */
   dshVersion?: string;
   /** 规范版本 */
   specVersion?: string;
-  /** ThemePresenter 实现类型 */
-  themePresenter?: string;
 }
 
-/** DOM 注入位置 */
-export type DOMInjectionPosition = 'titlebar' | 'background' | 'statusbar';
-
-/** 日志接口 */
-export interface SkinLogger {
-  info(...args: unknown[]): void;
-  warn(...args: unknown[]): void;
-  error(...args: unknown[]): void;
-}
-
-/**
- * 皮肤运行时上下文
- *
- * 在 present() 时由皮肤中心注入，提供 DSH UI 的所有交互能力。
- */
-export interface SkinContext {
-  /** UI 根节点 */
-  readonly root: HTMLElement;
-  /** 当前变体 */
-  readonly variant: SkinVariant;
-
-  /** 注入 CSS 文本（自动 scope 到本皮肤命名空间） */
-  injectCSS(css: string): void;
-  /** 注入 DOM 节点到指定位置 */
-  injectDOM(position: DOMInjectionPosition, node: Node): void;
-  /** 读取其他插件暴露的数据（必须在 capabilities.consumePlugins 中声明） */
-  getPluginData<T = unknown>(pluginId: string): T | null;
-  /** 监听 DSH 主题变化，返回取消监听函数 */
-  onThemeChange(cb: (variant: SkinVariant) => void): () => void;
-  /** 获取皮肤自身的静态资源 URL */
-  asset(path: string): string;
-  /** 日志 */
-  readonly log: SkinLogger;
-}
-
-/** present() 的选项 */
-export interface PresentOptions {
-  variant: SkinVariant;
-  /** 是否为试穿模式（试穿时建议避免重资源加载） */
-  tryOn: boolean;
-}
-
-/**
- * 皮肤运行时接口
- *
- * 每个皮肤的 lib/client.js 默认导出必须实现此接口。
- */
-export interface ThemePresenter {
-  /**
-   * 应用皮肤。
-   * @returns 清理函数（调用即回滚）或 Promise<清理函数>
-   */
-  present(
-    ctx: SkinContext,
-    options: PresentOptions
-  ): void | Promise<() => void>;
-
-  /**
-   * 完全回滚皮肤（兜底清理）。
-   * injectCSS/injectDOM 注入的资源会自动回收，这里只清理手动创建的资源。
-   */
-  retraction?(): void;
+/** 皮肤包校验结果 */
+export interface SkinValidationResult {
+  skinId: string;
+  passed: boolean;
+  errors: string[];
+  warnings: string[];
 }

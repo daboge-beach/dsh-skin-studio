@@ -54,7 +54,7 @@ function validateSkin(skinDir, skinId) {
   }
 
   // 必填字段
-  const required = ['id', 'name', 'version', 'author', 'description', 'client'];
+  const required = ['id', 'name', 'version', 'author', 'description', 'colorScheme'];
   for (const field of required) {
     if (!manifest[field]) {
       error(skinId, `缺少必填字段: ${field}`);
@@ -75,32 +75,44 @@ function validateSkin(skinDir, skinId) {
     error(skinId, `version "${manifest.version}" 不符合 SemVer`);
   }
 
-  // client 文件
-  if (manifest.client) {
-    const clientPath = join(skinDir, manifest.client);
-    if (!existsSync(clientPath)) {
-      warn(skinId, `client 文件不存在: ${manifest.client}（构建后会生成）`);
+  // colorScheme
+  if (manifest.colorScheme && !['light', 'dark'].includes(manifest.colorScheme)) {
+    error(skinId, `colorScheme "${manifest.colorScheme}" 必须是 light 或 dark`);
+  }
+
+  // 检查 package.json 是否声明了 ui-theme 依赖
+  const pkgPath = join(skinDir, 'package.json');
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+      const inject = pkg.dsh?.client?.inject;
+      if (!Array.isArray(inject) || !inject.includes('@deepseek-ai/dsh-client-ui-theme')) {
+        error(skinId, 'package.json 缺少 dsh.client.inject: ["@deepseek-ai/dsh-client-ui-theme"]，ctx.theme 会 undefined');
+      }
+    } catch (e) {
+      warn(skinId, `package.json 解析失败: ${e.message}`);
     }
+  }
+
+  // lib/index.js（构建产物）
+  const libPath = join(skinDir, 'lib', 'index.js');
+  if (!existsSync(libPath)) {
+    warn(skinId, 'lib/index.js 不存在（运行 pnpm build 后生成）');
   }
 
   // preview
   if (manifest.preview) {
-    const previewPath = typeof manifest.preview === 'string'
-      ? manifest.preview
-      : manifest.preview.light;
-    if (!existsSync(join(skinDir, previewPath))) {
-      warn(skinId, `预览图不存在: ${previewPath}`);
+    if (!existsSync(join(skinDir, manifest.preview))) {
+      warn(skinId, `预览图不存在: ${manifest.preview}`);
     }
   }
 
-  // variants
+  // （旧字段 variants 已被 colorScheme 替代）
   if (manifest.variants) {
-    const validVariants = ['light', 'dark'];
-    for (const v of manifest.variants) {
-      if (!validVariants.includes(v)) {
-        error(skinId, `未知变体: ${v}（仅支持 light/dark）`);
-      }
-    }
+    warn(skinId, 'variants 字段已废弃，改用 colorScheme: "light" | "dark"');
+  }
+  if (manifest.client) {
+    warn(skinId, 'client 字段已废弃，入口固定为 lib/index.js');
   }
 
   ok(skinId, `校验通过（v${manifest.version}）`);

@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "description": "Midnight skin — minimal dark theme for DeepSeek Harness",
   "type": "module",
-  "private": true,
+  "main": "./lib/index.js",
   "scripts": {
     "build": "tsdown src/index.ts --format esm --out-dir lib",
     "dev": "tsdown src/index.ts --format esm --out-dir lib --watch"
+  },
+  "dsh": {
+    "client": {
+      "inject": ["@deepseek-ai/dsh-client-ui-theme"]
+    }
   },
   "devDependencies": {
     "@dsh-skin-studio/types": "workspace:*",
