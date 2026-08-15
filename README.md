@@ -12,7 +12,7 @@
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 7](https://img.shields.io/badge/skins-7-ff69b4)](#-内置皮肤)
+[![Skins: 17](https://img.shields.io/badge/skins-17-ff69b4)](#-内置皮肤一览)
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#项目状态)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
@@ -38,6 +38,40 @@
 | 🔌 **官方格式兼容** | `skin.json` 字段与 `dsh-web-ui` 对齐，已有皮肤可直接迁移 |
 | 🧩 **插件联动** | 皮肤可消费其他 DSH 插件的数据（行情、宠物、token 统计等） |
 | 🛠️ **皮肤开发工具** | 提供 `dsh-skin init` 脚手架 + 类型定义 + 校验器，降低造皮肤门槛 |
+
+### 🎨 内置皮肤一览（17 款）
+
+**英雄联盟系列 · 10 款（神话级质感）**
+
+| 皮肤 | 主题 |
+|---|---|
+| 阿狸 · 九尾魅影 | 粉紫幻境 · 魅惑灵动 |
+| 伊泽瑞尔 · 符文远征 | 金蓝符文 · 探险家气质 |
+| 金克斯 · 弹幕狂潮 | 疯狂霓虹 · 鲨鱼火箭 |
+| 卡莎 · 虚空降临 | 深紫虚空 · 活体装甲 |
+| 拉克丝 · 光棱圣辉 | 圣洁光晕 · 彩虹光谱 |
+| 厄运小姐 · 赏金女王 | 红金赏金 · 弹雨玫瑰 |
+| 萨勒芬妮 · 星颂 | 星空舞台 · 双色应援 |
+| 娑娜 · 弦语仙音 | 琴音流淌 · 静谧雅致 |
+| 维恩 · 夜狩 | 冷银夜色 · 银弩猎手 |
+| 亚索 · 斩风疾影 | 青风竹意 · 疾剑浪客 |
+
+**凡人修仙传系列 · 5 款**
+
+| 皮肤 | 主题 |
+|---|---|
+| 韩立 · 青竹 | 青衫修士 · 竹林问心 |
+| 南宫婉 · 寒梅 | 冰雪聪明 · 寒梅傲骨 |
+| 银月 · 月华 | 狼族圣女 · 月华如水 |
+| 紫灵 · 紫霞 | 紫气东来 · 仙子凌波 |
+| 慕沛灵 · 桃夭 | 桃之夭夭 · 灼灼其华 |
+
+**基础系列 · 2 款**
+
+| 皮肤 | 主题 |
+|---|---|
+| Aurora | 极简亮色 · 清晨极光 |
+| Midnight | 极简暗色 · 深夜静谧 |
 
 ### 🚀 快速开始
 
@@ -153,7 +187,8 @@ dsh-skin-studio/
 │   └── skins/                # 内置皮肤源码
 │       ├── aurora/           # 极光（极简亮色）
 │       ├── midnight/         # 午夜（极简暗色）
-│       └── ...               # 更多内置皮肤
+│       ├── ahri-ninefold/    # 英雄联盟系列 × 10
+│       └── ...               # 凡人修仙传系列 × 5
 ├── docs/
 │   ├── SKIN_SPEC.md          # 皮肤规范（权威）
 │   ├── DEVELOPMENT.md        # 开发指南
@@ -181,6 +216,7 @@ dsh-skin-studio/
 - [x] 仓库初始化、规范定稿
 - [x] v0.1：皮肤中心 MVP（`packages/gallery`：画廊 / 试穿 / 应用 / 详情面板 / 吉祥物浮层 / 切换特效，内置 aurora + midnight + 凡人修仙传 5 款）
 - [x] v0.2：拖拽上传、zip 解压、格式校验（浏览器内零依赖解压 + `skin.json` 校验）
+- [x] v0.2.x：英雄联盟英雄皮肤系列 10 款（神话级质感）
 - [ ] v0.3：皮肤脚手架 CLI、开发热重载
 - [ ] v0.4：插件联动（消费行情/token 统计等数据）
 - [ ] v1.0：跟随 DSH v1.0 稳定 API，正式发布
@@ -207,7 +243,7 @@ MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 7](https://img.shields.io/badge/skins-7-ff69b4)](#-built-in-skins)
+[![Skins: 17](https://img.shields.io/badge/skins-17-ff69b4)](#-built-in-skins)
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#project-status)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
@@ -233,6 +269,40 @@ Not "N curated picks by the author", but a marketplace where anyone can contribu
 | 🔌 **Official format compatible** | `skin.json` fields align with `dsh-web-ui`; existing skins migrate as-is |
 | 🧩 **Plugin interop** | Skins can consume data from other DSH plugins (tickers, pets, token stats, …) |
 | 🛠️ **Skin dev tooling** | `dsh-skin init` scaffolder + type definitions + validator to lower the barrier |
+
+### 🎨 Built-in skins (17)
+
+**League of Legends series · 10 skins (mythic-tier polish)**
+
+| Skin | Theme |
+|---|---|
+| Ahri · Nine-Tail Charms | Pink-violet fantasy · enchanting agility |
+| Ezreal · Rune Expedition | Golden-blue runes · explorer spirit |
+| Jinx · Bullet Mayhem | Neon chaos · shark rockets |
+| Kai'Sa · Voidborn Descent | Deep-void purple · living armor |
+| Lux · Radiant Prism | Holy radiance · rainbow spectrum |
+| Miss Fortune · Bounty Queen | Red-gold bounty · bullet-rose |
+| Seraphine · Star Anthem | Starry stage · duo-tone cheer |
+| Sona · Etwahl Muse | Flowing strings · serene elegance |
+| Vayne · Night Hunter | Cold-silver night · silverbolt huntress |
+| Yasuo · Gale Slasher | Green wind & bamboo · wandering swordsman |
+
+**A Record of a Mortal's Journey series · 5 skins**
+
+| Skin | Theme |
+|---|---|
+| Han Li · Green Bamboo | Azure-robed cultivator · bamboo grove |
+| Nangong Wan · Winter Plum | Ice-smart grace · plum in the snow |
+| Yin Yue · Moonlight | Wolf-tribe maiden · moonlit waters |
+| Ziling · Violet Mist | Purple aura · immortal fairy |
+| Mu Peiling · Peach Blossom | Peach blossoms in full bloom |
+
+**Essentials · 2 skins**
+
+| Skin | Theme |
+|---|---|
+| Aurora | Minimal light · dawn aurora |
+| Midnight | Minimal dark · deep-night calm |
 
 ### 🚀 Quick Start
 
@@ -348,7 +418,8 @@ dsh-skin-studio/
 │   └── skins/                # built-in skin sources
 │       ├── aurora/           # Aurora (minimal light)
 │       ├── midnight/         # Midnight (minimal dark)
-│       └── ...               # more built-in skins
+│       ├── ahri-ninefold/    # League of Legends series × 10
+│       └── ...               # Mortal's Journey series × 5
 ├── docs/
 │   ├── SKIN_SPEC.md          # skin spec (authoritative)
 │   ├── DEVELOPMENT.md        # development guide
@@ -376,6 +447,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
 - [x] Repository bootstrap, spec finalized
 - [x] v0.1: gallery MVP (`packages/gallery`: browse / try-on / apply / detail panel / mascot overlay / transition effects; ships aurora + midnight + 5 A Record of a Mortal's Journey skins)
 - [x] v0.2: drag & drop upload, zip extraction, format validation (dependency-free in-browser unzip + `skin.json` validation)
+- [x] v0.2.x: League of Legends champion skin series × 10 (mythic-tier polish)
 - [ ] v0.3: skin scaffolder CLI, hot-reload dev flow
 - [ ] v0.4: plugin interop (consume ticker / token stats, etc.)
 - [ ] v1.0: follow DSH v1.0 stable API, official release
