@@ -17,7 +17,12 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "files": ["lib", "src", "dev", "README.md"],
+  "files": [
+    "lib",
+    "src",
+    "dev",
+    "README.md"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.build.json && tsdown",
@@ -32,6 +37,9 @@
       ],
       "platform": "web",
       "immediately": true
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
     }
   },
   "dependencies": {
@@ -49,7 +57,13 @@
     "vite": "^5.4.0",
     "vitest": "^2.0.0"
   },
-  "keywords": ["dsh", "deepseek-harness", "skin", "gallery", "plugin"],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "skin",
+    "gallery",
+    "plugin"
+  ],
   "license": "MIT",
   "author": "DSH Skin Studio",
   "homepage": "https://github.com/daboge-beach/dsh-skin-studio",

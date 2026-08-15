@@ -1,0 +1,7 @@
+# The dsh-skin-studio gallery bundle patch: registers the skin studio host
+# plugin (static /skins assets + client injection). Applied after the
+# dsh-base / dsh-web-app layers as one insert.
+
+- insert:
+    - id: skin-studio-gallery
+      name: '@dsh-skin-studio/gallery'

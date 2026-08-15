@@ -17,6 +17,7 @@
  * harness 源码。特效色一律取自各皮肤 palette（builtinSkins.ts）。
  */
 import type { ThemeSnapshot } from '@dsh-skin-studio/types'
+import { skinStudioSettings } from './settings.ts'
 
 /** 每款皮肤的视觉元数据：皮肤 class 后缀 + 光标文件名前缀 + 画布尺寸。 */
 export interface SkinVisual {
@@ -285,8 +286,10 @@ const LOL_BUTTON_FX: Record<string, { glow: [string, string]; ripple: string }> 
  * - 圆角有意差异：柔美系 14px / 道风 4px / 冷峻 2px（FANREN 文档写明勿改）。
  */
 function buildButtonCss(): string {
+  // animations: 'always' 时不包 media —— 系统 reduce 下也要播（设置项见 settings.ts）
+  const wrapMedia = skinStudioSettings.get().animations !== 'always'
   return [
-    `@media (prefers-reduced-motion: no-preference) {`,
+    wrapMedia ? `@media (prefers-reduced-motion: no-preference) {` : `/* animations: always — media guard omitted */`,
     `  /* 慕沛灵 · 灵气流动光带（hover） */`,
     `  body.xl-skin-blossom :is(button, [role="button"]) { border-radius: 14px; }`,
     `  body.xl-skin-blossom :is(button, [role="button"])::after {`,
@@ -351,7 +354,7 @@ function buildButtonCss(): string {
     `  .xl-ripple { position:absolute; pointer-events:none; border-radius:50%; transform:translate(-50%,-50%);`,
     `    animation: xl-ripple-out .45s ease-out forwards; }`,
     `  @keyframes xl-ripple-out { 0%{ width:10px;height:10px;opacity:.9 } 100%{ width:80px;height:80px;opacity:0 } }`,
-    `}`,
+    wrapMedia ? `}` : ``,
   ].join('\n')
 }
 
@@ -391,7 +394,9 @@ function buildDecorContainer(skinId: string, isDark: boolean): HTMLDivElement {
   if (spec === undefined) return wrap
   // 动画开关在 JS 端判（与吉祥物一致）：本环境 class 规则里的 animation
   // 会被 prefers-reduced-motion media 清覆；reduce 时改为静态展示装饰元素。
+  // animations: 'always' 设置下忽略系统 reduce（见 settings.ts）。
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    && skinStudioSettings.get().animations !== 'always'
   const sizeRange = spec.sizeMax - spec.sizeMin
   for (let i = 0; i < spec.count; i += 1) {
     const el = document.createElement('i')
@@ -482,7 +487,7 @@ function spawnRipple(btn: HTMLElement, e: MouseEvent): void {
 export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   subscribe: (cb: (snap: ThemeSnapshot) => void) => () => void): () => void {
   if (typeof document === 'undefined') return () => {}
-  const disposeCss = injectGlobalCss()
+  let disposeCss = injectGlobalCss()
   const disposePointer = installPointerFx()
 
   const apply = (snap: ThemeSnapshot | null): void => {
@@ -495,7 +500,18 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   apply(snapshotProvider())
   const off = subscribe(apply)
 
+  // animations 设置变化：重建 CSS 标签（media 包裹策略变了）+ 重铺装饰层
+  let lastAnimations = skinStudioSettings.get().animations
+  const offSettings = skinStudioSettings.subscribe(s => {
+    if (s.animations === lastAnimations) return
+    lastAnimations = s.animations
+    disposeCss()
+    disposeCss = injectGlobalCss()
+    apply(snapshotProvider())
+  })
+
   return () => {
+    offSettings()
     off()
     disposePointer()
     disposeCss()

@@ -91,15 +91,17 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
   const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
   const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
+  const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
 
   // 订阅官方 theme 服务获取当前主题
   const snapshot = useThemeSnapshot(ctx)
   const activeSkinId = snapshot?.active.id
 
-  // 吉祥物浮层开关 + 语录语言（settings.mascotEnabled / settings.quoteLang）
+  // 吉祥物浮层开关 + 语录语言 + 动画策略（settings.mascotEnabled / quoteLang / animations）
   useEffect(() => skinStudioSettings.subscribe(s => {
     setMascotEnabled(s.mascotEnabled)
     setQuoteLang(s.quoteLang)
+    setAnimations(s.animations)
   }), [])
 
   /** 试穿前的用户偏好（退出还原用）。 */
@@ -266,6 +268,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           onClick={() => skinStudioSettings.setQuoteLang(quoteLang === 'zh' ? 'en' : 'zh')}
         >
           语录语言：{quoteLang === 'zh' ? '中文' : 'English'}
+        </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          aria-pressed={animations === 'always'}
+          title="动画播放策略：跟随系统「减少动态效果」（默认，无障碍友好）或忽略系统设置始终播放。系统关闭了动画效果时，吉祥物/特效静止的话切到「始终播放」即可。"
+          onClick={() => skinStudioSettings.setAnimations(animations === 'always' ? 'system' : 'always')}
+        >
+          动画：{animations === 'always' ? '始终播放' : '跟随系统'}
         </button>
       </nav>
 

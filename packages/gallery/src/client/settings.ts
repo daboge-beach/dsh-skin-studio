@@ -21,9 +21,15 @@ export interface SkinStudioSettings {
    * 吉祥物语录语言（quotes.ts 中/英双池，默认中文）。
    */
   quoteLang: 'zh' | 'en'
+  /**
+   * 动画播放策略：'system' 跟随系统「减少动态效果」（默认，无障碍友好）；
+   * 'always' 忽略系统偏好、始终播放动画（部分用户系统动画被全局关闭，
+   * 皮肤中心的动效被连坐静止时，用它找回）。
+   */
+  animations: 'system' | 'always'
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh' }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system' }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -74,6 +80,13 @@ export const skinStudioSettings = {
   setQuoteLang(lang: 'zh' | 'en'): void {
     if (current.quoteLang === lang) return
     write({ ...current, quoteLang: lang })
+  },
+  getAnimations(): 'system' | 'always' {
+    return current.animations
+  },
+  setAnimations(mode: 'system' | 'always'): void {
+    if (current.animations === mode) return
+    write({ ...current, animations: mode })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)
