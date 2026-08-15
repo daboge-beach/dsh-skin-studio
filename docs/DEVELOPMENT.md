@@ -251,4 +251,4 @@ window.__DSH_HOST__?.ctx?.theme?.setTheme('light');
 
 - 读 [SKIN_SPEC.md](SKIN_SPEC.md) 了解完整规范
 - 参考 `packages/skins/aurora/` 和 `packages/skins/midnight/` 的实现
-- 加入 [GitHub Discussions](https://github.com/dengbochina-a11y/dsh-skin-studio/discussions) 提问和分享
+- 加入 [GitHub Discussions](https://github.com/daboge-beach/dsh-skin-studio/discussions) 提问和分享

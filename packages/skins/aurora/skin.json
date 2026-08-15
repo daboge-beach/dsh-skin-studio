@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "author": {
     "name": "DSH Skin Studio",
-    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+    "url": "https://github.com/daboge-beach/dsh-skin-studio"
   },
   "description": "极光 — 极简亮色皮肤，柔和的晨光配色，长时间使用不刺眼。",
   "license": "MIT",
-  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
   "keywords": ["minimal", "light", "clean"],
   "colorScheme": "light",
   "preview": "preview.png",

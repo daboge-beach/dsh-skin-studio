@@ -56,7 +56,7 @@ pnpm validate
 ### 开发环境
 
 ```bash
-git clone https://github.com/dengbochina-a11y/dsh-skin-studio.git
+git clone https://github.com/daboge-beach/dsh-skin-studio.git
 cd dsh-skin-studio
 pnpm install
 pnpm build
@@ -114,7 +114,7 @@ Closes #42
 
 ### 报告 Bug
 
-[开一个 Issue](https://github.com/dengbochina-a11y/dsh-skin-studio/issues/new?labels=bug)，请包含：
+[开一个 Issue](https://github.com/daboge-beach/dsh-skin-studio/issues/new?labels=bug)，请包含：
 
 - DSH 版本（`dsh --version`）
 - Skin Studio 版本
@@ -125,7 +125,7 @@ Closes #42
 
 ### 提建议
 
-[开一个 Discussion](https://github.com/dengbochina-a11y/dsh-skin-studio/discussions)，描述你想要的皮肤或功能。
+[开一个 Discussion](https://github.com/daboge-beach/dsh-skin-studio/discussions)，描述你想要的皮肤或功能。
 
 ## 📜 行为准则
 

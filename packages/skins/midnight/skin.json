@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "author": {
     "name": "DSH Skin Studio",
-    "url": "https://github.com/dengbochina-a11y/dsh-skin-studio"
+    "url": "https://github.com/daboge-beach/dsh-skin-studio"
   },
   "description": "午夜 — 极简暗色皮肤，深邃的夜空配色，护眼专注。",
   "license": "MIT",
-  "homepage": "https://github.com/dengbochina-a11y/dsh-skin-studio",
+  "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
   "keywords": ["minimal", "dark", "focus"],
   "colorScheme": "dark",
   "preview": "preview.png",
