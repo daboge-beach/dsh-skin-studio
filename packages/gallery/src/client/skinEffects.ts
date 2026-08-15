@@ -132,6 +132,33 @@ const PANEL_VEIL: Record<string, PanelVeilSpec> = {
 }
 
 /** 生成面板半透明 token 覆盖（作用域 body.xl-skin-* #root）。 */
+/** 弹窗层 token 覆盖（不透明主题色：无论 DSH 哪个弹窗吃哪个表面 token，
+ *  都拿到主题底色而非注册的雪白 layer-1；只作用弹窗容器，主界面卡片/
+ *  气泡的雪白表面不受影响）。 */
+function buildDialogVeilCss(): string {
+  const rules: string[] = []
+  for (const [skinId, v] of Object.entries(PANEL_VEIL)) {
+    const cssClass = SKIN_CURSORS[skinId]?.cssClass
+    if (cssClass === undefined) continue
+    rules.push(
+      // 弹窗本体（DSH 设置弹窗 / 皮肤中心 Modal / 权限与提问弹窗等）
+      `body.${cssClass} :is([role="dialog"], [aria-modal="true"]) {`,
+      `  --dsw-alias-bg-base: rgb(${v.base.join(' ')});`,
+      `  --dsw-alias-bg-layer-1: rgb(${v.base.join(' ')});`,
+      `  --dsw-alias-bg-layer-2: rgb(${v.layer2.join(' ')});`,
+      `}`,
+      // 兜底：渲染在 #root 之外的 body 级 portal 容器（同样给不透明主题色；
+      // #root 自身因 ID 特异度更高，保持半透明海报覆盖不受影响）
+      `body.${cssClass} > div:not(#root) {`,
+      `  --dsw-alias-bg-base: rgb(${v.base.join(' ')});`,
+      `  --dsw-alias-bg-layer-1: rgb(${v.base.join(' ')});`,
+      `  --dsw-alias-bg-layer-2: rgb(${v.layer2.join(' ')});`,
+      `}`,
+    )
+  }
+  return rules.join('\n')
+}
+
 function buildPanelVeilCss(): string {
   const rules: string[] = []
   for (const [skinId, v] of Object.entries(PANEL_VEIL)) {
@@ -333,6 +360,7 @@ function buildGlobalCss(): string {
   return [
     buildCursorCss(),
     buildPanelVeilCss(),
+    buildDialogVeilCss(),
     buildDecorCss(),
     buildButtonCss(),
     // 按钮伪元素定位需 relative 容器：不强制改 DSH，这里给皮肤中心自己的按钮容器
