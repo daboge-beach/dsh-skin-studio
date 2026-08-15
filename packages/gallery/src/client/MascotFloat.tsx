@@ -18,26 +18,35 @@ import { skinRegistry } from './registry/skinRegistry.ts'
 import { randomGreeting, randomQuote, type QuoteLang } from './quotes.ts'
 import styles from './MascotFloat.module.css'
 
-/** 漫步目标点（相对当前锚位的 translate 偏移）。 */
+/** 锚位 / 漫步目标点（viewport 坐标）。 */
 interface WanderPoint {
   x: number
   y: number
 }
 
-const IDLE_MS = 2600          // 每段驻足时长
-const MOVE_MS = 2200          // 平滑移动时长
+const IDLE_MS = 1600          // 每段驻足时长（满屏转悠版：更活泼）
+const MOVE_MS = 1800          // 平滑移动时长
 const BUBBLE_MS = 5200        // 气泡停留时长
 const DRAG_THRESHOLD = 6      // 超过此位移视为拖动而非点击
 
+/** 漫步目标点（viewport 坐标）。满屏转悠：避开顶部标题栏与底部输入区。 */
 function nextWanderPoint(): WanderPoint {
   if (typeof window === 'undefined') return { x: 0, y: 0 }
-  // 相对锚位向左、向上随机走（锚位在右下角或拖动后的落点）
-  const maxX = Math.max(0, window.innerWidth * 0.45)
-  const maxY = Math.min(window.innerHeight * 0.28, 150)
+  const margin = 16
+  const size = 160
+  const minY = 72                                     // 避开顶部标题/工具栏
+  const maxY = Math.max(minY + 40, window.innerHeight - size - 300)  // 底部避开输入区
+  const maxX = Math.max(margin, window.innerWidth - size - margin)
   return {
-    x: Math.round(Math.random() * maxX),
-    y: -Math.round(Math.random() * maxY),
+    x: Math.round(margin + Math.random() * (maxX - margin)),
+    y: Math.round(minY + Math.random() * (maxY - minY)),
   }
+}
+
+/** 默认锚位（viewport 右下角，与 .wander 的 24px 边距一致）。 */
+function defaultAnchor(): WanderPoint {
+  if (typeof window === 'undefined') return { x: 0, y: 0 }
+  return { x: window.innerWidth - 184, y: window.innerHeight - 184 }
 }
 
 export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null {
@@ -48,9 +57,8 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const [lang, setLang] = useState<QuoteLang>(() => skinStudioSettings.get().quoteLang)
   /** 淡出淡入：皮肤切换瞬间先降 opacity 再升起。 */
   const [visible, setVisible] = useState(false)
-  const [point, setPoint] = useState<WanderPoint>({ x: 0, y: 0 })
-  /** 拖动后的固定锚位（viewport 坐标）；null = 回到默认右下角。 */
-  const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null)
+  /** 当前锚位（viewport 坐标）：初始右下角，漫步/拖动都直接更新它。 */
+  const [anchor, setAnchor] = useState<WanderPoint>(defaultAnchor)
   const [dragging, setDragging] = useState(false)
   const [bubble, setBubble] = useState<string | null>(null)
   const lastQuoteRef = useRef<string | null>(null)
@@ -68,21 +76,20 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
 
   useEffect(() => {
     setVisible(false)
-    setPoint({ x: 0, y: 0 })
-    setAnchor(null)
+    setAnchor(defaultAnchor())
     setBubble(null)
     greetedRef.current = false
     const raf = requestAnimationFrame(() => { setVisible(true) })
     return () => cancelAnimationFrame(raf)
   }, [activeSkin?.id])
 
-  // 散步走动（reduced-motion / 未启用 / 拖动中停住）
+  // 散步走动（满屏随机走位；reduced-motion / 未启用 / 拖动中停住）
   useEffect(() => {
     if (reduced || !enabled || dragging || activeSkin?.mascotUrl === undefined) return undefined
     let alive = true
     const step = (): void => {
       if (!alive) return
-      setPoint(nextWanderPoint())
+      setAnchor(nextWanderPoint())
       window.setTimeout(step, IDLE_MS + MOVE_MS)
     }
     step()
@@ -138,7 +145,6 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
     const dy = e.clientY - start.py
     if (!start.moved && Math.abs(dx) + Math.abs(dy) < DRAG_THRESHOLD) return
     start.moved = true
-    setPoint({ x: 0, y: 0 }) // 拖动时清掉漫步偏移，直接跟随指针
     setAnchor({ x: start.ax + dx, y: start.ay + dy })
   }
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>): void => {
@@ -150,21 +156,20 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
     if (!start.moved) pushBubble()
   }
 
-  // 只有提供了 sprite_anim.png 的皮肤（凡人修仙传 5 款）才有浮层
+  // 只有提供了 sprite_anim.png 的皮肤才有浮层
   if (!enabled || activeSkin?.mascotUrl === undefined) return null
-
-  const anchored = anchor !== null
 
   return (
     <div
       className={styles.wander}
       style={{
-        ...(anchored
-          ? { left: anchor.x, top: anchor.y, right: 'auto', bottom: 'auto' }
-          : {}),
-        transform: `translate(${-point.x}px, ${point.y}px)`,
-        // 内联过渡：拖动时跟手（无过渡），漫步时平滑
-        transition: dragging ? 'none' : `transform ${MOVE_MS}ms cubic-bezier(0.33, 0, 0.2, 1)`,
+        left: anchor.x,
+        top: anchor.y,
+        // 覆盖 .wander 的 right/bottom 定位（同时存在会拉伸宽度）
+        right: 'auto',
+        bottom: 'auto',
+        // 内联过渡：拖动时跟手（无过渡），漫步时平滑走位
+        transition: dragging ? 'none' : `left ${MOVE_MS}ms cubic-bezier(0.33, 0, 0.2, 1), top ${MOVE_MS}ms cubic-bezier(0.33, 0, 0.2, 1)`,
         cursor: dragging ? 'grabbing' : 'grab',
       }}
     >

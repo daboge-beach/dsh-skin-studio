@@ -7,7 +7,7 @@
   right: 24px;
   bottom: 24px;
   z-index: 999;
-  will-change: transform;
+  will-change: left, top; /* 满屏漫步走位（left/top 由组件内联驱动） */
   pointer-events: none;
 }
 
