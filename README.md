@@ -1,5 +1,11 @@
 # 🎨 DSH Skin Studio
 
+**[简体中文](#-dsh-skin-studio--中文) | [English](#-dsh-skin-studio--english)**
+
+---
+
+## 🎨 DSH Skin Studio · 中文
+
 > DeepSeek Harness 皮肤工作室 —— 内置精选皮肤 · 用户上传皮肤中心 · 让每个 agent 都有专属面孔。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -12,9 +18,7 @@
 
 > ⚠️ **DSH 本身处于 v0.1 开发者预览阶段**，插件 API 尚不稳定。本项目跟随上游版本演进，暂不保证跨版本兼容。
 
----
-
-## 📖 这个项目是什么
+### 📖 这个项目是什么
 
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）把"万物皆插件"做到了极致——模型、工具、会话、**连 UI 都是可替换的插件**。皮肤（Skin）就是一种 UI 插件，通过 `skin.json` + `lib/client.js` 定义，由 `ThemePresenter` 接口实现"先试穿再应用、退出零残留"。
 
@@ -24,7 +28,7 @@
 
 不是"作者精选 N 款"，而是"任何人都能贡献、任何人都能装"的 marketplace 形态。
 
-## ✨ 核心特性
+### ✨ 核心特性
 
 | 特性 | 说明 |
 |---|---|
@@ -35,14 +39,14 @@
 | 🧩 **插件联动** | 皮肤可消费其他 DSH 插件的数据（行情、宠物、token 统计等） |
 | 🛠️ **皮肤开发工具** | 提供 `dsh-skin init` 脚手架 + 类型定义 + 校验器，降低造皮肤门槛 |
 
-## 🚀 快速开始
+### 🚀 快速开始
 
-### 前置要求
+#### 前置要求
 
 - Node.js ≥ 20
 - DeepSeek Harness 已安装（`npx @deepseek-ai/dsh web` 可正常启动）
 
-### 安装
+#### 安装
 
 ```bash
 # 装皮肤聚合包到 web profile
@@ -52,7 +56,7 @@ dsh plugin --profile web add @dsh-skin-studio/gallery
 dsh plugin --profile web add @dsh-skin-studio/studio
 ```
 
-### 验证
+#### 验证
 
 ```bash
 dsh --profile web --dump-config   # 确认插件已挂载
@@ -60,20 +64,20 @@ dsh --profile web --dump-config   # 确认插件已挂载
 
 打开 http://127.0.0.1:3080，侧栏会出现 **Skin Studio** 入口。
 
-### 试穿皮肤
+#### 试穿皮肤
 
 1. 点击侧栏 **Skin Studio**
 2. 画廊里点击任意皮肤 → 全屏预览
 3. 点 **试穿** → 即时生效，不满意随时退出
 4. 满意后点 **应用** → 正式启用
 
-### 上传自定义皮肤
+#### 上传自定义皮肤
 
 - **方式一（本地目录）**：把皮肤文件夹放到 `~/.dsh/skins/<your-skin>/`，刷新画廊即可看到
 - **方式二（拖拽上传）**：在画廊界面拖入 `.zip` 皮肤包，自动解压校验
 - **方式三（npm 包）**：`dsh plugin --profile web add <你的皮肤包名>`
 
-## 🧱 皮肤包格式
+### 🧱 皮肤包格式
 
 每个皮肤是一个目录，结构如下（兼容官方 `dsh-web-ui` 规范）：
 
@@ -86,7 +90,7 @@ my-skin/
     └── client.js      # 客户端 bundle（必填，含 ThemePresenter 实现）
 ```
 
-### `skin.json` 字段规范
+#### `skin.json` 字段规范
 
 ```jsonc
 {
@@ -124,7 +128,7 @@ my-skin/
 
 > 完整字段定义和 `ThemePresenter` 接口签名见 [docs/SKIN_SPEC.md](docs/SKIN_SPEC.md)。
 
-## 🛠️ 开发自己的皮肤
+### 🛠️ 开发自己的皮肤
 
 ```bash
 # 用脚手架创建皮肤模板
@@ -138,7 +142,7 @@ pnpm build  # 构建 lib/client.js
 
 开发文档见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
 
-## 📦 项目结构
+### 📦 项目结构
 
 ```
 dsh-skin-studio/
@@ -160,7 +164,7 @@ dsh-skin-studio/
 └── website/                  # 文档站
 ```
 
-## 🤝 贡献皮肤
+### 🤝 贡献皮肤
 
 任何人都可以贡献皮肤到内置画廊。流程：
 
@@ -172,7 +176,7 @@ dsh-skin-studio/
 
 详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
 
-## 🗺️ 路线图
+### 🗺️ 路线图
 
 - [x] 仓库初始化、规范定稿
 - [x] v0.1：皮肤中心 MVP（`packages/gallery`：画廊 / 试穿 / 应用 / 详情面板 / 吉祥物浮层 / 切换特效，内置 aurora + midnight + 凡人修仙传 5 款）
@@ -181,17 +185,212 @@ dsh-skin-studio/
 - [ ] v0.4：插件联动（消费行情/token 统计等数据）
 - [ ] v1.0：跟随 DSH v1.0 稳定 API，正式发布
 
-## 📄 License
+### 📄 License
 
 MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 上游协议。
 
-## 🙏 致谢
+### 🙏 致谢
 
 - [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — 感谢 DeepSeek 团队提供"万物皆插件"的运行时框架，本项目得以在其之上构建皮肤生态
 - [dsh-web-ui](https://github.com/zhu1090093659/dsh-web-ui) — 皮肤格式和 ThemePresenter 抽象的开拓者，本项目借鉴了大量设计
 - 所有贡献皮肤的用户
 
 > 🎨 凡人修仙传系列皮肤为 AI 生成的同人创作，基于《凡人修仙传》（作者：忘语）角色形象，仅供个人欣赏与学习交流。
+
+---
+
+## 🎨 DSH Skin Studio · English
+
+> The skin studio for DeepSeek Harness — curated built-in skins · a community skin gallery · give every agent its own face.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
+[![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
+[![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
+[![Skins: 7](https://img.shields.io/badge/skins-7-ff69b4)](#-built-in-skins)
+[![Status: Preview](https://img.shields.io/badge/status-preview-red)](#project-status)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
+
+> ⚠️ **DSH itself is at the v0.1 developer-preview stage** and its plugin API is still unstable. This project tracks upstream releases; cross-version compatibility is not guaranteed yet.
+
+### 📖 What is this project
+
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) takes "everything is a plugin" to the extreme — models, tools, sessions, and **even the UI are replaceable plugins**. A Skin is a kind of UI plugin, defined by `skin.json` + `lib/client.js`, implementing try-before-apply with zero residue on exit via the `ThemePresenter` interface.
+
+`dsh-web-ui` already ships 8 hand-picked skins by its author, proving the road works. **We want to go one step further:**
+
+> **Let users build their own skins and upload them — an open Skin Gallery.**
+
+Not "N curated picks by the author", but a marketplace where anyone can contribute and anyone can install.
+
+### ✨ Key Features
+
+| Feature | Description |
+|---|---|
+| 🎨 **Curated built-in skins** | Ships with several high-quality skins, ready out of the box |
+| 📥 **User-uploaded skins** | Drag & drop `skin.json` + assets into the gallery — no rebuild required |
+| 🖼️ **Visual gallery** | Full-screen preview, light/dark variant toggle, try → confirm two-step flow |
+| 🔌 **Official format compatible** | `skin.json` fields align with `dsh-web-ui`; existing skins migrate as-is |
+| 🧩 **Plugin interop** | Skins can consume data from other DSH plugins (tickers, pets, token stats, …) |
+| 🛠️ **Skin dev tooling** | `dsh-skin init` scaffolder + type definitions + validator to lower the barrier |
+
+### 🚀 Quick Start
+
+#### Prerequisites
+
+- Node.js ≥ 20
+- DeepSeek Harness installed (`npx @deepseek-ai/dsh web` runs successfully)
+
+#### Installation
+
+```bash
+# Add the skin gallery package to the web profile
+dsh plugin --profile web add @dsh-skin-studio/gallery
+
+# Or the full bundle (skins + gallery + dev tools)
+dsh plugin --profile web add @dsh-skin-studio/studio
+```
+
+#### Verify
+
+```bash
+dsh --profile web --dump-config   # confirm the plugin is mounted
+```
+
+Open http://127.0.0.1:3080 — a **Skin Studio** entry appears in the sidebar.
+
+#### Try a skin
+
+1. Click **Skin Studio** in the sidebar
+2. Click any skin in the gallery → full-screen preview
+3. Click **Try on** → applies instantly, revert anytime
+4. Happy with it? Click **Apply** to make it official
+
+#### Upload a custom skin
+
+- **Option 1 (local folder)**: put the skin folder under `~/.dsh/skins/<your-skin>/` and refresh the gallery
+- **Option 2 (drag & drop)**: drop a `.zip` skin package onto the gallery; it is unzipped and validated automatically
+- **Option 3 (npm package)**: `dsh plugin --profile web add <your-skin-package>`
+
+### 🧱 Skin package format
+
+Each skin is a directory structured as follows (compatible with the official `dsh-web-ui` spec):
+
+```
+my-skin/
+├── skin.json          # skin manifest (required)
+├── preview.png        # gallery preview (required, 1280×800 recommended)
+├── README.md          # skin introduction (optional)
+└── lib/
+    └── client.js      # client bundle (required, contains the ThemePresenter)
+```
+
+#### `skin.json` field spec
+
+```jsonc
+{
+  "id": "my-skin",                    // unique skin ID (kebab-case)
+  "name": "My Skin",                  // display name
+  "version": "1.0.0",                 // semver
+  "author": "You <email@example.com>",
+  "description": "One line about this skin",
+  "homepage": "https://github.com/...", // optional
+  "license": "MIT",
+
+  // visual variants (at least one; supports light/dark)
+  "variants": ["light", "dark"],
+
+  // client entry (relative to the skin root)
+  "client": "lib/client.js",
+
+  // capability declarations (what the skin can do)
+  "capabilities": {
+    "customTitleBar": true,           // custom title bar
+    "customBackground": true,         // custom background
+    "customScrollbars": true,         // custom scrollbars
+    "consumePlugins": ["dsh-fun-ticker"]  // consume data from other plugins
+  },
+
+  // palette (optional, used for gallery color previews)
+  "palette": {
+    "primary": "#3b82f6",
+    "background": "#0f172a",
+    "surface": "#1e293b",
+    "text": "#f1f5f9"
+  }
+}
+```
+
+> See [docs/SKIN_SPEC.md](docs/SKIN_SPEC.md) for the full field definitions and the `ThemePresenter` interface signature.
+
+### 🛠️ Develop your own skin
+
+```bash
+# Scaffold a skin template
+npx @dsh-skin-studio/create my-skin
+
+cd my-skin
+pnpm install
+pnpm dev    # dev server with hot-reload preview
+pnpm build  # build lib/client.js
+```
+
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the development guide.
+
+### 📦 Project layout
+
+```
+dsh-skin-studio/
+├── packages/
+│   ├── gallery/              # skin gallery UI (browse, try-on, upload)
+│   ├── studio/               # aggregate package (gallery + built-ins + tools)
+│   ├── create/               # skin scaffolder CLI
+│   └── skins/                # built-in skin sources
+│       ├── aurora/           # Aurora (minimal light)
+│       ├── midnight/         # Midnight (minimal dark)
+│       └── ...               # more built-in skins
+├── docs/
+│   ├── SKIN_SPEC.md          # skin spec (authoritative)
+│   ├── DEVELOPMENT.md        # development guide
+│   ├── CONTRIBUTING.md       # contribution guide
+│   └── uploads/              # format conventions for user-uploaded skins
+├── examples/                 # minimal example skin
+├── scripts/                  # build & release scripts
+└── website/                  # docs site
+```
+
+### 🤝 Contribute a skin
+
+Anyone can contribute a skin to the built-in gallery. The flow:
+
+1. Fork this repository
+2. Create a skin with `npx @dsh-skin-studio/create`
+3. Put the skin source under `packages/skins/<your-skin-name>/`
+4. Open a PR with preview screenshots
+5. Once reviewed, it ships in the next release
+
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
+
+### 🗺️ Roadmap
+
+- [x] Repository bootstrap, spec finalized
+- [x] v0.1: gallery MVP (`packages/gallery`: browse / try-on / apply / detail panel / mascot overlay / transition effects; ships aurora + midnight + 5 A Record of a Mortal's Journey skins)
+- [x] v0.2: drag & drop upload, zip extraction, format validation (dependency-free in-browser unzip + `skin.json` validation)
+- [ ] v0.3: skin scaffolder CLI, hot-reload dev flow
+- [ ] v0.4: plugin interop (consume ticker / token stats, etc.)
+- [ ] v1.0: follow DSH v1.0 stable API, official release
+
+### 📄 License
+
+MIT — follows the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) upstream license.
+
+### 🙏 Acknowledgments
+
+- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — thanks to the DeepSeek team for the "everything is a plugin" runtime this skin ecosystem is built upon
+- [dsh-web-ui](https://github.com/zhu1090093659/dsh-web-ui) — pioneer of the skin format and the ThemePresenter abstraction; this project borrows heavily from its design
+- Everyone who contributes skins
+
+> 🎨 The *A Record of a Mortal's Journey* skins are AI-generated fan art based on characters from the novel by Wang Yu (忘语), for personal enjoyment and learning only.
 
 ---
 
