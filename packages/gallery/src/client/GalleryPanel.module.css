@@ -153,6 +153,52 @@
   border-color: var(--dsw-alias-brand-primary);
 }
 
+/* ── 试穿决策条（试穿期间常驻面板，取代旧的常驻 toast） ── */
+.tryOnBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--dsw-alias-brand-primary);
+  background: color-mix(in srgb, var(--dsw-alias-brand-primary) 8%, transparent);
+  font-size: 13px;
+}
+
+.tryOnBarText {
+  color: var(--dsw-alias-label-primary);
+}
+
+.tryOnBarActions {
+  display: flex;
+  gap: 8px;
+}
+
+.tryOnBarPrimary,
+.tryOnBarGhost {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.tryOnBarPrimary {
+  color: var(--dsw-alias-brand-primary);
+  border-color: var(--dsw-alias-brand-primary);
+}
+
+.tryOnBarPrimary:hover,
+.tryOnBarGhost:hover {
+  filter: brightness(1.1);
+}
+
 /* ── 卡片网格 ──────────────────────────────────────────── */
 
 .grid {

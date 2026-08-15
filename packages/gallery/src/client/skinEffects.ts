@@ -304,13 +304,13 @@ function buildButtonCss(): string {
     `  body.xl-skin-daoist :is(button, [role="button"]) { border-radius: 4px; font-family: "STKaiti","KaiTi",serif; }`,
     `  body.xl-skin-daoist :is(button, [role="button"])::before,`,
     `  body.xl-skin-daoist :is(button, [role="button"])::after {`,
-    `    content:"雷"; position:absolute; font-size:12px; color:#FBBF24;`,
+    // content 只写在 hover 规则里：透明伪元素文本也会进入可访问名称（污染
+    // 读屏与按名定位），非 hover 态不产出任何文本
+    `    position:absolute; font-size:12px; color:#FBBF24;`,
     `    text-shadow:0 0 6px rgb(251 191 36 / .8); opacity:0; transition:opacity .2s; pointer-events:none;`,
     `  }`,
-    `  body.xl-skin-daoist :is(button, [role="button"])::before { left:3px; top:-6px; }`,
-    `  body.xl-skin-daoist :is(button, [role="button"])::after { right:3px; bottom:-6px; content:"符"; }`,
-    `  body.xl-skin-daoist :is(button, [role="button"]):hover::before,`,
-    `  body.xl-skin-daoist :is(button, [role="button"]):hover::after { opacity:1; }`,
+    `  body.xl-skin-daoist :is(button, [role="button"]):hover::before { content:"雷"; opacity:1; left:3px; top:-6px; }`,
+    `  body.xl-skin-daoist :is(button, [role="button"]):hover::after { content:"符"; opacity:1; right:3px; bottom:-6px; }`,
     ``,
     `  /* 银月 · 星辉流转（box-shadow 模拟） */`,
     `  body.xl-skin-lunar :is(button, [role="button"]) { border-radius: 14px; }`,

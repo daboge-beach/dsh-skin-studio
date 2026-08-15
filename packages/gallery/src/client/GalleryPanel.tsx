@@ -5,7 +5,7 @@
  * 卡片网格 + 上传格 → 详情模态。试穿/应用通过官方 ctx.theme.setTheme，
  * 偏好持久化由官方 ThemeRuntime 的 settings scope 完成（应用并保存）。
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { SearchIcon, UploadIcon } from './icons.tsx'
 import { SkinCard } from './SkinCard.tsx'
@@ -86,7 +86,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [skins, setSkins] = useState<SkinEntry[]>([])
   const [selectedSkin, setSelectedSkin] = useState<SkinEntry | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [tryOnSkinId, setTryOnSkinId] = useState<string | null>(null)
+  const [tryOnSkinId, setTryOnSkinId] = useState<string | null>(() => skinStudioSettings.getTryOn()?.skinId ?? null)
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
   const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
@@ -104,8 +104,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     setAnimations(s.animations)
   }), [])
 
-  /** 试穿前的用户偏好（退出还原用）。 */
-  const previousPreferenceRef = useRef<string | undefined>(undefined)
+  /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
 
   const refreshList = useCallback((tab: GalleryTab): void => {
     skinRegistry.list(tab).then(setSkins).catch((e: unknown) => {
@@ -124,58 +123,64 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     || s.keywords?.some(k => k.includes(searchQuery.toLowerCase())),
   ), [skins, searchQuery])
 
-  // ── 试穿：即时切换 + 底部 toast 等用户决策 ────────────────
+  /** 当前试穿款对应的条目（面板决策条显示用）。 */
+  const tryOnSkinEntry = tryOnSkinId !== null
+    ? skins.find(s => s.id === tryOnSkinId) ?? null
+    : null
+
+  // ── 试穿：即时预览（不落记忆，刷新还原）+ 面板内决策条 ────
+  // 试穿态存模块级单例（skinStudioSettings.getTryOn）：面板关闭重开后预览与决策条延续。
+  /** 确认试穿：保持当前皮肤并写入偏好（跨会话）。 */
+  const confirmTryOn = useCallback((skin: SkinEntry): void => {
+    skinStudioSettings.setTryOn(null)
+    skinStudioSettings.setActiveSkin(skin.id)
+    setTryOnSkinId(null)
+    showToast({ message: `${skin.name} 已应用并保存`, type: 'success' })
+  }, [])
+
+  /** 退出试穿：切回原偏好，不写记忆。 */
+  const revertTryOn = useCallback((skin: SkinEntry): void => {
+    const previous = skinStudioSettings.getTryOn()?.previousPreference
+    skinStudioSettings.setTryOn(null)
+    try {
+      if (previous !== undefined && previous !== skin.id) ctx.theme.setTheme(previous)
+    } finally {
+      setTryOnSkinId(null)
+    }
+  }, [ctx])
+
   const handleTryOn = useCallback((skin: SkinEntry): void => {
     // 已在试穿同一款 → 退出还原
     if (tryOnSkinId === skin.id) {
-      const previous = previousPreferenceRef.current
-      try {
-        if (previous !== undefined && previous !== skin.id) ctx.theme.setTheme(previous)
-      } finally {
-        setTryOnSkinId(null)
-      }
+      revertTryOn(skin)
       showToast({ message: `已退出试穿 ${skin.name}`, type: 'info' })
       return
     }
 
-    const snapshotNow = ctx.theme.getTheme()
-    const previousId = snapshotNow.preference // 记住原偏好
+    // 从已试穿款直接换穿另一款：以首次试穿前的偏好为还原基准
+    const previousId = tryOnSkinId !== null
+      ? skinStudioSettings.getTryOn()?.previousPreference
+      : ctx.theme.getTheme().preference
 
     try {
       ensureThemeRegistered(ctx, skin)
-      // 即时切换到目标皮肤
+      // 试穿态：theme 监听跳过记忆跟随（试穿不落 activeSkin）
+      skinStudioSettings.setTryOn({ skinId: skin.id, previousPreference: previousId })
       ctx.theme.setTheme(skin.id)
       setTryOnSkinId(skin.id)
-      previousPreferenceRef.current = previousId
 
-      // 底部 toast：「满意？点应用保存 · 不满意点退出还原」
+      // 短提示自动消失；常驻决策入口在面板内的试穿条（不再用常驻 toast）
       showToast({
-        message: `正在试穿 ${skin.name}`,
-        actionLabel: '应用并保存',
-        onAction: () => {
-          // 用户确认 → 偏好显式写入自身命名空间（刷新后恢复），清除试穿态
-          skinStudioSettings.setActiveSkin(skin.id)
-          setTryOnSkinId(null)
-          previousPreferenceRef.current = undefined
-          showToast({ message: `${skin.name} 已应用`, type: 'success' })
-        },
-        cancelLabel: '退出还原',
-        onCancel: () => {
-          // 用户取消 → 切回原偏好
-          try {
-            ctx.theme.setTheme(previousId)
-          } finally {
-            setTryOnSkinId(null)
-            previousPreferenceRef.current = undefined
-          }
-        },
-        duration: 0, // 不自动消失，等用户决策
+        message: `正在试穿 ${skin.name} —— 满意点「应用并保存」，或等刷新自动还原`,
+        type: 'info',
+        duration: 3500,
       })
     } catch (e) {
+      skinStudioSettings.setTryOn(null)
       showToast({ message: `试穿失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
       setTryOnSkinId(null)
     }
-  }, [ctx, tryOnSkinId])
+  }, [ctx, tryOnSkinId, revertTryOn])
 
   // ── 上传：校验 zip → 解析 skin.json → validate → install ──
   const handleUpload = useCallback(async (file: File): Promise<void> => {
@@ -279,6 +284,34 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           动画：{animations === 'always' ? '始终播放' : '跟随系统'}
         </button>
       </nav>
+
+      {/* 试穿决策条：试穿期间的常驻决策入口（取代旧的常驻 toast） */}
+      {tryOnSkinEntry !== null && (
+        <div className={styles.tryOnBar} role="status">
+          <span className={styles.tryOnBarText}>
+            正在试穿：{tryOnSkinEntry.name}（临时预览，刷新自动还原）
+          </span>
+          <span className={styles.tryOnBarActions}>
+            <button
+              type="button"
+              className={styles.tryOnBarPrimary}
+              onClick={() => confirmTryOn(tryOnSkinEntry)}
+            >
+              应用并保存
+            </button>
+            <button
+              type="button"
+              className={styles.tryOnBarGhost}
+              onClick={() => {
+                revertTryOn(tryOnSkinEntry)
+                showToast({ message: `已退出试穿 ${tryOnSkinEntry.name}`, type: 'info' })
+              }}
+            >
+              退出还原
+            </button>
+          </span>
+        </div>
+      )}
 
       <div className={styles.grid}>
         {filtered.map(skin => (

@@ -11,6 +11,7 @@ import { Modal } from './Modal.tsx'
 import { showToast } from './Toast.tsx'
 import type { SkinEntry } from './registry/types.ts'
 import { ensureThemeRegistered } from './themeBridge.ts'
+import { skinStudioSettings } from './settings.ts'
 import styles from './SkinDetailModal.module.css'
 
 export interface SkinDetailModalProps {
@@ -40,8 +41,11 @@ export function SkinDetailModal({ skin, ctx, onClose, onTryOn }: SkinDetailModal
   const apply = (): void => {
     try {
       ensureThemeRegistered(ctx, skin)
+      // 显式落记忆（试穿态下监听会跳过跟随，必须在这里写）；先退出试穿态
+      skinStudioSettings.setTryOn(null)
+      skinStudioSettings.setActiveSkin(skin.id)
       ctx.theme.setTheme(skin.id)
-      showToast({ message: `${skin.name} 已应用`, type: 'success' })
+      showToast({ message: `${skin.name} 已应用并保存`, type: 'success' })
       onClose()
     } catch (e) {
       showToast({ message: `应用失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })

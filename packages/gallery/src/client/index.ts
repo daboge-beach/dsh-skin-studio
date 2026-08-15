@@ -78,6 +78,9 @@ export function apply(ctx: ClientContext): void {
       const id = snapshot.active.id
       const saved = skinStudioSettings.getActiveSkin()
       if (id === saved) return
+      // 试穿只是临时预览：不写记忆、不触发 adoption 顶回（决策见皮肤中心
+      // 面板的试穿条 —— 「应用并保存」落记忆，「退出还原」切回）。
+      if (skinStudioSettings.isTryOnActive()) return
       const builtInFlip = BUILT_IN_PREFERENCES.has(snapshot.preference)
         && BUILT_IN_PREFERENCES.has(id)
       if (saved !== null && builtInFlip && !(windowClosed && userTouched)) {

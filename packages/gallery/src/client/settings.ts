@@ -48,6 +48,14 @@ function read(): SkinStudioSettings {
 
 let current: SkinStudioSettings = read()
 
+/** 试穿态（内存级，不持久化 —— 刷新即还原到已保存皮肤）。 */
+export interface TryOnState {
+  skinId: string
+  /** 首次试穿前的主题偏好（退出还原的基准）。 */
+  previousPreference: string | undefined
+}
+let tryOn: TryOnState | null = null
+
 function write(next: SkinStudioSettings): void {
   current = next
   if (typeof localStorage !== 'undefined') {
@@ -63,6 +71,20 @@ function write(next: SkinStudioSettings): void {
 export const skinStudioSettings = {
   get(): SkinStudioSettings {
     return current
+  },
+  /**
+   * 试穿态（内存级，不持久化）：非 null 时主题监听不写 activeSkin 记忆 ——
+   * 试穿只是临时预览，刷新/重开还原到已保存皮肤；「应用并保存」才落记忆。
+   * 模块级单例：皮肤中心面板关闭重开后试穿预览与决策条仍延续。
+   */
+  getTryOn(): TryOnState | null {
+    return tryOn
+  },
+  setTryOn(state: TryOnState | null): void {
+    tryOn = state
+  },
+  isTryOnActive(): boolean {
+    return tryOn !== null
   },
   setMascotEnabled(enabled: boolean): void {
     write({ ...current, mascotEnabled: enabled })

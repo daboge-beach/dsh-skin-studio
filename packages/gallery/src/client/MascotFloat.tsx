@@ -29,16 +29,16 @@ const MOVE_MS = 1800          // 平滑移动时长
 const BUBBLE_MS = 5200        // 气泡停留时长
 const DRAG_THRESHOLD = 6      // 超过此位移视为拖动而非点击
 
-/** 漫步目标点（viewport 坐标）。满屏转悠：避开顶部标题栏与底部输入区。 */
+/** 漫步目标点（viewport 坐标）。满屏转悠：避开侧栏、顶部标题栏与底部输入区。 */
 function nextWanderPoint(): WanderPoint {
   if (typeof window === 'undefined') return { x: 0, y: 0 }
-  const margin = 16
   const size = 160
+  const minX = 300                                     // 避开左侧会话侧栏（避免挡侧栏按钮）
   const minY = 72                                     // 避开顶部标题/工具栏
   const maxY = Math.max(minY + 40, window.innerHeight - size - 300)  // 底部避开输入区
-  const maxX = Math.max(margin, window.innerWidth - size - margin)
+  const maxX = Math.max(minX, window.innerWidth - size - 16)
   return {
-    x: Math.round(margin + Math.random() * (maxX - margin)),
+    x: Math.round(minX + Math.random() * (maxX - minX)),
     y: Math.round(minY + Math.random() * (maxY - minY)),
   }
 }
