@@ -30,7 +30,7 @@ export interface SkinVisual {
   hotspot: [number, number]
 }
 
-/** 凡人 5 款 + 英雄联盟 10 款 + 梗文化 1 款皮肤的光标/视觉元数据（aurora/midnight 无光标，跟随系统）。 */
+/** 全部 18 款皮肤的视觉元数据；aurora/midnight 无光标文件（cursorPrefix 空，光标规则跳过，跟随系统）。 */
 export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'mupeiling-blossom': { cssClass: 'xl-skin-blossom', cursorPrefix: 'blossom', hotspot: [16, 16] },
   'hanli-daoist': { cssClass: 'xl-skin-daoist', cursorPrefix: 'sword', hotspot: [11, 9] },
@@ -48,6 +48,8 @@ export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'ahri-ninefold': { cssClass: 'xl-skin-ninefold', cursorPrefix: 'orb', hotspot: [16, 16] },
   'kaisa-voidborn': { cssClass: 'xl-skin-voidborn', cursorPrefix: 'voidfly', hotspot: [16, 16] },
   'liangshen': { cssClass: 'xl-skin-liangshen', cursorPrefix: 'tablet', hotspot: [14, 14] },
+  'aurora': { cssClass: 'xl-skin-aurora', cursorPrefix: '', hotspot: [0, 0] },
+  'midnight': { cssClass: 'xl-skin-midnight', cursorPrefix: '', hotspot: [0, 0] },
 }
 
 const CURSOR_STYLE_TAG = '@dsh-skin-studio/gallery/skin-cursors'
@@ -68,6 +70,7 @@ function buildCursorCss(): string {
     const [hx, hy] = v.hotspot
     // 分档光标：t1+ 用 -t{n} 配色变体（TIERED_CURSOR_SKINS 有变体资产）
     const suffix = tier > 0 && TIERED_CURSOR_SKINS.has(skinId) ? `-t${tier}` : ''
+    if (v.cursorPrefix === '') continue // aurora/midnight 无光标文件，跳过光标规则
     // v.cssClass 已含 xl-skin- 前缀，此处不可再拼一层
     rules.push(
       `body.${v.cssClass} {`,
@@ -119,6 +122,8 @@ interface PanelVeilSpec {
 
 /** 每款皮肤的半透明面板规格（暗色款 alpha 略高保文字可读）。 */
 const PANEL_VEIL: Record<string, PanelVeilSpec> = {
+  'aurora': { base: [244, 248, 252], layer1: [255, 255, 255], layer2: [241, 245, 249], sidebar: [241, 245, 249], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
+  'midnight': { base: [15, 23, 42], layer1: [30, 41, 59], layer2: [51, 65, 85], sidebar: [15, 23, 42], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
   'liangshen': { base: [10, 15, 30], layer1: [17, 24, 39], layer2: [26, 37, 64], sidebar: [10, 15, 30], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
   'mupeiling-blossom': { base: [251, 234, 240], layer1: [255, 255, 255], layer2: [244, 192, 209], sidebar: [251, 234, 240], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
   'hanli-daoist': { base: [234, 243, 222], layer1: [244, 248, 236], layer2: [192, 221, 151], sidebar: [234, 243, 222], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
@@ -380,9 +385,9 @@ function buildGlobalCss(): string {
   ].join('\n')
 }
 
-// ── 磨玻璃工作区（背景图 + 半透明面板 + backdrop-blur） ────────────────
+// ── 磨玻璃工作区（全皮肤背景图 + 档位联动 + backdrop-blur） ──────────
 
-/** 各皮肤的背景图层（bg.png；梁神用始皇帝形态立绘，其余基础款无图不启用）。 */
+/** 各皮肤的基础背景图层（全部 18 款；梁神走分档表）。 */
 const GLASS_BG: Record<string, string> = {
   'hanli-daoist': '/skins/hanli-daoist/assets/bg.png',
   'mupeiling-blossom': '/skins/mupeiling-blossom/assets/bg.png',
@@ -399,25 +404,53 @@ const GLASS_BG: Record<string, string> = {
   'mf-bountyhunter': '/skins/mf-bountyhunter/assets/bg.png',
   'ahri-ninefold': '/skins/ahri-ninefold/assets/bg.png',
   'kaisa-voidborn': '/skins/kaisa-voidborn/assets/bg.png',
-  'liangshen': '/skins/liangshen/assets/tiers/t3/hero.png',
+  'aurora': '/skins/aurora/assets/bg.png',
+  'midnight': '/skins/midnight/assets/bg.png',
 }
 
+/** 有分档专属背景图（tiers/t{n}/bg.png）的皮肤：背景随思考档位换图。 */
+const TIERED_BG_SKINS = new Set(['hanli-daoist', 'ahri-ninefold', 'liangshen'])
+
+/** 非分档皮肤的档位滤镜递进（朴素 → 原色 → 金气 → 辉煌）。 */
+const TIER_BG_FILTERS: readonly string[] = [
+  'brightness(0.92) saturate(0.9)',
+  'none',
+  'brightness(1.08) saturate(1.25) sepia(0.12)',
+  'brightness(1.15) saturate(1.45) contrast(1.05)',
+]
+
 /**
- * 磨玻璃 CSS：背景图 fixed 铺满 + 表面 token 半透明化（PANEL_VEIL 的
- * RGB 加 alpha）+ 布局大列 backdrop-blur。token 覆盖用 body.{cssClass}
- * 选择器（特异性高于皮肤注册的类级 token，且后注入）。
+ * 磨玻璃 CSS（全皮肤）：body::before fixed 铺背景图（独立层可加滤镜），
+ * #root 提升到图之上；表面 token 半透明化（PANEL_VEIL 色表加 alpha）；
+ * 布局大列 backdrop-blur。档位联动：分档图皮肤换图，其余按档位滤镜。
  */
 function buildGlassCss(): string {
   if (!skinStudioSettings.get().glass) return ''
-  const rules: string[] = []
-  for (const [skinId, bg] of Object.entries(GLASS_BG)) {
+  const tier = effectiveTier()
+  const rules: string[] = [
+    `body[class*='xl-skin-'] { position: relative; }`,
+    `body[class*='xl-skin-'] #root { position: relative; z-index: 1; }`,
+  ]
+  // 全皮肤并集（GLASS_BG + 分档皮肤）逐一铺背景层
+  const allGlassSkins = [...Object.keys(GLASS_BG), ...TIERED_BG_SKINS]
+  for (const skinId of allGlassSkins) {
     const v = SKIN_CURSORS[skinId]
     const veil = PANEL_VEIL[skinId]
     if (v === undefined || veil === undefined) continue
+    const tiered = TIERED_BG_SKINS.has(skinId)
+    const bg = tiered
+      ? `/skins/${skinId}/assets/tiers/t${tier}/bg.png`
+      : GLASS_BG[skinId] ?? ''
+    // 分档图皮肤不加滤镜（图已按档位专门生成）；其余皮肤按档位滤镜递进
+    const filter = tiered ? 'none' : TIER_BG_FILTERS[tier] ?? 'none'
     const rgba = (rgb: readonly number[], a: number): string =>
       `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${a})`
     rules.push(
-      `body.${v.cssClass} { background: url('${bg}') center/cover fixed no-repeat; }`,
+      `body.${v.cssClass}::before {`,
+      `  content: ''; position: fixed; inset: 0; z-index: 0;`,
+      `  background: url('${bg}') center/cover no-repeat;`,
+      filter === 'none' ? '' : `  filter: ${filter};`,
+      `}`,
       `body.${v.cssClass} {`,
       `  --dsw-alias-bg-base: ${rgba(veil.base, 0.55)};`,
       `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.66)};`,
@@ -427,16 +460,15 @@ function buildGlassCss(): string {
       `}`,
     )
   }
-  if (rules.length === 0) return ''
-  return [
-    ...rules,
-    // 布局大列（侧栏列 280px / 拖拽条 / 主内容列，位于 #root 下第 4 层）
-    // 磨玻璃：半透明面板 + 背景模糊增艳
+  // 布局大列（侧栏列 280px / 拖拽条 / 主内容列，#root 下第 4 层）
+  // 磨玻璃：半透明面板 + 背景模糊增艳
+  rules.push(
     `body[class*='xl-skin-'] #root > div > div > div > div {`,
     `  backdrop-filter: blur(18px) saturate(1.35);`,
     `  -webkit-backdrop-filter: blur(18px) saturate(1.35);`,
     `}`,
-  ].join('\n')
+  )
+  return rules.filter(r => r !== '').join('\n')
 }
 
 // ── 挂载 / 卸载 ────────────────────────────────────────────────────────
