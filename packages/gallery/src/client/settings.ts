@@ -38,9 +38,14 @@ export interface SkinStudioSettings {
    * 背景装饰强度（凡人系=修为境界、LOL 系=皮肤等级，逐级递进）。
    */
   powerTier: 'auto' | 't0' | 't1' | 't2' | 't3'
+  /**
+   * 磨玻璃工作区（默认开）：皮肤背景图铺满窗口，界面面板半透明 +
+   * backdrop-blur，背景图从工作区透出。关闭则回到实色面板。
+   */
+  glass: boolean
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto' }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -134,6 +139,13 @@ export const skinStudioSettings = {
   setPowerTier(tier: 'auto' | 't0' | 't1' | 't2' | 't3'): void {
     if (current.powerTier === tier) return
     write({ ...current, powerTier: tier })
+  },
+  getGlass(): boolean {
+    return current.glass
+  },
+  setGlass(on: boolean): void {
+    if (current.glass === on) return
+    write({ ...current, glass: on })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)

@@ -374,8 +374,68 @@ function buildGlobalCss(): string {
     buildDialogVeilCss(),
     buildDecorCss(),
     buildButtonCss(),
+    buildGlassCss(),
     // 按钮伪元素定位需 relative 容器：不强制改 DSH，这里给皮肤中心自己的按钮容器
     `[data-dsh-skin-studio] :is(button,[role="button"]){ position:relative; overflow:hidden; }`,
+  ].join('\n')
+}
+
+// ── 磨玻璃工作区（背景图 + 半透明面板 + backdrop-blur） ────────────────
+
+/** 各皮肤的背景图层（bg.png；梁神用始皇帝形态立绘，其余基础款无图不启用）。 */
+const GLASS_BG: Record<string, string> = {
+  'hanli-daoist': '/skins/hanli-daoist/assets/bg.png',
+  'mupeiling-blossom': '/skins/mupeiling-blossom/assets/bg.png',
+  'yinyue-lunar': '/skins/yinyue-lunar/assets/bg.png',
+  'nangongwan-moon': '/skins/nangongwan-moon/assets/bg.png',
+  'ziling-mystic': '/skins/ziling-mystic/assets/bg.png',
+  'seraphine-anthem': '/skins/seraphine-anthem/assets/bg.png',
+  'jinx-mayhem': '/skins/jinx-mayhem/assets/bg.png',
+  'lux-radiance': '/skins/lux-radiance/assets/bg.png',
+  'yasuo-gale': '/skins/yasuo-gale/assets/bg.png',
+  'vayne-nightfall': '/skins/vayne-nightfall/assets/bg.png',
+  'ezreal-relicrun': '/skins/ezreal-relicrun/assets/bg.png',
+  'sona-etwahl': '/skins/sona-etwahl/assets/bg.png',
+  'mf-bountyhunter': '/skins/mf-bountyhunter/assets/bg.png',
+  'ahri-ninefold': '/skins/ahri-ninefold/assets/bg.png',
+  'kaisa-voidborn': '/skins/kaisa-voidborn/assets/bg.png',
+  'liangshen': '/skins/liangshen/assets/tiers/t3/hero.png',
+}
+
+/**
+ * 磨玻璃 CSS：背景图 fixed 铺满 + 表面 token 半透明化（PANEL_VEIL 的
+ * RGB 加 alpha）+ 布局大列 backdrop-blur。token 覆盖用 body.{cssClass}
+ * 选择器（特异性高于皮肤注册的类级 token，且后注入）。
+ */
+function buildGlassCss(): string {
+  if (!skinStudioSettings.get().glass) return ''
+  const rules: string[] = []
+  for (const [skinId, bg] of Object.entries(GLASS_BG)) {
+    const v = SKIN_CURSORS[skinId]
+    const veil = PANEL_VEIL[skinId]
+    if (v === undefined || veil === undefined) continue
+    const rgba = (rgb: readonly number[], a: number): string =>
+      `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${a})`
+    rules.push(
+      `body.${v.cssClass} { background: url('${bg}') center/cover fixed no-repeat; }`,
+      `body.${v.cssClass} {`,
+      `  --dsw-alias-bg-base: ${rgba(veil.base, 0.55)};`,
+      `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.66)};`,
+      `  --dsw-alias-bg-layer-2: ${rgba(veil.layer2, 0.72)};`,
+      `  --dsw-alias-bg-overlay: ${rgba(veil.layer1, 0.72)};`,
+      `  --dsh-specific-sidebar-fill: ${rgba(veil.sidebar, 0.58)};`,
+      `}`,
+    )
+  }
+  if (rules.length === 0) return ''
+  return [
+    ...rules,
+    // 布局大列（侧栏列 280px / 拖拽条 / 主内容列，位于 #root 下第 4 层）
+    // 磨玻璃：半透明面板 + 背景模糊增艳
+    `body[class*='xl-skin-'] #root > div > div > div > div {`,
+    `  backdrop-filter: blur(18px) saturate(1.35);`,
+    `  -webkit-backdrop-filter: blur(18px) saturate(1.35);`,
+    `}`,
   ].join('\n')
 }
 
@@ -518,11 +578,13 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   apply(snapshotProvider())
   const off = subscribe(apply)
 
-  // animations 设置变化：重建 CSS 标签（media 包裹策略变了）+ 重铺装饰层
+  // 设置变化（动画策略 / 磨玻璃开关）：重建 CSS 标签 + 重铺装饰层
   let lastAnimations = skinStudioSettings.get().animations
+  let lastGlass = skinStudioSettings.get().glass
   const offSettings = skinStudioSettings.subscribe(s => {
-    if (s.animations === lastAnimations) return
+    if (s.animations === lastAnimations && s.glass === lastGlass) return
     lastAnimations = s.animations
+    lastGlass = s.glass
     rebuild()
   })
 

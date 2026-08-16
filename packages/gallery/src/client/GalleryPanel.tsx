@@ -95,6 +95,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
   const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
   const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3'>(() => skinStudioSettings.get().powerTier)
+  const [glass, setGlass] = useState<boolean>(() => skinStudioSettings.get().glass)
   const [effective, setEffective] = useState<number>(() => effectiveTier())
   useEffect(() => subscribeTier(t => setEffective(t)), [])
 
@@ -109,6 +110,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     setAnimations(s.animations)
     setNotifyTaskDone(s.notifyTaskDone)
     setPowerTier(s.powerTier)
+    setGlass(s.glass)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
@@ -301,6 +303,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           }}
         >
           任务提醒：{notifyTaskDone === 'off' ? '关' : notifyTaskDone === 'sound' ? '声音' : notifyTaskDone === 'motion' ? '动作' : '声音+动作'}
+        </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          aria-pressed={glass}
+          title="磨玻璃工作区：皮肤背景图铺满窗口，界面面板半透明模糊（backdrop-blur），背景从工作区透出。有背景图的皮肤生效。"
+          onClick={() => skinStudioSettings.setGlass(!glass)}
+        >
+          磨玻璃：{glass ? '开' : '关'}
         </button>
       </nav>
 
