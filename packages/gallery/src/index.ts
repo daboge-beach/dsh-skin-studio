@@ -52,16 +52,37 @@ export function apply(ctx: HostContext): void {
         res.end()
         return
       }
+      // 境界档位资产（tiers/t{n}/x）缺失时回退到原资产（x），避免档位
+      // 资产生成不完整时吉祥物/光标整体消失
+      const tierMatch = /^tiers\/t\d\/(.+)$/.exec(file)
       const full = resolve(SKINS_ROOT, skinId, 'assets', file)
       if (!full.startsWith(SKINS_ROOT)) {
         res.writeHead(403)
         res.end()
         return
       }
+      let realFile = full
       try {
         const info = await stat(full)
         if (!info.isFile()) throw new Error('not a file')
-        const ext = file.split('.').pop() ?? ''
+      } catch {
+        if (tierMatch === null) {
+          res.writeHead(404)
+          res.end('skin asset not found')
+          return
+        }
+        realFile = resolve(SKINS_ROOT, skinId, 'assets', tierMatch[1] ?? '')
+        try {
+          const fallback = await stat(realFile)
+          if (!fallback.isFile()) throw new Error('not a file')
+        } catch {
+          res.writeHead(404)
+          res.end('skin asset not found')
+          return
+        }
+      }
+      try {
+        const ext = realFile.split('.').pop() ?? ''
         res.writeHead(200, {
           'content-type': MIME[ext] ?? 'application/octet-stream',
           'cache-control': 'public, max-age=3600',
@@ -70,7 +91,7 @@ export function apply(ctx: HostContext): void {
           res.end()
           return
         }
-        createReadStream(full).pipe(res)
+        createReadStream(realFile).pipe(res)
       } catch {
         res.writeHead(404)
         res.end('skin asset not found')

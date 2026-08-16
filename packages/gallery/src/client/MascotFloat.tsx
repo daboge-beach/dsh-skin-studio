@@ -17,6 +17,7 @@ import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
 import { randomGreeting, randomQuote, type QuoteLang } from './quotes.ts'
 import { onTaskDone, randomDoneQuote } from './taskNotify.ts'
+import { effectiveTier, subscribeTier, TIERED_SPRITE_SKINS, type PowerTier } from './tierPower.ts'
 import styles from './MascotFloat.module.css'
 
 /** 锚位 / 漫步目标点（viewport 坐标）。 */
@@ -90,6 +91,10 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const dragStartRef = useRef<{ px: number; py: number; ax: number; ay: number; moved: boolean } | null>(null)
   const activeSkin = snapshot !== null ? skinRegistry.get(snapshot.active.id) : undefined
   const skinId = activeSkin?.id ?? ''
+
+  // 境界档位：驱动吉祥物造型（分档 sprite；t0 用原形象）
+  const [tier, setTier] = useState<PowerTier>(() => effectiveTier())
+  useEffect(() => subscribeTier(setTier), [])
 
   useEffect(() => skinStudioSettings.subscribe(s => {
     setEnabled(s.mascotEnabled)
@@ -201,6 +206,11 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   // 只有提供了 sprite_anim.png 的皮肤才有浮层
   if (!enabled || activeSkin?.mascotUrl === undefined) return null
 
+  // 分档造型：t1+ 用 tiers/t{n}/sprite_anim.png（t0 沿用原形象）
+  const tierMascotUrl = tier > 0 && TIERED_SPRITE_SKINS.has(skinId)
+    ? `/skins/${skinId}/assets/tiers/t${tier}/sprite_anim.png`
+    : activeSkin.mascotUrl
+
   return (
     <div
       className={styles.wander}
@@ -225,7 +235,7 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
         key={activeSkin.id}
         className={styles.float}
         style={{
-          backgroundImage: `url(${activeSkin.mascotUrl})`,
+          backgroundImage: `url(${tierMascotUrl})`,
           opacity: visible ? 0.9 : 0,
           // 内联动画（全局 keyframes 名）：class 规则的 animation 在部分宿主
           // 环境会被清覆，内联已被证实免疫。庆祝时叠加庆祝动画（transform

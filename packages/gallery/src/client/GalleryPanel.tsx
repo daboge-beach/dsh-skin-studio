@@ -17,6 +17,7 @@ import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
 import type { GalleryTab, SkinEntry } from './registry/types.ts'
 import { ensureThemeRegistered, unregisterGalleryTheme } from './themeBridge.ts'
+import { effectiveTier, subscribeTier, tierLabel } from './tierPower.ts'
 import styles from './GalleryPanel.module.css'
 
 export interface GalleryPanelProps {
@@ -93,17 +94,21 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
   const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
   const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
+  const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3'>(() => skinStudioSettings.get().powerTier)
+  const [effective, setEffective] = useState<number>(() => effectiveTier())
+  useEffect(() => subscribeTier(t => setEffective(t)), [])
 
   // 订阅官方 theme 服务获取当前主题
   const snapshot = useThemeSnapshot(ctx)
   const activeSkinId = snapshot?.active.id
 
-  // 吉祥物浮层开关 + 语录语言 + 动画策略 + 任务提醒（settings.*）
+  // 吉祥物浮层开关 + 语录语言 + 动画策略 + 任务提醒 + 境界档位（settings.*）
   useEffect(() => skinStudioSettings.subscribe(s => {
     setMascotEnabled(s.mascotEnabled)
     setQuoteLang(s.quoteLang)
     setAnimations(s.animations)
     setNotifyTaskDone(s.notifyTaskDone)
+    setPowerTier(s.powerTier)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
@@ -326,6 +331,37 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           </span>
         </div>
       )}
+
+      {/* 境界滑条：拉动改变档位（auto 时跟随 DSH 推理等级） */}
+      <div className={styles.tierRow} role="group" aria-label="境界档位">
+        <span className={styles.tierLabel}>境界</span>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          aria-pressed={powerTier === 'auto'}
+          title="跟随 DSH 推理等级自动升降档（推荐）；再点恢复手动滑条控制"
+          onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effective}` as 't0' | 't1' | 't2' | 't3' : 'auto')}
+        >
+          {powerTier === 'auto' ? `跟随推理（${effective + 1}档）` : '手动'}
+        </button>
+        <input
+          type="range"
+          min={0}
+          max={3}
+          step={1}
+          value={powerTier === 'auto' ? effective : Number(powerTier.slice(1))}
+          aria-label={`境界档位，当前第 ${effective + 1} 档 ${tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}`}
+          title="境界档位：推理等级越高，角色修为/皮肤等级越高（造型、光标、背景随之变化）"
+          className={styles.tierSlider}
+          onChange={e => {
+            const v = Number(e.target.value)
+            skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3')
+          }}
+        />
+        <span className={styles.tierName}>
+          {tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}
+        </span>
+      </div>
 
       <div className={styles.grid}>
         {filtered.map(skin => (

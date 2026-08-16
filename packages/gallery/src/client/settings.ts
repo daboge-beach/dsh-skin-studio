@@ -32,9 +32,15 @@ export interface SkinStudioSettings {
    * 'both' 两者（默认）。信号源是发送按钮的禁用恢复（见 taskNotify.ts）。
    */
   notifyTaskDone: 'off' | 'sound' | 'motion' | 'both'
+  /**
+   * 境界档位（推理等级联动）：'auto' 跟随 DSH 推理等级（DOM 读取，见
+   * tierPower.ts）；'t0'~'t3' 手动锁定。档位驱动吉祥物造型 / 光标配色 /
+   * 背景装饰强度（凡人系=修为境界、LOL 系=皮肤等级，逐级递进）。
+   */
+  powerTier: 'auto' | 't0' | 't1' | 't2' | 't3'
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both' }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto' }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -121,6 +127,13 @@ export const skinStudioSettings = {
   setNotifyTaskDone(mode: 'off' | 'sound' | 'motion' | 'both'): void {
     if (current.notifyTaskDone === mode) return
     write({ ...current, notifyTaskDone: mode })
+  },
+  getPowerTier(): 'auto' | 't0' | 't1' | 't2' | 't3' {
+    return current.powerTier
+  },
+  setPowerTier(tier: 'auto' | 't0' | 't1' | 't2' | 't3'): void {
+    if (current.powerTier === tier) return
+    write({ ...current, powerTier: tier })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)

@@ -24,6 +24,7 @@ import { registerSettingsSection, registerSimplifiedSidebar } from './hostAdapte
 import { mountOverlays } from './overlays.ts'
 import { mountSkinEffects } from './skinEffects.ts'
 import { mountTaskNotify } from './taskNotify.ts'
+import { mountTierWatch } from './tierPower.ts'
 
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
 export const inject = ['theme', 'slots']
@@ -135,6 +136,9 @@ export function apply(ctx: ClientContext): void {
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     },
   }), '@dsh-skin-studio/gallery: task done notify')
+
+  // 7. 境界档位观察（'auto' 模式跟随 DSH 推理等级，DOM 读取）
+  ctx.effect(() => mountTierWatch(), '@dsh-skin-studio/gallery: tier watch')
 }
 
 export const name = '@dsh-skin-studio/gallery'

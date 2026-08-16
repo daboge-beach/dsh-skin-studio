@@ -1,0 +1,18 @@
+<svg style="filter: brightness(1.35) saturate(1.6) contrast(1.12) drop-shadow(0 0 2px rgb(255 215 0 / 0.9))" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 韩立 · 青竹蜂云剑点击态：剑尖迸发三道金色剑气 -->
+  <g transform="rotate(-45 11 20)">
+    <!-- 剑柄 -->
+    <rect x="6" y="22" width="10" height="4" rx="1.2" fill="#5F8A3D" />
+    <rect x="5" y="19.6" width="12" height="2.6" rx="0.8" fill="#3B6D11" />
+    <!-- 剑身 -->
+    <polygon points="7,18  15,18  13.4,2  8.6,2" fill="#639922" />
+    <polygon points="10.2,18  11.9,18  12.2,2  9.8,2" fill="#97C459" fill-opacity="0.7" />
+    <!-- 三道金色剑气（从剑尖发散） -->
+    <g stroke="#FBBF24" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <line x1="11" y1="1.6" x2="6" y2="-4.6" />
+      <line x1="11" y1="1.6" x2="11" y2="-6.4" />
+      <line x1="11" y1="1.6" x2="16" y2="-4.2" />
+    </g>
+    <circle cx="11" cy="1.6" r="1.4" fill="#FBBF24" />
+  </g>
+</svg>

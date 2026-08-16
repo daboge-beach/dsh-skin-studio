@@ -18,6 +18,7 @@
  */
 import type { ThemeSnapshot } from '@dsh-skin-studio/types'
 import { skinStudioSettings } from './settings.ts'
+import { effectiveTier, subscribeTier, TIERED_CURSOR_SKINS } from './tierPower.ts'
 
 /** 每款皮肤的视觉元数据：皮肤 class 后缀 + 光标文件名前缀 + 画布尺寸。 */
 export interface SkinVisual {
@@ -60,19 +61,22 @@ const CURSOR_STYLE_TAG = '@dsh-skin-studio/gallery/skin-cursors'
  */
 function buildCursorCss(): string {
   const rules: string[] = []
+  const tier = effectiveTier()
   for (const [skinId, v] of Object.entries(SKIN_CURSORS)) {
     const base = `/skins/${skinId}/assets/cursors`
     const [hx, hy] = v.hotspot
+    // 分档光标：t1+ 用 -t{n} 配色变体（TIERED_CURSOR_SKINS 有变体资产）
+    const suffix = tier > 0 && TIERED_CURSOR_SKINS.has(skinId) ? `-t${tier}` : ''
     // v.cssClass 已含 xl-skin- 前缀，此处不可再拼一层
     rules.push(
       `body.${v.cssClass} {`,
-      `  cursor: url('${base}/${v.cursorPrefix}-default.svg') ${hx} ${hy}, auto;`,
+      `  cursor: url('${base}/${v.cursorPrefix}-default${suffix}.svg') ${hx} ${hy}, auto;`,
       `}`,
       `body.${v.cssClass} :is(button, a, [role="button"], input, select, textarea, label, summary) {`,
-      `  cursor: url('${base}/${v.cursorPrefix}-hover.svg') ${hx} ${hy}, pointer;`,
+      `  cursor: url('${base}/${v.cursorPrefix}-hover${suffix}.svg') ${hx} ${hy}, pointer;`,
       `}`,
       `body.${v.cssClass}.xl-cursor-click :is(button, a, [role="button"], input, select, textarea, label, summary) {`,
-      `  cursor: url('${base}/${v.cursorPrefix}-click.svg') ${hx} ${hy}, pointer;`,
+      `  cursor: url('${base}/${v.cursorPrefix}-click${suffix}.svg') ${hx} ${hy}, pointer;`,
       `}`,
     )
   }
@@ -397,8 +401,11 @@ function buildDecorContainer(skinId: string, isDark: boolean): HTMLDivElement {
   // animations: 'always' 设置下忽略系统 reduce（见 settings.ts）。
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     && skinStudioSettings.get().animations !== 'always'
+  // 境界档位：装饰密度随档位递增（灵气越盛，漫天元素越多）
+  const tierBoost = 1 + effectiveTier() * 0.6
+  const count = Math.max(3, Math.round(spec.count * tierBoost))
   const sizeRange = spec.sizeMax - spec.sizeMin
-  for (let i = 0; i < spec.count; i += 1) {
+  for (let i = 0; i < count; i += 1) {
     const el = document.createElement('i')
     const size = spec.sizeMin + (sizeRange > 0 ? (Math.random() * sizeRange) : 0) + 1
     el.style.width = `${size}px`
@@ -496,6 +503,13 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
     applySkinClass(active.id, active.colorScheme)
   }
 
+  /** 重建特效层：CSS 标签（光标配色/动画策略）+ 装饰层（密度）。 */
+  const rebuild = (): void => {
+    disposeCss()
+    disposeCss = injectGlobalCss()
+    apply(snapshotProvider())
+  }
+
   // 立即应用当前皮肤（若已激活）
   apply(snapshotProvider())
   const off = subscribe(apply)
@@ -505,12 +519,14 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   const offSettings = skinStudioSettings.subscribe(s => {
     if (s.animations === lastAnimations) return
     lastAnimations = s.animations
-    disposeCss()
-    disposeCss = injectGlobalCss()
-    apply(snapshotProvider())
+    rebuild()
   })
 
+  // 境界档位变化：光标配色变体（CSS 重建）+ 装饰密度（重铺）
+  const offTier = subscribeTier(() => { rebuild() })
+
   return () => {
+    offTier()
     offSettings()
     off()
     disposePointer()
