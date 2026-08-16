@@ -23,6 +23,14 @@ const GLOBAL_CSS = [
   '  50%  { background-position: 0% 100%; }',
   '  75%  { background-position: 100% 100%; }',
   '}',
+  // 任务完成庆祝：跳两下带一点旋转（transform 通道，与帧动画并行）
+  '@keyframes xl-mascot-celebrate {',
+  '  0%   { transform: translateY(0) rotate(0deg) scale(1); }',
+  '  30%  { transform: translateY(-26px) rotate(-6deg) scale(1.1); }',
+  '  60%  { transform: translateY(0) rotate(0deg) scale(1); }',
+  '  80%  { transform: translateY(-12px) rotate(6deg) scale(1.05); }',
+  '  100% { transform: translateY(0) rotate(0deg) scale(1); }',
+  '}',
 ].join('\n')
 
 /** 注入全局样式标签（幂等；返回移除函数）。 */

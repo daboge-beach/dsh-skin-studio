@@ -16,6 +16,7 @@ import { usePrefersReducedMotion, useThemeSnapshot } from './hooks.ts'
 import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
 import { randomGreeting, randomQuote, type QuoteLang } from './quotes.ts'
+import { onTaskDone, randomDoneQuote } from './taskNotify.ts'
 import styles from './MascotFloat.module.css'
 
 /** 锚位 / 漫步目标点（viewport 坐标）。 */
@@ -83,6 +84,8 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const [anchor, setAnchor] = useState<WanderPoint>(defaultAnchor)
   const [dragging, setDragging] = useState(false)
   const [bubble, setBubble] = useState<string | null>(null)
+  /** 任务完成庆祝中（叠加庆祝动画，短暂覆盖常规帧动画节奏）。 */
+  const [celebrating, setCelebrating] = useState(false)
   const lastQuoteRef = useRef<string | null>(null)
   const dragStartRef = useRef<{ px: number; py: number; ax: number; ay: number; moved: boolean } | null>(null)
   const activeSkin = snapshot !== null ? skinRegistry.get(snapshot.active.id) : undefined
@@ -130,6 +133,23 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
     if (bubbleTimerRef.current !== undefined) window.clearTimeout(bubbleTimerRef.current)
     bubbleTimerRef.current = window.setTimeout(() => { setBubble(null) }, BUBBLE_MS)
   }, [skinId, lang])
+
+  // 任务完成庆祝：跳两下 + 冒一条完成语录（拖动中不抢戏）
+  const celebrateTimerRef = useRef<number>(undefined)
+  useEffect(() => {
+    if (reduced || !enabled || skinId === '') return undefined
+    return onTaskDone(() => {
+      if (dragging) return
+      setCelebrating(true)
+      if (celebrateTimerRef.current !== undefined) window.clearTimeout(celebrateTimerRef.current)
+      celebrateTimerRef.current = window.setTimeout(() => { setCelebrating(false) }, 1600)
+      const q = randomDoneQuote(lang)
+      lastQuoteRef.current = q
+      setBubble(q)
+      if (bubbleTimerRef.current !== undefined) window.clearTimeout(bubbleTimerRef.current)
+      bubbleTimerRef.current = window.setTimeout(() => { setBubble(null) }, BUBBLE_MS)
+    })
+  }, [reduced, enabled, skinId, dragging, lang])
 
   // 自动语录冒泡（拖动中不抢戏）
   useEffect(() => {
@@ -208,8 +228,13 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
           backgroundImage: `url(${activeSkin.mascotUrl})`,
           opacity: visible ? 0.9 : 0,
           // 内联动画（全局 keyframes 名）：class 规则的 animation 在部分宿主
-          // 环境会被清覆，内联已被证实免疫
-          animation: reduced ? undefined : 'xl-mascot-frames 1.2s step-end infinite',
+          // 环境会被清覆，内联已被证实免疫。庆祝时叠加庆祝动画（transform
+          // 通道）—— 与帧动画（background-position 通道）并行不冲突。
+          animation: reduced
+            ? undefined
+            : celebrating
+              ? 'xl-mascot-frames 1.2s step-end infinite, xl-mascot-celebrate 0.8s ease-in-out 2'
+              : 'xl-mascot-frames 1.2s step-end infinite',
           transition: 'opacity 0.3s ease',
         }}
         role="img"

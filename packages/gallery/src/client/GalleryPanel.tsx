@@ -92,16 +92,18 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
   const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
   const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
+  const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
 
   // 订阅官方 theme 服务获取当前主题
   const snapshot = useThemeSnapshot(ctx)
   const activeSkinId = snapshot?.active.id
 
-  // 吉祥物浮层开关 + 语录语言 + 动画策略（settings.mascotEnabled / quoteLang / animations）
+  // 吉祥物浮层开关 + 语录语言 + 动画策略 + 任务提醒（settings.*）
   useEffect(() => skinStudioSettings.subscribe(s => {
     setMascotEnabled(s.mascotEnabled)
     setQuoteLang(s.quoteLang)
     setAnimations(s.animations)
+    setNotifyTaskDone(s.notifyTaskDone)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
@@ -282,6 +284,18 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           onClick={() => skinStudioSettings.setAnimations(animations === 'always' ? 'system' : 'always')}
         >
           动画：{animations === 'always' ? '始终播放' : '跟随系统'}
+        </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          aria-pressed={notifyTaskDone !== 'off'}
+          title="任务完成后提醒：提示音（音色随皮肤系列）与/或吉祥物庆祝动作。点击循环切换：关 → 声音 → 动作 → 声音+动作。"
+          onClick={() => {
+            const next = notifyTaskDone === 'off' ? 'sound' : notifyTaskDone === 'sound' ? 'motion' : notifyTaskDone === 'motion' ? 'both' : 'off'
+            skinStudioSettings.setNotifyTaskDone(next)
+          }}
+        >
+          任务提醒：{notifyTaskDone === 'off' ? '关' : notifyTaskDone === 'sound' ? '声音' : notifyTaskDone === 'motion' ? '动作' : '声音+动作'}
         </button>
       </nav>
 

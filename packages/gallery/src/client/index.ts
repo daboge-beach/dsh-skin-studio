@@ -23,6 +23,7 @@ import { skinStudioSettings } from './settings.ts'
 import { registerSettingsSection, registerSimplifiedSidebar } from './hostAdapters.ts'
 import { mountOverlays } from './overlays.ts'
 import { mountSkinEffects } from './skinEffects.ts'
+import { mountTaskNotify } from './taskNotify.ts'
 
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
 export const inject = ['theme', 'slots']
@@ -123,6 +124,17 @@ export function apply(ctx: ClientContext): void {
     () => ctx.theme.getTheme(),
     listener => ctx.on('theme/change', listener),
   ), '@dsh-skin-studio/gallery: skin visual effects')
+
+  // 6. 任务完成提醒（提示音 + 吉祥物庆祝；信号源为发送按钮禁用恢复）
+  ctx.effect(() => mountTaskNotify({
+    getSkinId: () => ctx.theme.getTheme()?.active.id ?? '',
+    getMode: () => skinStudioSettings.get().notifyTaskDone,
+    reducedMotion: () => {
+      const s = skinStudioSettings.get()
+      return s.animations !== 'always'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    },
+  }), '@dsh-skin-studio/gallery: task done notify')
 }
 
 export const name = '@dsh-skin-studio/gallery'

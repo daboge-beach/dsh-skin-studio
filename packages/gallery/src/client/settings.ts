@@ -27,9 +27,14 @@ export interface SkinStudioSettings {
    * 皮肤中心的动效被连坐静止时，用它找回）。
    */
   animations: 'system' | 'always'
+  /**
+   * 任务完成提醒：'off' 关 / 'sound' 提示音 / 'motion' 吉祥物庆祝 /
+   * 'both' 两者（默认）。信号源是发送按钮的禁用恢复（见 taskNotify.ts）。
+   */
+  notifyTaskDone: 'off' | 'sound' | 'motion' | 'both'
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system' }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both' }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -109,6 +114,13 @@ export const skinStudioSettings = {
   setAnimations(mode: 'system' | 'always'): void {
     if (current.animations === mode) return
     write({ ...current, animations: mode })
+  },
+  getNotifyTaskDone(): 'off' | 'sound' | 'motion' | 'both' {
+    return current.notifyTaskDone
+  },
+  setNotifyTaskDone(mode: 'off' | 'sound' | 'motion' | 'both'): void {
+    if (current.notifyTaskDone === mode) return
+    write({ ...current, notifyTaskDone: mode })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)
