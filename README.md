@@ -223,8 +223,9 @@ dsh-skin-studio/
 - [x] v0.1：皮肤中心 MVP（`packages/gallery`：画廊 / 试穿 / 应用 / 详情面板 / 吉祥物浮层 / 切换特效，内置 aurora + midnight + 凡人修仙传 5 款）
 - [x] v0.2：拖拽上传、zip 解压、格式校验（浏览器内零依赖解压 + `skin.json` 校验）
 - [x] v0.2.x：英雄联盟英雄皮肤系列 10 款（神话级质感）
-- [ ] v0.3：皮肤脚手架 CLI、开发热重载
-- [ ] v0.4：插件联动（消费行情/token 统计等数据）
+- [x] v0.3.0：吉祥物生态（满屏漫步 · 庆祝动作）+ 任务完成提醒 + 境界档位系统（推理等级联动）+ 梗文化皮肤「梁神」（详见 CHANGELOG.md）
+- [ ] v0.4：皮肤脚手架 CLI、开发热重载
+- [ ] v0.5：插件联动（消费行情/token 统计等数据）
 - [ ] v1.0：跟随 DSH v1.0 稳定 API，正式发布
 
 ### 📄 License
@@ -460,8 +461,9 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
 - [x] v0.1: gallery MVP (`packages/gallery`: browse / try-on / apply / detail panel / mascot overlay / transition effects; ships aurora + midnight + 5 A Record of a Mortal's Journey skins)
 - [x] v0.2: drag & drop upload, zip extraction, format validation (dependency-free in-browser unzip + `skin.json` validation)
 - [x] v0.2.x: League of Legends champion skin series × 10 (mythic-tier polish)
-- [ ] v0.3: skin scaffolder CLI, hot-reload dev flow
-- [ ] v0.4: plugin interop (consume ticker / token stats, etc.)
+- [x] v0.3.0: mascot ecosystem (full-screen wandering, celebrations) + task-done alerts + power tier system (reasoning-effort linked) + the "Liang Shen" meme skin (see CHANGELOG.md)
+- [ ] v0.4: skin scaffolder CLI, hot-reload dev flow
+- [ ] v0.5: plugin interop (consume ticker / token stats, etc.)
 - [ ] v1.0: follow DSH v1.0 stable API, official release
 
 ### 📄 License
