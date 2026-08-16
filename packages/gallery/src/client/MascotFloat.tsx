@@ -29,18 +29,40 @@ const MOVE_MS = 1800          // 平滑移动时长
 const BUBBLE_MS = 5200        // 气泡停留时长
 const DRAG_THRESHOLD = 6      // 超过此位移视为拖动而非点击
 
-/** 漫步目标点（viewport 坐标）。满屏转悠：避开侧栏、顶部标题栏与底部输入区。 */
+/** 漫步目标点（viewport 坐标）。
+ *  走动路径满屏（穿过正文是瞬时滑过，观感自然）；驻足点避开正文列 ——
+ *  DSH 正文是内容区（侧栏右侧起）内居中的 ~700px 文本列，停在其左右
+ *  空白带；两侧都放不下时（窄屏）退化为满屏随机。 */
 function nextWanderPoint(): WanderPoint {
   if (typeof window === 'undefined') return { x: 0, y: 0 }
+  const W = window.innerWidth
+  const H = window.innerHeight
   const size = 160
-  const minX = 300                                     // 避开左侧会话侧栏（避免挡侧栏按钮）
+  const minX = 300                                    // 避开左侧会话侧栏（不挡侧栏按钮）
   const minY = 72                                     // 避开顶部标题/工具栏
-  const maxY = Math.max(minY + 40, window.innerHeight - size - 300)  // 底部避开输入区
-  const maxX = Math.max(minX, window.innerWidth - size - 16)
-  return {
-    x: Math.round(minX + Math.random() * (maxX - minX)),
-    y: Math.round(minY + Math.random() * (maxY - minY)),
+  const maxY = Math.max(minY + 40, H - size - 300)    // 底部避开输入区
+  const maxX = Math.max(minX, W - size - 16)
+  const rand = (lo: number, hi: number): number => Math.round(lo + Math.random() * Math.max(0, hi - lo))
+
+  // 正文列估计：内容区内居中的文本列（与 DSH 会话布局一致）
+  const contentW = W - minX
+  const bodyW = Math.min(700, contentW * 0.62)
+  const bodyX0 = minX + (contentW - bodyW) / 2
+  const bodyX1 = bodyX0 + bodyW
+
+  // 左右空白驻足带（至少 60px 宽才可用；上限 320px 保持分布集中）
+  const bands: Array<[number, number]> = []
+  const leftW = bodyX0 - 20 - size - minX
+  const rightW = maxX - (bodyX1 + 20)
+  if (leftW >= 60) bands.push([minX, minX + Math.min(leftW, 320)])
+  if (rightW >= 60) bands.push([bodyX1 + 20, bodyX1 + 20 + Math.min(rightW, 320)])
+
+  if (bands.length === 0) {
+    // 窄屏兜底：没有可用的空白带，退化为满屏随机
+    return { x: rand(minX, maxX), y: rand(minY, maxY) }
   }
+  const [x0, x1] = bands[Math.floor(Math.random() * bands.length)] as [number, number]
+  return { x: rand(x0, x1), y: rand(minY, maxY) }
 }
 
 /** 默认锚位（viewport 右下角，与 .wander 的 24px 边距一致）。 */
