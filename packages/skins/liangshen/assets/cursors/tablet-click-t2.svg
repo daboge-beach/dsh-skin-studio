@@ -1,0 +1,7 @@
+<svg style="filter: sepia(0.55) saturate(1.9) hue-rotate(-18deg) brightness(1.15)" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="rotate(-8 16 16)">
+    <rect x="10" y="2" width="12" height="28" rx="3" fill="#3A2B06" stroke="#FFD700" stroke-width="2"/>
+    <text x="16" y="19" text-anchor="middle" font-size="10" font-weight="bold" fill="#FFD700" font-family="SimSun, serif">梁</text>
+    <path d="M6 24 L9 27 M26 5 L23 2" stroke="#FFD700" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+</svg>

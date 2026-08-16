@@ -9,8 +9,8 @@ describe("demo wiring probe", () => {
     applyGallery(host.ctx);
     const themes = host.ctx.theme.getTheme().themes.map(t => t.id);
     expect(themes).toContain("mupeiling-blossom");
-    expect(themes.length).toBe(19);
+    expect(themes.length).toBe(20);
     const list = await skinRegistry.list("builtin");
-    expect(list.length).toBe(17);
+    expect(list.length).toBe(18);
   });
 });

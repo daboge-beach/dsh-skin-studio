@@ -12,7 +12,7 @@
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 17](https://img.shields.io/badge/skins-17-ff69b4)](#-内置皮肤一览)
+[![Skins: 18](https://img.shields.io/badge/skins-18-ff69b4)](#-内置皮肤一览)
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#项目状态)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
@@ -39,7 +39,7 @@
 | 🧩 **插件联动** | 皮肤可消费其他 DSH 插件的数据（行情、宠物、token 统计等） |
 | 🛠️ **皮肤开发工具** | 提供 `dsh-skin init` 脚手架 + 类型定义 + 校验器，降低造皮肤门槛 |
 
-### 🎨 内置皮肤一览（17 款）
+### 🎨 内置皮肤一览（18 款）
 
 **英雄联盟系列 · 10 款（神话级质感）**
 
@@ -72,6 +72,12 @@
 |---|---|
 | Aurora | 极简亮色 · 清晨极光 |
 | Midnight | 极简暗色 · 深夜静谧 |
+
+**梗文化系列 · 1 款**
+
+| 皮肤 | 主题 |
+|---|---|
+| 梁神 · 深度求道 | 凉子（冻得发抖）→ 梁子 → 梁圣 → 梁神（始皇帝形态），推理等级越高 boss 修为越高 · 卡通 caricature 非真人肖像 |
 
 ### 🚀 快速开始
 
@@ -243,7 +249,7 @@ MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 17](https://img.shields.io/badge/skins-17-ff69b4)](#-built-in-skins)
+[![Skins: 18](https://img.shields.io/badge/skins-18-ff69b4)](#-built-in-skins)
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#project-status)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
@@ -270,7 +276,7 @@ Not "N curated picks by the author", but a marketplace where anyone can contribu
 | 🧩 **Plugin interop** | Skins can consume data from other DSH plugins (tickers, pets, token stats, …) |
 | 🛠️ **Skin dev tooling** | `dsh-skin init` scaffolder + type definitions + validator to lower the barrier |
 
-### 🎨 Built-in skins (17)
+### 🎨 Built-in skins (18)
 
 **League of Legends series · 10 skins (mythic-tier polish)**
 
@@ -303,6 +309,12 @@ Not "N curated picks by the author", but a marketplace where anyone can contribu
 |---|---|
 | Aurora | Minimal light · dawn aurora |
 | Midnight | Minimal dark · deep-night calm |
+
+**Meme series · 1 skin**
+
+| Skin | Theme |
+|---|---|
+| Liang Shen · Deep Quest | Chilly → Liang-zi → Saint → Emperor (Qin Shi Huang form); higher reasoning effort, higher boss cultivation · cartoon caricature, not a real person |
 
 ### 🚀 Quick Start
 

@@ -92,7 +92,7 @@ describe('skinRegistry 上传链路', () => {
     expect(skinRegistry.get('moon-fox')?.name).toBe('月狐')
 
     // 内置款不受影响
-    expect((await skinRegistry.list('builtin')).length).toBe(17)
+    expect((await skinRegistry.list('builtin')).length).toBe(18)
   })
 
   it('子目录内的皮肤包同样可解析（路径前缀剥离）', async () => {

@@ -113,6 +113,7 @@ const TIER_LABELS: Record<string, readonly [string, string, string, string]> = {
   'sona-etwahl': ['基础', '史诗', '传说', '终极'],
   'vayne-nightfall': ['基础', '史诗', '传说', '终极'],
   'yasuo-gale': ['基础', '史诗', '传说', '终极'],
+  'liangshen': ['凉子', '梁子', '梁圣', '梁神'],
 }
 
 /** 取皮肤在某档的显示名（如「韩立 · 青竹（元婴）」）。 */
@@ -120,8 +121,8 @@ export function tierLabel(skinId: string, tier: PowerTier): string {
   return TIER_LABELS[skinId]?.[tier] ?? `Lv.${tier + 1}`
 }
 
-/** 有分档生图资产（tiers/t{n}/sprite_anim.png）的皮肤，第一版两条链路。 */
-export const TIERED_SPRITE_SKINS = new Set(['hanli-daoist', 'ahri-ninefold'])
+/** 有分档生图资产（tiers/t{n}/sprite_anim.png）的皮肤，第一版三条链路。 */
+export const TIERED_SPRITE_SKINS = new Set(['hanli-daoist', 'ahri-ninefold', 'liangshen'])
 
 /** 有分档光标变体的皮肤（cursors/*-t{n}.svg 由构建脚本生成）。 */
-export const TIERED_CURSOR_SKINS = new Set(['hanli-daoist', 'ahri-ninefold'])
+export const TIERED_CURSOR_SKINS = new Set(['hanli-daoist', 'ahri-ninefold', 'liangshen'])

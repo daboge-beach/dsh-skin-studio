@@ -23,14 +23,16 @@ import { sona } from './quotes/sona.ts'
 import { mf } from './quotes/mf.ts'
 import { ahri } from './quotes/ahri.ts'
 import { kaisa } from './quotes/kaisa.ts'
+import { liangshen } from './quotes/liangshen.ts'
 
 export type { QuoteLang } from './quotes/types.ts'
 export { TARGET_LINES } from './quotes/builder.ts'
 
-/** 全部 15 款带语录的皮肤（凡人 5 款 + 英雄联盟 10 款）。 */
+/** 全部 16 款带语录的皮肤（凡人 5 + 英雄联盟 10 + 梗文化 1）。 */
 const CHARACTER_DEFS = [
   blossom, daoist, lunar, moon, mystic,
   seraphine, jinx, lux, yasuo, vayne, ezreal, sona, mf, ahri, kaisa,
+  liangshen,
 ] as const
 
 /** 未知皮肤的双语回退池。 */

@@ -30,7 +30,7 @@ export interface SkinVisual {
   hotspot: [number, number]
 }
 
-/** 凡人 5 款 + 英雄联盟 10 款皮肤的光标/视觉元数据（aurora/midnight 无光标，跟随系统）。 */
+/** 凡人 5 款 + 英雄联盟 10 款 + 梗文化 1 款皮肤的光标/视觉元数据（aurora/midnight 无光标，跟随系统）。 */
 export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'mupeiling-blossom': { cssClass: 'xl-skin-blossom', cursorPrefix: 'blossom', hotspot: [16, 16] },
   'hanli-daoist': { cssClass: 'xl-skin-daoist', cursorPrefix: 'sword', hotspot: [11, 9] },
@@ -47,6 +47,7 @@ export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'mf-bountyhunter': { cssClass: 'xl-skin-bounty', cursorPrefix: 'bullet', hotspot: [16, 12] },
   'ahri-ninefold': { cssClass: 'xl-skin-ninefold', cursorPrefix: 'orb', hotspot: [16, 16] },
   'kaisa-voidborn': { cssClass: 'xl-skin-voidborn', cursorPrefix: 'voidfly', hotspot: [16, 16] },
+  'liangshen': { cssClass: 'xl-skin-liangshen', cursorPrefix: 'tablet', hotspot: [14, 14] },
 }
 
 const CURSOR_STYLE_TAG = '@dsh-skin-studio/gallery/skin-cursors'
@@ -118,6 +119,7 @@ interface PanelVeilSpec {
 
 /** 每款皮肤的半透明面板规格（暗色款 alpha 略高保文字可读）。 */
 const PANEL_VEIL: Record<string, PanelVeilSpec> = {
+  'liangshen': { base: [10, 15, 30], layer1: [17, 24, 39], layer2: [26, 37, 64], sidebar: [10, 15, 30], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
   'mupeiling-blossom': { base: [251, 234, 240], layer1: [255, 255, 255], layer2: [244, 192, 209], sidebar: [251, 234, 240], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
   'hanli-daoist': { base: [234, 243, 222], layer1: [244, 248, 236], layer2: [192, 221, 151], sidebar: [234, 243, 222], aBase: 0.36, aSidebar: 0.80, aLayer1: 0.92, aLayer2: 0.85 },
   'yinyue-lunar': { base: [4, 44, 83], layer1: [12, 68, 124], layer2: [24, 95, 165], sidebar: [4, 44, 83], aBase: 0.50, aSidebar: 0.82, aLayer1: 0.92, aLayer2: 0.86 },
@@ -216,6 +218,8 @@ const DECOR: Record<string, DecorSpec> = {
   'mf-bountyhunter': { prefix: 'shell', colors: ['#D9A441', '#E0405A', '#B45309'], count: 14, anim: 'fx-fall', sizeMin: 4, sizeMax: 8 },
   'ahri-ninefold': { prefix: 'foxflame', colors: ['#E86A92', '#F5C16C', '#F9A8D4'], count: 12, anim: 'fx-drift', sizeMin: 4, sizeMax: 9 },
   'kaisa-voidborn': { prefix: 'voidmoth', colors: ['#A78BFA', '#C4B0FD', '#7C3AED'], count: 11, anim: 'fx-drift', sizeMin: 4, sizeMax: 8 },
+  // 梗文化系列（凉子→梁神的算力星尘）
+  'liangshen': { prefix: 'token', colors: ['#4D6BFE', '#9DB1FF', '#FFD700'], count: 13, anim: 'fx-drift', sizeMin: 3, sizeMax: 7 },
 }
 
 /** 横幅纱罩：亮/暗各一套斜向渐变透明度（左浓右淡保文字可读）。 */
@@ -223,7 +227,7 @@ const VEIL_LIGHT = [0.86, 0.72, 0.38, 0.05] as const
 const VEIL_DARK = [0.90, 0.78, 0.46, 0.08] as const
 
 /** 暗色皮肤集合（其余带光标的皮肤按亮色纱罩）。 */
-const DARK_SKINS = new Set(['yinyue-lunar', 'ziling-mystic', 'jinx-mayhem', 'vayne-nightfall', 'mf-bountyhunter', 'kaisa-voidborn'])
+const DARK_SKINS = new Set(['yinyue-lunar', 'ziling-mystic', 'jinx-mayhem', 'vayne-nightfall', 'mf-bountyhunter', 'kaisa-voidborn', 'liangshen'])
 
 /** 背景装饰的 base CSS（表驱动横幅 + 装饰结构，reduced-motion 由 JS 端控制）。 */
 function buildDecorCss(): string {

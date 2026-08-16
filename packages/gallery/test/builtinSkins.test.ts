@@ -37,8 +37,8 @@ const LOL_SCHEME: Record<string, 'light' | 'dark'> = {
 }
 
 describe('BUILTIN_SKINS（内置皮肤清单）', () => {
-  it('共 17 款：aurora、midnight + 凡人修仙传 5 款 + 英雄联盟 10 款', () => {
-    expect(BUILTIN_SKINS.map(s => s.id)).toEqual(['aurora', 'midnight', ...FANREN_IDS, ...LOL_IDS])
+  it('共 18 款：aurora、midnight + 凡人修仙传 5 款 + 英雄联盟 10 款 + 梗文化 1 款', () => {
+    expect(BUILTIN_SKINS.map(s => s.id)).toEqual(['aurora', 'midnight', ...FANREN_IDS, ...LOL_IDS, 'liangshen'])
   })
 
   it('凡人 5 款 + LOL 10 款带全套图片资源（preview/hero/mascot）', () => {

@@ -1,0 +1,6 @@
+<svg style="filter: saturate(1.35) brightness(1.12)" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="rotate(-8 16 16)">
+    <rect x="10" y="2" width="12" height="28" rx="3" fill="#141D3A" stroke="#4D6BFE" stroke-width="1.5"/>
+    <text x="16" y="19" text-anchor="middle" font-size="10" font-weight="bold" fill="#9DB1FF" font-family="SimSun, serif">梁</text>
+  </g>
+</svg>
