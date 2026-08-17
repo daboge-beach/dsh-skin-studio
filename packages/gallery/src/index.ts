@@ -85,7 +85,8 @@ export function apply(ctx: HostContext): void {
         const ext = realFile.split('.').pop() ?? ''
         res.writeHead(200, {
           'content-type': MIME[ext] ?? 'application/octet-stream',
-          'cache-control': 'public, max-age=3600',
+          // 皮肤资产（尤其分档 bg）会原地更新，禁强缓存避免换图后仍见旧图
+          'cache-control': 'no-cache',
         })
         if (req.method === 'HEAD') {
           res.end()
