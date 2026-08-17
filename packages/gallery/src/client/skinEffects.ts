@@ -451,7 +451,9 @@ function buildGlassCss(): string {
       `  background: url('${bg}') center/cover no-repeat;`,
       filter === 'none' ? '' : `  filter: ${filter};`,
       `}`,
-      `body.${v.cssClass} {`,
+      // token 半透明化定义在 #root（变量按最近祖先解析：压过 ThemePresenter
+      // 写在 body 内联 style 的实色 token —— 内联在 body 上，#root 更近必胜）
+      `body.${v.cssClass} #root {`,
       `  --dsw-alias-bg-base: ${rgba(veil.base, 0.55)};`,
       `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.66)};`,
       `  --dsw-alias-bg-layer-2: ${rgba(veil.layer2, 0.72)};`,
