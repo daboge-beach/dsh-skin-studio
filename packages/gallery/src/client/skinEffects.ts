@@ -416,9 +416,9 @@ const GLASS_BG: Record<string, string> = {
 const TIERED_BG_SKINS = new Set([
   'hanli-daoist', 'ahri-ninefold', 'liangshen',
   'mupeiling-blossom', 'yinyue-lunar', 'nangongwan-moon', 'ziling-mystic',
-  // ezreal 已有分档图；其余 LOL 8 款分档人物背景待生图 API 恢复后加入
-  // （其间走 TIER_BG_FILTERS 滤镜递进，保证档位有可见变化）
-  'ezreal-relicrun',
+  'ezreal-relicrun', 'jinx-mayhem', 'kaisa-voidborn', 'lux-radiance',
+  'mf-bountyhunter', 'seraphine-anthem', 'sona-etwahl', 'vayne-nightfall',
+  'yasuo-gale',
 ])
 
 /** 非分档皮肤的档位滤镜递进（朴素 → 原色 → 金气 → 辉煌）。 */

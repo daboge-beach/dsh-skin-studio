@@ -7,6 +7,8 @@
 ## 🎨 DSH Skin Studio · 中文
 
 > DeepSeek Harness 皮肤工作室 —— 内置精选皮肤 · 用户上传皮肤中心 · 让每个 agent 都有专属面孔。
+>
+> 主题覆盖：**英雄联盟（LOL / League of Legends）英雄皮肤** ×10 · **凡人修仙传（A Record of a Mortal's Journey to Immortality，国漫修仙）** ×5 · **DeepSeek 梗文化（梁神）** ×1 · 极简基础 ×2 —— 支持随推理等级切换的**修仙境界 / 皮肤等级**分档形态（人物背景 · 吉祥物 · 光标 · 提示音）。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
@@ -245,6 +247,8 @@ MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 ## 🎨 DSH Skin Studio · English
 
 > The skin studio for DeepSeek Harness — curated built-in skins · a community skin gallery · give every agent its own face.
+>
+> Themes: **League of Legends (LOL) champion skins** ×10 · **A Record of a Mortal's Journey to Immortality (凡人修仙传, Chinese xiuxian novel / donghua)** ×5 · **DeepSeek meme (Liang Shen)** ×1 · minimal essentials ×2 — with **cultivation-stage / skin-tier** forms that follow the reasoning-effort level (character backgrounds · mascot · cursors · chimes).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
