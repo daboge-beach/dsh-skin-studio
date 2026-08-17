@@ -13,10 +13,15 @@ export type PowerTier = 0 | 1 | 2 | 3
 /** 推理等级名 → 档位（未识别的名称按保守原则落 0 档）。 */
 function effortNameToTier(name: string): PowerTier {
   const n = name.trim().toLowerCase()
+  // 英文档名（模型元数据原生）
   if (/(max|ultra|insane|thinking)/.test(n)) return 3
   if (/high/.test(n)) return 2
   if (/(medium|mid|balanced)/.test(n)) return 1
-  if (/low|mini|fast|default|none/.test(n)) return 0
+  // 中文档名（界面本地化形态）
+  if (/深度|极智|最强|满血/.test(n)) return 3
+  if (/高|深思/.test(n)) return 2
+  if (/中|平衡/.test(n)) return 1
+  if (/low|mini|fast|default|none|快速|默认|标准/.test(n)) return 0
   return 0
 }
 
