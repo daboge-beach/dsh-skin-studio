@@ -451,22 +451,17 @@ function buildGlassCss(): string {
       `  background: url('${bg}') center/cover no-repeat;`,
       filter === 'none' ? '' : `  filter: ${filter};`,
       `}`,
-      // token 半透明化定义在 #root（变量按最近祖先解析：压过 ThemePresenter
-      // 写在 body 内联 style 的实色 token —— 内联在 body 上，#root 更近必胜）
+      // 磨砂只做侧栏：半透明化 sidebar-fill（变量按最近祖先解析压过 body
+      // 内联 token）；正文对话区的 bg-* token 保持皮肤实色，正常显示。
       `body.${v.cssClass} #root {`,
-      `  --dsw-alias-bg-base: ${rgba(veil.base, 0.40)};`,
-      `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.52)};`,
-      `  --dsw-alias-bg-layer-2: ${rgba(veil.layer2, 0.58)};`,
-      `  --dsw-alias-bg-overlay: ${rgba(veil.layer1, 0.60)};`,
       `  --dsw-specific-sidebar-fill: ${rgba(veil.sidebar, 0.34)};`,
       `}`,
     )
   }
-  // 布局大列磨玻璃（半透明面板 + 背景模糊增艳）。实测层级：280px 侧栏列
-  // 与主内容列位于 #root 下第 5 层，其上层容器（含 0 宽拖拽列）为第 4 层。
+  // 磨砂只加在左侧会话列表列（280px sidebarCol，#root 下第 5 层第一个）；
+  // 正文对话区不加模糊，保持正常显示。
   rules.push(
-    `body[class*='xl-skin-'] #root > div > div > div > div,`,
-    `body[class*='xl-skin-'] #root > div > div > div > div > div {`,
+    `body[class*='xl-skin-'] #root > div > div > div > div > div:first-child {`,
     `  backdrop-filter: blur(18px) saturate(1.35);`,
     `  -webkit-backdrop-filter: blur(18px) saturate(1.35);`,
     `}`,
