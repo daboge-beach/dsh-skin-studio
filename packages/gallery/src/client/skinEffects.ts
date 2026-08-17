@@ -172,9 +172,8 @@ function buildDialogVeilCss(): string {
 }
 
 function buildPanelVeilCss(): string {
-  // 磨玻璃开启时正文要完全实色：bg-* 不做纱罩透明覆盖（侧栏的半透明由
-  // buildGlassCss 的 sidebar-fill 单独负责）；磨玻璃关闭时保留原轻纱风格。
-  if (skinStudioSettings.get().glass) return ''
+  // veil 轻纱：bg-* 半透明覆盖（正文无磨砂模糊，但整体仍透出背景图）。
+  // 侧栏的磨砂由 buildGlassCss 单独负责（更透明的 sidebar-fill + blur）。
   const rules: string[] = []
   for (const [skinId, v] of Object.entries(PANEL_VEIL)) {
     const cssClass = SKIN_CURSORS[skinId]?.cssClass
