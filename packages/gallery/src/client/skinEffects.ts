@@ -410,8 +410,14 @@ const GLASS_BG: Record<string, string> = {
   'midnight': '/skins/midnight/assets/bg.png',
 }
 
-/** 有分档专属背景图（tiers/t{n}/bg.png）的皮肤：背景随思考档位换图。 */
-const TIERED_BG_SKINS = new Set(['hanli-daoist', 'ahri-ninefold', 'liangshen'])
+/** 有分档背景图（tiers/t{n}/bg.png，人物状态随档位递进）的皮肤；缺档由服务端回退原 bg。 */
+const TIERED_BG_SKINS = new Set([
+  'hanli-daoist', 'ahri-ninefold', 'liangshen',
+  'mupeiling-blossom', 'yinyue-lunar', 'nangongwan-moon', 'ziling-mystic',
+  'ezreal-relicrun', 'jinx-mayhem', 'kaisa-voidborn', 'lux-radiance',
+  'mf-bountyhunter', 'seraphine-anthem', 'sona-etwahl', 'vayne-nightfall',
+  'yasuo-gale',
+])
 
 /** 非分档皮肤的档位滤镜递进（朴素 → 原色 → 金气 → 辉煌）。 */
 const TIER_BG_FILTERS: readonly string[] = [
