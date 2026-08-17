@@ -308,10 +308,10 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           type="button"
           className={styles.mascotToggle}
           aria-pressed={glass}
-          title="磨玻璃工作区：皮肤背景图铺满窗口，界面面板半透明模糊（backdrop-blur），背景从工作区透出。有背景图的皮肤生效。"
+          title="背景透出：皮肤背景图铺满窗口，界面面板半透明直接透出背景（无磨砂模糊）。有背景图的皮肤生效。"
           onClick={() => skinStudioSettings.setGlass(!glass)}
         >
-          磨玻璃：{glass ? '开' : '关'}
+          背景透出：{glass ? '开' : '关'}
         </button>
       </nav>
 

@@ -460,15 +460,8 @@ function buildGlassCss(): string {
       `}`,
     )
   }
-  // 磨砂只加在左侧会话列表列（280px sidebarCol，#root 下第 5 层第一个）；
-  // 正文对话区不加模糊，保持正常显示。
-  rules.push(
-    `body[class*='xl-skin-'] #root > div > div > div > div > div:first-child {`,
-    `  backdrop-filter: blur(18px) saturate(1.35);`,
-    `  -webkit-backdrop-filter: blur(18px) saturate(1.35);`,
-    `}`,
-  )
-  return rules.filter(r => r !== '').join('\n')
+  // 不加 backdrop 模糊（用户要求纯透出无磨砂）：半透明面板直接透出背景图。
+  return rules.join('\n')
 }
 
 // ── 挂载 / 卸载 ────────────────────────────────────────────────────────
