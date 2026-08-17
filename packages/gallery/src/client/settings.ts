@@ -159,6 +159,14 @@ export const skinStudioSettings = {
     if (current.cursorFx === on) return
     write({ ...current, cursorFx: on })
   },
+  /**
+   * 一键还原出厂：全部设置回默认值、清除皮肤偏好与试穿态
+   * （主题本身由调用方切回原生偏好，见 GalleryPanel 的还原入口）。
+   */
+  resetAll(): void {
+    tryOn = null
+    write({ ...DEFAULTS })
+  },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)
     return () => { listeners.delete(listener) }

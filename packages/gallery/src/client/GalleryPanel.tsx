@@ -324,6 +324,18 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         >
           光标：{cursorFx ? '开' : '关'}
         </button>
+        <button
+          type="button"
+          className={styles.factoryReset}
+          title="一键还原出厂设置：清除皮肤偏好与全部皮肤中心设置，界面回到 DSH 原生外观（跟随系统的明暗主题）。皮肤中心本身保留，随时可以再换皮肤。"
+          onClick={() => {
+            skinStudioSettings.resetAll()
+            try { ctx.theme.setTheme('system') } catch { /* 主题服务不可用时仅还原设置 */ }
+            showToast({ message: '已还原出厂设置 — 界面回到 DSH 原生外观', type: 'success' })
+          }}
+        >
+          还原出厂
+        </button>
       </nav>
 
       {/* 试穿决策条：试穿期间的常驻决策入口（取代旧的常驻 toast） */}

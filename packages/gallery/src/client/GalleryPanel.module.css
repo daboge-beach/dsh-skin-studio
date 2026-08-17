@@ -199,6 +199,23 @@
   filter: brightness(1.1);
 }
 
+/* ── 还原出厂（destructive，红色描边醒目） ── */
+.factoryReset {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 0.5px solid var(--dsw-alias-state-error-primary);
+  background: transparent;
+  color: var(--dsw-alias-state-error-primary);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.factoryReset:hover {
+  background: color-mix(in srgb, var(--dsw-alias-state-error-primary) 10%, transparent);
+}
+
 /* ── 境界滑条（推理等级联动档位） ── */
 .tierRow {
   display: flex;
