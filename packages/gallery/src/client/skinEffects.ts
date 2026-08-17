@@ -454,18 +454,19 @@ function buildGlassCss(): string {
       // token 半透明化定义在 #root（变量按最近祖先解析：压过 ThemePresenter
       // 写在 body 内联 style 的实色 token —— 内联在 body 上，#root 更近必胜）
       `body.${v.cssClass} #root {`,
-      `  --dsw-alias-bg-base: ${rgba(veil.base, 0.55)};`,
-      `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.66)};`,
-      `  --dsw-alias-bg-layer-2: ${rgba(veil.layer2, 0.72)};`,
-      `  --dsw-alias-bg-overlay: ${rgba(veil.layer1, 0.72)};`,
-      `  --dsh-specific-sidebar-fill: ${rgba(veil.sidebar, 0.58)};`,
+      `  --dsw-alias-bg-base: ${rgba(veil.base, 0.40)};`,
+      `  --dsw-alias-bg-layer-1: ${rgba(veil.layer1, 0.52)};`,
+      `  --dsw-alias-bg-layer-2: ${rgba(veil.layer2, 0.58)};`,
+      `  --dsw-alias-bg-overlay: ${rgba(veil.layer1, 0.60)};`,
+      `  --dsw-specific-sidebar-fill: ${rgba(veil.sidebar, 0.34)};`,
       `}`,
     )
   }
-  // 布局大列（侧栏列 280px / 拖拽条 / 主内容列，#root 下第 4 层）
-  // 磨玻璃：半透明面板 + 背景模糊增艳
+  // 布局大列磨玻璃（半透明面板 + 背景模糊增艳）。实测层级：280px 侧栏列
+  // 与主内容列位于 #root 下第 5 层，其上层容器（含 0 宽拖拽列）为第 4 层。
   rules.push(
-    `body[class*='xl-skin-'] #root > div > div > div > div {`,
+    `body[class*='xl-skin-'] #root > div > div > div > div,`,
+    `body[class*='xl-skin-'] #root > div > div > div > div > div {`,
     `  backdrop-filter: blur(18px) saturate(1.35);`,
     `  -webkit-backdrop-filter: blur(18px) saturate(1.35);`,
     `}`,
