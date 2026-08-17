@@ -101,6 +101,75 @@ reasoning effort now drives tiered skin assets, and the first meme-culture skin 
 
 ---
 
+## [0.4.0] — 2026-08-17
+
+**简体中文**
+
+「背景透出 + 全皮肤分档人物背景」版本：磨砂玻璃演化为纯半透明透出，
+16 款皮肤的人物背景随推理等级切换，外加一批体验修复与还原出厂功能。
+
+### 新增
+
+- **背景透出（16 款全皮肤）**：皮肤人物背景图铺满窗口，界面面板半透明
+  直接透出（无磨砂模糊）；aurora/midnight 补齐专属背景图
+- **分档人物背景（16 款 × 4 档 = 64 张生图）**：推理等级越高人物状态越高
+  - 凡人修仙传 5 款：炼气 → 筑基 → 结丹 → 元婴（人物为画面主体）
+  - 英雄联盟 10 款：基础 → 史诗 → 传说 → 终极神话（女英雄丰满迷人向，
+    prompt 点名官方英雄身份；男英雄帅气递进）
+  - 梁神：凉子 → 梁子 → 梁圣 → 梁神（始皇帝形态）
+  - 未生成档位自动回退原背景 / 滤镜递进
+- **一键还原出厂**：红色醒目按钮，一键清除皮肤偏好与全部设置、回到
+  DSH 原生界面（皮肤中心插件保留）
+- **光标开关**：皮肤光标热点偏移影响点击精度时可一键回系统光标
+- 推理等级识别兼容中文档名（深度思考/高/中/快速等）
+
+### 修复
+
+- 推理等级联动不跟随：MutationObserver 之外加 2s 轮询兜底
+- 皮肤资产禁强缓存（max-age=3600 → no-cache）：换图后立即可见
+- 侧栏透出失效：token 变量前缀拼错（dsh→dsw）+ blur 层级偏移
+- 吉祥物 Q 版手办化（132px 圆形徽章 + 描边 + 底座投影）
+- 语录时间错乱：15 个角色素材去除写死「周五」的句子
+- 档位检测探针 body data-xl-tier（诊断联动链路）
+
+---
+
+**English**
+
+The "see-through backgrounds + tiered character art" release: glassmorphism
+evolved into pure translucency, 16 skins now swap character backgrounds with
+the reasoning effort level, plus a batch of UX fixes and factory reset.
+
+### Added
+
+- **Background see-through (all 16 skins)**: character wallpaper fills the
+  window with translucent panels revealing it (no blur); aurora/midnight got
+  their own wallpapers
+- **Tiered character backgrounds (16 skins × 4 tiers = 64 images)**: higher
+  reasoning effort, higher character state
+  - Mortal's Journey ×5: Qi Condensation → Foundation → Core Formation →
+    Nascent Soul (character as the dominant subject)
+  - League of Legends ×10: Base → Epic → Legendary → Ultimate mythic forms
+    (female champions on the glamorous, full-figured side, prompts name the
+    official champion titles; male champions heroic progression)
+  - Liang Shen: Chilly → Liang-zi → Saint → Emperor (Qin Shi Huang form)
+  - Missing tiers fall back to the base wallpaper / filter progression
+- **One-click factory reset**: a prominent red button clears the skin
+  preference and all settings, returning to the native DSH look (the plugin
+  itself stays)
+- **Cursor toggle**: fall back to system cursors when skin cursor hotspots
+  hurt click precision
+- Chinese reasoning-effort names recognized (deep/high/medium/fast etc.)
+
+### Fixed
+
+- Reasoning-effort following: 2s polling fallback besides MutationObserver
+- Skin assets served no-cache (was max-age=3600): image swaps visible at once
+- Sidebar see-through: misspelled token prefix (dsh→dsw) + blur-layer offset
+- Mascot restyled as a chibi figure badge (132px round frame, outline, stand)
+- Quote time confusion: 15 characters' hardcoded "Friday" lines made day-neutral
+- Observable tier probe on body data-xl-tier
+
 ## [0.2.x] — 2026-08-15
 
 **简体中文**
