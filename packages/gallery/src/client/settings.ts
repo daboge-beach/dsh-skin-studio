@@ -43,9 +43,14 @@ export interface SkinStudioSettings {
    * backdrop-blur，背景图从工作区透出。关闭则回到实色面板。
    */
   glass: boolean
+  /**
+   * 皮肤光标（默认开）：三态自定义光标。部分皮肤光标热点偏移影响点击
+   * 精度时可关闭，回退系统光标。
+   */
+  cursorFx: boolean
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -146,6 +151,13 @@ export const skinStudioSettings = {
   setGlass(on: boolean): void {
     if (current.glass === on) return
     write({ ...current, glass: on })
+  },
+  getCursorFx(): boolean {
+    return current.cursorFx
+  },
+  setCursorFx(on: boolean): void {
+    if (current.cursorFx === on) return
+    write({ ...current, cursorFx: on })
   },
   subscribe(listener: Listener): () => void {
     listeners.add(listener)

@@ -96,6 +96,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
   const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3'>(() => skinStudioSettings.get().powerTier)
   const [glass, setGlass] = useState<boolean>(() => skinStudioSettings.get().glass)
+  const [cursorFx, setCursorFx] = useState<boolean>(() => skinStudioSettings.get().cursorFx)
   const [effective, setEffective] = useState<number>(() => effectiveTier())
   useEffect(() => subscribeTier(t => setEffective(t)), [])
 
@@ -111,6 +112,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     setNotifyTaskDone(s.notifyTaskDone)
     setPowerTier(s.powerTier)
     setGlass(s.glass)
+    setCursorFx(s.cursorFx)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
@@ -312,6 +314,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           onClick={() => skinStudioSettings.setGlass(!glass)}
         >
           背景透出：{glass ? '开' : '关'}
+        </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          aria-pressed={cursorFx}
+          title="皮肤光标：三态自定义光标（默认/悬停/点击）。若光标热点偏移导致点击不准，可关闭回退系统光标。"
+          onClick={() => skinStudioSettings.setCursorFx(!cursorFx)}
+        >
+          光标：{cursorFx ? '开' : '关'}
         </button>
       </nav>
 

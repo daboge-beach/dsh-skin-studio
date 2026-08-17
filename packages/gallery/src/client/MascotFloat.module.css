@@ -12,15 +12,22 @@
 }
 
 .float {
-  width: 160px;
-  height: 160px;
+  width: 132px;
+  height: 132px;
   pointer-events: auto;
   touch-action: none; /* 拖动不被浏览器手势打断 */
-  /* 2×2 网格 4 帧：200% 200% 让每一帧占满元素 */
+  /* Q 版手办徽章感：圆形相框 + 粗描边 + 底座投影 */
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 6px 14px rgb(0 0 0 / 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  background-color: rgb(255 255 255 / 0.55);
   background-size: 200% 200%;
   background-repeat: no-repeat;
   filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.18));
   user-select: none;
+  overflow: hidden;
 }
 
 .float:hover {

@@ -52,6 +52,8 @@ const listeners = new Set<TierListener>()
 
 function publish(): void {
   const tier = effectiveTier()
+  // 可观测探针：body data-xl-tier 暴露当前档（诊断联动链路用）
+  if (typeof document !== 'undefined') document.body.dataset.xlTier = String(tier)
   for (const listener of listeners) listener(tier)
 }
 
@@ -92,8 +94,13 @@ export function mountTierWatch(): () => void {
   })
   rescan()
 
+  // 轮询兜底：MutationObserver 在个别宿主环境下可能漏报 aria-label 变化
+  // （按钮被整棵替换等），2s 轮询保证推理等级变化最终一致（值未变时零开销）。
+  const pollTimer = window.setInterval(rescan, 2000)
+
   const offSettings = skinStudioSettings.subscribe(() => { publish() })
   return () => {
+    window.clearInterval(pollTimer)
     if (scanTimer !== undefined) window.clearTimeout(scanTimer)
     observer.disconnect()
     offSettings()

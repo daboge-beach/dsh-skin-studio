@@ -63,6 +63,8 @@ const CURSOR_STYLE_TAG = '@dsh-skin-studio/gallery/skin-cursors'
  * 所有 cursor 带 fallback（auto/pointer），保证 SVG 加载失败仍可用。
  */
 function buildCursorCss(): string {
+  // 光标开关：关闭时回退系统光标（部分皮肤光标热点偏移影响点击精度）
+  if (!skinStudioSettings.get().cursorFx) return ''
   const rules: string[] = []
   const tier = effectiveTier()
   for (const [skinId, v] of Object.entries(SKIN_CURSORS)) {
@@ -609,13 +611,15 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   apply(snapshotProvider())
   const off = subscribe(apply)
 
-  // 设置变化（动画策略 / 磨玻璃开关）：重建 CSS 标签 + 重铺装饰层
+  // 设置变化（动画策略 / 磨玻璃开关 / 光标开关）：重建 CSS 标签 + 重铺装饰层
   let lastAnimations = skinStudioSettings.get().animations
   let lastGlass = skinStudioSettings.get().glass
+  let lastCursorFx = skinStudioSettings.get().cursorFx
   const offSettings = skinStudioSettings.subscribe(s => {
-    if (s.animations === lastAnimations && s.glass === lastGlass) return
+    if (s.animations === lastAnimations && s.glass === lastGlass && s.cursorFx === lastCursorFx) return
     lastAnimations = s.animations
     lastGlass = s.glass
+    lastCursorFx = s.cursorFx
     rebuild()
   })
 
