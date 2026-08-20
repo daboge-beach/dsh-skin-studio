@@ -8,7 +8,7 @@
  */
 import { skinStudioSettings } from './settings.ts'
 
-export type PowerTier = 0 | 1 | 2 | 3
+export type PowerTier = 0 | 1 | 2 | 3 | 4
 
 /**
  * 推理等级名 → 档位。返回 null = 未识别（调用方保持当前档位不变，
@@ -115,23 +115,23 @@ export function mountTierWatch(): () => void {
 }
 
 /** 各皮肤的档位标签（境界名 / 皮肤等级名；未列出的皮肤用通用档名）。 */
-const TIER_LABELS: Record<string, readonly [string, string, string, string]> = {
-  'hanli-daoist': ['炼气', '筑基', '结丹', '元婴'],
-  'mupeiling-blossom': ['炼气', '筑基', '结丹', '元婴'],
-  'yinyue-lunar': ['炼气', '筑基', '结丹', '元婴'],
-  'nangongwan-moon': ['炼气', '筑基', '结丹', '元婴'],
-  'ziling-mystic': ['炼气', '筑基', '结丹', '元婴'],
-  'ahri-ninefold': ['基础', '史诗', '传说', '终极'],
-  'ezreal-relicrun': ['基础', '史诗', '传说', '终极'],
-  'jinx-mayhem': ['基础', '史诗', '传说', '终极'],
-  'kaisa-voidborn': ['基础', '史诗', '传说', '终极'],
-  'lux-radiance': ['基础', '史诗', '传说', '终极'],
-  'mf-bountyhunter': ['基础', '史诗', '传说', '终极'],
-  'seraphine-anthem': ['基础', '史诗', '传说', '终极'],
-  'sona-etwahl': ['基础', '史诗', '传说', '终极'],
-  'vayne-nightfall': ['基础', '史诗', '传说', '终极'],
-  'yasuo-gale': ['基础', '史诗', '传说', '终极'],
-  'liangshen': ['凉子', '梁子', '梁圣', '梁神'],
+const TIER_LABELS: Record<string, readonly string[]> = {
+  'hanli-daoist': ['炼气', '筑基', '结丹', '元婴', '化神'],
+  'mupeiling-blossom': ['炼气', '筑基', '结丹', '元婴', '化神'],
+  'yinyue-lunar': ['炼气', '筑基', '结丹', '元婴', '化神'],
+  'nangongwan-moon': ['炼气', '筑基', '结丹', '元婴', '化神'],
+  'ziling-mystic': ['炼气', '筑基', '结丹', '元婴', '化神'],
+  'ahri-ninefold': ['基础', '史诗', '传说', '终极', '至臻'],
+  'ezreal-relicrun': ['基础', '史诗', '传说', '终极', '至臻'],
+  'jinx-mayhem': ['基础', '史诗', '传说', '终极', '至臻'],
+  'kaisa-voidborn': ['基础', '史诗', '传说', '终极', '至臻'],
+  'lux-radiance': ['基础', '史诗', '传说', '终极', '至臻'],
+  'mf-bountyhunter': ['基础', '史诗', '传说', '终极', '至臻'],
+  'seraphine-anthem': ['基础', '史诗', '传说', '终极', '至臻'],
+  'sona-etwahl': ['基础', '史诗', '传说', '终极', '至臻'],
+  'vayne-nightfall': ['基础', '史诗', '传说', '终极', '至臻'],
+  'yasuo-gale': ['基础', '史诗', '传说', '终极', '至臻'],
+  'liangshen': ['凉子', '梁子', '梁圣', '梁神', '梁·AGI'],
 }
 
 /** 取皮肤在某档的显示名（如「韩立 · 青竹（元婴）」）。 */

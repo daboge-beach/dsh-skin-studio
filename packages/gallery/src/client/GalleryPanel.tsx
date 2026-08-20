@@ -95,7 +95,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
   const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
   const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
-  const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3'>(() => skinStudioSettings.get().powerTier)
+  const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3' | 't4'>(() => skinStudioSettings.get().powerTier)
   const [glass, setGlass] = useState<boolean>(() => skinStudioSettings.get().glass)
   const [cursorFx, setCursorFx] = useState<boolean>(() => skinStudioSettings.get().cursorFx)
   const [tierSync, setTierSync] = useState<boolean>(() => skinStudioSettings.get().tierSyncEffort)
@@ -386,14 +386,14 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           className={styles.mascotToggle}
           aria-pressed={powerTier === 'auto'}
           title="跟随 DSH 推理等级自动升降档（推荐）；再点恢复手动滑条控制"
-          onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effective}` as 't0' | 't1' | 't2' | 't3' : 'auto')}
+          onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effective}` as 't0' | 't1' | 't2' | 't3' | 't4' : 'auto')}
         >
           {powerTier === 'auto' ? `跟随推理（${effective + 1}档）` : '手动'}
         </button>
         <input
           type="range"
           min={0}
-          max={3}
+          max={4}
           step={1}
           value={powerTier === 'auto' ? effective : Number(powerTier.slice(1))}
           aria-label={`境界档位，当前第 ${effective + 1} 档 ${tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}`}
@@ -401,7 +401,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           className={styles.tierSlider}
           onChange={e => {
             const v = Number(e.target.value)
-            skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3')
+            skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3' | 't4')
             if (skinStudioSettings.get().tierSyncEffort) syncTierToEffort(ctx, v as 0 | 1 | 2 | 3, effortTier)
           }}
         />

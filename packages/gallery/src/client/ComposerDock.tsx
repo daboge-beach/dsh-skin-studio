@@ -102,7 +102,7 @@ export function ComposerDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element {
   const onSlider = (v: string): void => {
     const n = Number(v)
     // 视觉档位 0-3（资产四档，超出档位视觉取最高）
-    skinStudioSettings.setPowerTier(`t${Math.min(n, 3)}` as 't0' | 't1' | 't2' | 't3')
+    skinStudioSettings.setPowerTier(`t${Math.min(n, 4)}` as 't0' | 't1' | 't2' | 't3' | 't4')
     if (typeof document !== 'undefined') document.body.dataset.xlSync = sync ? 'slider-on' : 'slider-off'
     if (sync && ctx !== undefined) syncTierToEffort(ctx, n as PowerTier, effortTier)
   }
@@ -123,7 +123,7 @@ export function ComposerDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element {
         className={styles.tierMode}
         aria-pressed={powerTier === 'auto'}
         title="跟随推理等级自动升降档 / 手动锁定（点此切换）"
-        onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effectiveTier()}` as 't0' | 't1' | 't2' | 't3' : 'auto')}
+        onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effectiveTier()}` as 't0' | 't1' | 't2' | 't3' | 't4' : 'auto')}
       >
         {powerTier === 'auto' ? '跟随' : '手动'}
       </button>

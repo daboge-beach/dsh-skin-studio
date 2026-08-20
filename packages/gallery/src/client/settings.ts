@@ -37,7 +37,7 @@ export interface SkinStudioSettings {
    * tierPower.ts）；'t0'~'t3' 手动锁定。档位驱动吉祥物造型 / 光标配色 /
    * 背景装饰强度（凡人系=修为境界、LOL 系=皮肤等级，逐级递进）。
    */
-  powerTier: 'auto' | 't0' | 't1' | 't2' | 't3'
+  powerTier: 'auto' | 't0' | 't1' | 't2' | 't3' | 't4'
   /**
    * 磨玻璃工作区（默认开）：皮肤背景图铺满窗口，界面面板半透明 +
    * backdrop-blur，背景图从工作区透出。关闭则回到实色面板。
@@ -159,10 +159,10 @@ export const skinStudioSettings = {
     if (current.notifyTaskDone === mode) return
     write({ ...current, notifyTaskDone: mode })
   },
-  getPowerTier(): 'auto' | 't0' | 't1' | 't2' | 't3' {
+  getPowerTier(): 'auto' | 't0' | 't1' | 't2' | 't3' | 't4' {
     return current.powerTier
   },
-  setPowerTier(tier: 'auto' | 't0' | 't1' | 't2' | 't3'): void {
+  setPowerTier(tier: 'auto' | 't0' | 't1' | 't2' | 't3' | 't4'): void {
     if (current.powerTier === tier) return
     write({ ...current, powerTier: tier })
   },
