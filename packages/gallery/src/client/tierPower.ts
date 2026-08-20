@@ -10,19 +10,18 @@ import { skinStudioSettings } from './settings.ts'
 
 export type PowerTier = 0 | 1 | 2 | 3
 
-/** 推理等级名 → 档位（未识别的名称按保守原则落 0 档）。 */
-function effortNameToTier(name: string): PowerTier {
+/**
+ * 推理等级名 → 档位。返回 null = 未识别（调用方保持当前档位不变，
+ * 不做任何突变——任何模型的等级词没命中就维持现状，滑条随时手控）。
+ */
+function effortNameToTier(name: string): PowerTier | null {
   const n = name.trim().toLowerCase()
-  // 英文档名（模型元数据原生）
-  if (/(max|ultra|insane|thinking)/.test(n)) return 3
-  if (/high/.test(n)) return 2
-  if (/(medium|mid|balanced)/.test(n)) return 1
-  // 中文档名（界面本地化形态）
-  if (/深度|极智|最强|满血/.test(n)) return 3
-  if (/高|深思/.test(n)) return 2
-  if (/中|平衡/.test(n)) return 1
-  if (/low|mini|fast|default|none|快速|默认|标准/.test(n)) return 0
-  return 0
+  // 通用强度词（DeepSeek / GLM / 主流 OpenAI 风格档位）
+  if (/(max|ultra|insane|thinking|deep|深度|极智|最强|满血|开启思考)/.test(n)) return 3
+  if (/(high|深|强)/.test(n)) return 2
+  if (/(medium|mid|balanced|中|平衡)/.test(n)) return 1
+  if (/(low|mini|fast|default|none|off|standard|quick|快速|默认|标准|关闭思考)/.test(n)) return 0
+  return null
 }
 
 /** 从 DOM 读当前推理等级名（模型触发按钮的 aria-label 含 "推理等级 X" / "reasoning effort X"）。 */
@@ -77,8 +76,10 @@ export function mountTierWatch(): () => void {
     scanTimer = window.setTimeout(() => {
       scanTimer = undefined
       const name = readReasoningEffort()
-      const next = name === null ? 0 : effortNameToTier(name)
-      if (next !== detectedTier) {
+      // 未识别的等级名（换了模型/新档位词）→ 保持当前档位，不突变
+      if (name === null) return
+      const next = effortNameToTier(name)
+      if (next !== null && next !== detectedTier) {
         detectedTier = next
         publish()
       }
