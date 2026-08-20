@@ -112,9 +112,9 @@ export function apply(ctx: ClientContext): void {
   ctx.effect(() => mountTierWatch(), '@dsh-skin-studio/gallery: tier watch')
 
   // 8. 输入区控制条（conversation.composer.dock）：模型选择 + 境界滑条。
-  //    槽位由 conversation 服务声明 —— 注入该服务保证声明已就绪再注册
-  //    （demo/mock 宿主无此服务或不支持通用 register，静默跳过）。
-  ctx.inject(['conversation'], injected => {
+  //    槽位由 conversation 服务声明；modelDirectories 供等级同步（cordis
+  //    要求服务先注入才能访问）。demo/mock 宿主缺这些服务时不注册。
+  ctx.inject(['conversation', 'modelDirectories', 'sessions'], injected => {
     injected.effect(() => {
       let dispose: (() => void) | undefined
       try {

@@ -61,13 +61,28 @@ const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, qu
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
 
+/**
+ * 设置存储版本：升级时对存量数据做一次性迁移（新引入字段的默认值对齐）。
+ * v2：tierSyncEffort 默认改开 —— 早期版本拖滑条时曾把旧默认 false 一并
+ * 持久化，无版本号无法区分「显式关闭」与「被动写入的旧默认」，迁移时
+ * 统一对齐新默认；用户此后显式操作以 __v=2 落盘，不再被覆盖。
+ */
+const SETTINGS_VERSION = 2
+
 function read(): SkinStudioSettings {
   if (typeof localStorage === 'undefined') return { ...DEFAULTS }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw === null) return { ...DEFAULTS }
-    const parsed = JSON.parse(raw) as Partial<SkinStudioSettings>
-    return { ...DEFAULTS, ...parsed }
+    const parsed = JSON.parse(raw) as Partial<SkinStudioSettings> & { __v?: number }
+    const merged = { ...DEFAULTS, ...parsed } as SkinStudioSettings
+    if (parsed.__v !== SETTINGS_VERSION) {
+      // 一次性迁移：版本间新增/改默认的字段在此对齐
+      if (parsed.tierSyncEffort === undefined || parsed.__v === undefined) {
+        merged.tierSyncEffort = DEFAULTS.tierSyncEffort
+      }
+    }
+    return merged
   } catch {
     return { ...DEFAULTS }
   }
@@ -87,7 +102,7 @@ function write(next: SkinStudioSettings): void {
   current = next
   if (typeof localStorage !== 'undefined') {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...next, __v: SETTINGS_VERSION }))
     } catch {
       // 隐私模式等场景写入失败不致命，内存态仍然生效
     }

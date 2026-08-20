@@ -39,10 +39,8 @@ export function syncTierToEffort(ctx: ClientContext, tier: PowerTier, knownTier:
     if (sessionId === undefined || sessionId === null) { trace('no-session'); return }
 
     let directory: {
-      getSnapshot(): {
-        current: { provider: string; model: string; reasoningEffort?: string } | null
-        groups?: Array<{ id: string; models: Array<{ id: string; reasoning?: { efforts?: Array<{ id: string }> } | undefined }> }>
-      }
+      store?: { getSnapshot?(): unknown }
+      getSnapshot?(): unknown
       select(selection: { provider: string; model: string; reasoningEffort?: string }): Promise<void>
     }
     try {
@@ -51,7 +49,15 @@ export function syncTierToEffort(ctx: ClientContext, tier: PowerTier, knownTier:
       trace('directory-err:' + String(e).slice(0, 60))
       return
     }
-    const snap = directory.getSnapshot()
+    // 官方形态是 directory.store.getSnapshot()（ModelDirectory 经 store 暴露状态）
+    const snapOf = typeof directory.getSnapshot === 'function'
+      ? directory.getSnapshot()
+      : (typeof directory.store?.getSnapshot === 'function' ? directory.store.getSnapshot() : undefined)
+    if (snapOf === undefined) { trace('no-snapshot'); return }
+    const snap = snapOf as {
+      current: { provider: string; model: string; reasoningEffort?: string } | null
+      groups?: Array<{ id: string; models: Array<{ id: string; reasoning?: { efforts?: Array<{ id: string }> } | undefined }> }>
+    }
     const cur = snap.current
     if (cur === null) { trace('no-current'); return }
 
