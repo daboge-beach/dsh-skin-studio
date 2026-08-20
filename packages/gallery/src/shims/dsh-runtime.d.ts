@@ -42,7 +42,7 @@ declare module '@deepseek-ai/dsh-client-runtime/client' {
      * 注册组件到槽位。component 收到框架组装的 props（宿主参数 +
      * 标准席位）；返回反注册函数。
      */
-    register(options: SlotRegisterOptions, component: (props: SettingsSectionOwnerProps) => ReactNode): () => void
+    register(options: SlotRegisterOptions, component: (props?: SettingsSectionOwnerProps) => ReactNode): () => void
     /**
      * 等待槽位被声明后注册（官方推荐的跨包注册方式）：声明出现时执行
      * factory，声明塌缩时自动撤销 factory 返回的 disposer，重新声明时重跑。

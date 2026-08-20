@@ -1,0 +1,53 @@
+/* ComposerDock — 输入区下方的模型/境界控制条（紧凑单行）。 */
+.dock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.modelBtn {
+  padding: 2px 10px;
+  border-radius: 8px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  max-width: 46em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modelBtn:hover {
+  border-color: var(--dsw-alias-border-l2);
+  color: var(--dsw-alias-label-primary);
+}
+
+.tierMode {
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.tierMode[aria-pressed='true'] {
+  color: var(--dsw-alias-brand-primary);
+  border-color: var(--dsw-alias-brand-primary);
+}
+
+.tierSlider {
+  width: 120px;
+  accent-color: var(--dsw-alias-brand-primary);
+  cursor: ew-resize;
+}
+
+.tierName {
+  color: var(--dsw-alias-brand-primary);
+  min-width: 3em;
+  font-weight: 500;
+}

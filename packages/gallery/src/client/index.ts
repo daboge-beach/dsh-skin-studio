@@ -25,6 +25,7 @@ import { mountOverlays } from './overlays.ts'
 import { mountSkinEffects } from './skinEffects.ts'
 import { mountTaskNotify } from './taskNotify.ts'
 import { mountTierWatch } from './tierPower.ts'
+import { ComposerDockBar } from './ComposerDock.tsx'
 
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
 export const inject = ['theme', 'slots']
@@ -139,6 +140,26 @@ export function apply(ctx: ClientContext): void {
 
   // 7. 境界档位观察（'auto' 模式跟随 DSH 推理等级，DOM 读取）
   ctx.effect(() => mountTierWatch(), '@dsh-skin-studio/gallery: tier watch')
+
+  // 8. 输入区控制条（conversation.composer.dock）：模型选择 + 境界滑条。
+  //    槽位由 conversation 服务声明 —— 注入该服务保证声明已就绪再注册
+  //    （demo/mock 宿主无此服务或不支持通用 register，静默跳过）。
+  ctx.inject(['conversation'], injected => {
+    injected.effect(() => {
+      let dispose: (() => void) | undefined
+      try {
+        dispose = injected.slots.register(
+          { name: 'conversation.composer.dock', id: 'skin-studio-tier', order: -1 },
+          () => ComposerDockBar(),
+        )
+        if (typeof document !== 'undefined') document.body.dataset.xlDock = 'registered'
+      } catch (e) {
+        if (typeof document !== 'undefined') document.body.dataset.xlDock = 'err:' + String(e).slice(0, 80)
+        dispose = undefined
+      }
+      return () => { dispose?.() }
+    }, '@dsh-skin-studio/gallery: composer dock')
+  })
 }
 
 export const name = '@dsh-skin-studio/gallery'
