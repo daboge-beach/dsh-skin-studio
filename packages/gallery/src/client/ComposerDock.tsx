@@ -52,6 +52,7 @@ export function ComposerDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element {
 
   const onSlider = (v: string): void => {
     skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3')
+    if (typeof document !== 'undefined') document.body.dataset.xlSync = sync ? 'slider-on' : 'slider-off'
     if (sync && ctx !== undefined) syncTierToEffort(ctx, Number(v) as PowerTier, effortTierSafe)
   }
 
@@ -75,6 +76,15 @@ export function ComposerDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element {
         onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effectiveTier()}` as 't0' | 't1' | 't2' | 't3' : 'auto')}
       >
         {powerTier === 'auto' ? '跟随' : '手动'}
+      </button>
+      <button
+        type="button"
+        className={styles.tierMode}
+        aria-pressed={sync}
+        title="滑条同步推理等级：开=拖动境界滑条真实修改当前会话的推理等级（改变 token 消耗）；关=滑条仅控制视觉档位"
+        onClick={() => { skinStudioSettings.setTierSyncEffort(!sync) }}
+      >
+        {sync ? '⇄同步' : '⇄视觉'}
       </button>
       <input
         type="range" min={0} max={3} step={1}

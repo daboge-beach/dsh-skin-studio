@@ -24,10 +24,11 @@ function strengthOf(id: string, known: (id: string) => number | null): number {
  * @param tier - 目标档位（0-3，映射到当前模型 efforts 列表的对应强度位）。
  */
 export function syncTierToEffort(ctx: ClientContext, tier: PowerTier, knownTier: (id: string) => number | null): void {
+  const trace = (m: string): void => { if (typeof document !== 'undefined') document.body.dataset.xlSync = m }
   try {
     const dirs = ctx.modelDirectories
     const sessions = ctx.sessions
-    if (dirs === undefined || sessions === null || sessions === undefined) return
+    if (dirs === undefined || sessions === null || sessions === undefined) { trace('no-service'); return }
 
     // 当前会话 id：list 快照的 current（防御式读，形态随版本可能收窄）
     const list = typeof sessions.list.getSnapshot === 'function'
@@ -35,31 +36,47 @@ export function syncTierToEffort(ctx: ClientContext, tier: PowerTier, knownTier:
       : (sessions.list as unknown as { current?: { id?: string } | string | null })
     const currentRaw = list?.current
     const sessionId = typeof currentRaw === 'string' ? currentRaw : currentRaw?.id
-    if (sessionId === undefined || sessionId === null) return
+    if (sessionId === undefined || sessionId === null) { trace('no-session'); return }
 
-    const directory = dirs.directoryFor(sessionId)
+    let directory: {
+      getSnapshot(): {
+        current: { provider: string; model: string; reasoningEffort?: string } | null
+        groups?: Array<{ id: string; models: Array<{ id: string; reasoning?: { efforts?: Array<{ id: string }> } | undefined }> }>
+      }
+      select(selection: { provider: string; model: string; reasoningEffort?: string }): Promise<void>
+    }
+    try {
+      directory = dirs.directoryFor(sessionId)
+    } catch (e) {
+      trace('directory-err:' + String(e).slice(0, 60))
+      return
+    }
     const snap = directory.getSnapshot()
     const cur = snap.current
-    if (cur === null) return
+    if (cur === null) { trace('no-current'); return }
 
     // 当前模型的 efforts 列表（provider 组 → model → reasoning.efforts）
     const group = (snap.groups ?? []).find(g => g.id === cur.provider)
     const model = group?.models.find(m => m.id === cur.model)
     const efforts = model?.reasoning?.efforts
-    if (efforts === undefined || efforts.length === 0) return
+    if (group === undefined) { trace('no-group:' + cur.provider); return }
+    if (model === undefined) { trace('no-model:' + cur.model); return }
+    if (efforts === undefined || efforts.length === 0) { trace('no-efforts'); return }
 
     // 按强度排序后取目标档位（档位超上限则取最高档）
     const sorted = [...efforts].sort(
       (a, b) => strengthOf(a.id, knownTier) - strengthOf(b.id, knownTier))
     const picked = sorted[Math.min(tier, sorted.length - 1)]
-    if (picked === undefined || picked.id === cur.reasoningEffort) return
+    if (picked === undefined) { trace('no-pick'); return }
+    if (picked.id === cur.reasoningEffort) { trace('same:' + picked.id); return }
 
+    trace('sent:' + picked.id)
     void directory.select({
       provider: cur.provider,
       model: cur.model,
       reasoningEffort: picked.id,
-    }).catch(() => { /* 提交失败不影响视觉档位 */ })
-  } catch {
-    // 任何接口形态差异都静默降级
+    }).then(() => { trace('ok:' + picked.id) }).catch(e => { trace('select-err:' + String(e).slice(0, 60)) })
+  } catch (e) {
+    trace('err:' + String(e).slice(0, 60))
   }
 }

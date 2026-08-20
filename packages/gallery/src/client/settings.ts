@@ -56,7 +56,7 @@ export interface SkinStudioSettings {
   tierSyncEffort: boolean
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: false }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: true }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
