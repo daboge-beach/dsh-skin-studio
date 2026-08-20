@@ -87,6 +87,7 @@ declare module '@deepseek-ai/dsh-client-runtime/client' {
 
   /** 每会话模型目录（官方 ui-model-selection 服务；防御式最小面）。 */
   interface ModelDirectoryLike {
+    store?: { getSnapshot?(): unknown }
     getSnapshot(): {
       current: ModelSelectionLike | null
       groups?: Array<{
