@@ -9,6 +9,79 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.5.0] — 2026-08-17
+
+**简体中文**
+
+「输入区控制条 + 滑条双向同步真实推理等级」版本。
+
+### 新增
+
+- **输入区控制条**：模型选择 + 境界档位滑条直接放在输入框下方（官方
+  conversation.composer.dock 槽位）；模型按钮点击打开官方菜单，文案
+  实时镜像当前模型与推理等级
+- **滑条双向同步真实推理等级**：开启后拖动境界滑条真实修改当前会话的
+  推理等级 —— 走官方 modelDirectories/sessions.selectModel 接口，与
+  模型菜单点选完全同路径；dock 上「⇄视觉/⇄同步」一键切换（默认开，
+  同步会真实改变推理强度与 token 消耗）
+- **一键还原出厂**：红色醒目按钮，清除皮肤偏好与全部设置回到 DSH
+  原生界面（插件保留）
+- **光标开关**：光标热点影响点击精度时一键回系统光标
+- LOL 8 款分档人物背景补齐（16 款 × 4 档 = 64 张全量；女英雄丰满
+  迷人向，prompt 点名官方英雄称号）
+- 检索关键词：README/package.json 加英雄联盟/凡人修仙传/国漫/
+  xiuxian/donghua 等
+
+### 修复
+
+- 换模型（如切 GLM）后皮肤被顶掉黑屏：移除 userTouched 猜测逻辑，
+  有皮肤记忆一律顶回；回原生唯一入口=还原出厂
+- 等级识别简化：未识别的等级词保持当前档位不突变（不再错误落 0 档）
+- 皮肤资产禁强缓存：换图后立即可见
+- 15 个角色语录去除写死「周五」的时间错乱
+- 吉祥物 Q 版手办徽章化
+- 适配 DSH rc.8：构建预设 workspace 扫描（manifest 副本 + prebuild
+  自动同步）、cordis 服务注入、设置存储版本迁移 v2
+
+---
+
+**English**
+
+The "composer dock + slider-to-reasoning-effort two-way sync" release.
+
+### Added
+
+- **Composer dock control bar**: model selection + tier slider docked
+  right under the message box (official conversation.composer.dock slot);
+  the model button opens the native menu and mirrors the current model and
+  effort level in real time
+- **Slider syncs the real reasoning effort**: when enabled, dragging the
+  tier slider actually changes the session's reasoning effort through the
+  official modelDirectories / sessions.selectModel path (identical to
+  picking in the model menu); toggled by the dock's ⇄ button (default on —
+  it genuinely changes reasoning strength and token cost)
+- **One-click factory reset**: prominent red button restores the native
+  DSH look (plugin stays)
+- **Cursor toggle**: fall back to system cursors when hotspots hurt clicks
+- Remaining 8 LoL tiered character backgrounds delivered (16 skins × 4
+  tiers = 64 total; female champions glamorous, prompts name official
+  champion titles)
+- Search keywords: LoL / Mortal's Journey / donghua / xiuxian etc. in
+  README and package.json
+
+### Fixed
+
+- Black screen after switching models (e.g. to GLM): the userTouched
+  guesswork removed — any built-in theme flip is bounced back to the saved
+  skin; the only path back to native is Factory Reset
+- Effort recognition simplified: unknown effort names keep the current
+  tier instead of dropping to 0
+- Skin assets served no-cache so swaps are visible at once
+- Day-neutral quotes ("Friday" lines removed across 15 characters)
+- Mascot restyled as a chibi figure badge
+- DSH rc.8 compatibility: build preset workspace scan (manifest copy +
+  prebuild sync), cordis service injection, settings storage migration v2
+
 ## [0.3.0] — 2026-08-16
 
 **简体中文**
