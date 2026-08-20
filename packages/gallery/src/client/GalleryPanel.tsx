@@ -17,7 +17,8 @@ import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
 import type { GalleryTab, SkinEntry } from './registry/types.ts'
 import { ensureThemeRegistered, unregisterGalleryTheme } from './themeBridge.ts'
-import { effectiveTier, subscribeTier, tierLabel } from './tierPower.ts'
+import { effectiveTier, subscribeTier, tierLabel, effortTier } from './tierPower.ts'
+import { syncTierToEffort } from './tierSync.ts'
 import styles from './GalleryPanel.module.css'
 
 export interface GalleryPanelProps {
@@ -97,6 +98,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3'>(() => skinStudioSettings.get().powerTier)
   const [glass, setGlass] = useState<boolean>(() => skinStudioSettings.get().glass)
   const [cursorFx, setCursorFx] = useState<boolean>(() => skinStudioSettings.get().cursorFx)
+  const [tierSync, setTierSync] = useState<boolean>(() => skinStudioSettings.get().tierSyncEffort)
   const [effective, setEffective] = useState<number>(() => effectiveTier())
   useEffect(() => subscribeTier(t => setEffective(t)), [])
 
@@ -113,6 +115,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     setPowerTier(s.powerTier)
     setGlass(s.glass)
     setCursorFx(s.cursorFx)
+    setTierSync(s.tierSyncEffort)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
@@ -326,6 +329,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         </button>
         <button
           type="button"
+          className={styles.mascotToggle}
+          aria-pressed={tierSync}
+          title="滑条同步推理等级：开启后手动拉动境界滑条会真实修改当前会话的推理等级（官方接口，与模型菜单同路径）。注意会改变实际推理强度与 token 消耗，默认关闭。"
+          onClick={() => skinStudioSettings.setTierSyncEffort(!tierSync)}
+        >
+          等级同步：{tierSync ? '开' : '关'}
+        </button>
+        <button
+          type="button"
           className={styles.factoryReset}
           title="一键还原出厂设置：清除皮肤偏好与全部皮肤中心设置，界面回到 DSH 原生外观（跟随系统的明暗主题）。皮肤中心本身保留，随时可以再换皮肤。"
           onClick={() => {
@@ -390,6 +402,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           onChange={e => {
             const v = Number(e.target.value)
             skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3')
+            if (skinStudioSettings.get().tierSyncEffort) syncTierToEffort(ctx, v as 0 | 1 | 2 | 3, effortTier)
           }}
         />
         <span className={styles.tierName}>

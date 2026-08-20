@@ -48,9 +48,15 @@ export interface SkinStudioSettings {
    * 精度时可关闭，回退系统光标。
    */
   cursorFx: boolean
+  /**
+   * 滑条同步推理等级（默认关）：开启后手动拉动境界滑条会真实修改当前
+   * 会话的推理等级（走官方 modelDirectories.selectModel 接口）。注意
+   * 这会改变实际推理强度/token 消耗，故默认关闭。
+   */
+  tierSyncEffort: boolean
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: false }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -158,6 +164,13 @@ export const skinStudioSettings = {
   setCursorFx(on: boolean): void {
     if (current.cursorFx === on) return
     write({ ...current, cursorFx: on })
+  },
+  getTierSyncEffort(): boolean {
+    return current.tierSyncEffort
+  },
+  setTierSyncEffort(on: boolean): void {
+    if (current.tierSyncEffort === on) return
+    write({ ...current, tierSyncEffort: on })
   },
   /**
    * 一键还原出厂：全部设置回默认值、清除皮肤偏好与试穿态

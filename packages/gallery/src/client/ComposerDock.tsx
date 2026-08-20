@@ -7,9 +7,14 @@
  * - 档位滑条：与皮肤中心面板同一套 tierPower 逻辑（跟随推理/手动 + 0-3 档）
  */
 import { useEffect, useState } from 'react'
+import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { skinStudioSettings } from './settings.ts'
-import { effectiveTier, subscribeTier, tierLabel, type PowerTier } from './tierPower.ts'
+import { effectiveTier, subscribeTier, tierLabel, effortTier, type PowerTier } from './tierPower.ts'
+import { syncTierToEffort } from './tierSync.ts'
 import styles from './ComposerDock.module.css'
+
+/** tierSync 的强度判定适配（effortTier 已在 tierPower 导出）。 */
+const effortTierSafe = (id: string): number | null => effortTier(id)
 
 /** 镜像官方模型按钮的 aria-label（1s 轮询，轻量）。 */
 function useModelLabel(): string {
@@ -36,13 +41,19 @@ function openModelMenu(): void {
   }
 }
 
-/** 档位控制条（无 props 的 dock 组件）。 */
-export function ComposerDockBar(): JSX.Element {
+/** 档位控制条（dock 组件；ctx 用于可选的推理等级同步）。 */
+export function ComposerDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element {
   const modelLabel = useModelLabel()
   const [powerTier, setPowerTier] = useState(() => skinStudioSettings.get().powerTier)
   const [tier, setTier] = useState<PowerTier>(() => effectiveTier())
-  useEffect(() => skinStudioSettings.subscribe(s => { setPowerTier(s.powerTier) }), [])
+  const [sync, setSync] = useState(() => skinStudioSettings.get().tierSyncEffort)
+  useEffect(() => skinStudioSettings.subscribe(s => { setPowerTier(s.powerTier); setSync(s.tierSyncEffort) }), [])
   useEffect(() => subscribeTier(t => { setTier(t) }), [])
+
+  const onSlider = (v: string): void => {
+    skinStudioSettings.setPowerTier(`t${v}` as 't0' | 't1' | 't2' | 't3')
+    if (sync && ctx !== undefined) syncTierToEffort(ctx, Number(v) as PowerTier, effortTierSafe)
+  }
 
   const short = modelLabel
     .replace(/^选择模型，当前\s*/, '')
@@ -71,7 +82,7 @@ export function ComposerDockBar(): JSX.Element {
         aria-label={`境界档位，当前 ${tierLabel(skinStudioSettings.getActiveSkin() ?? '', tier)}`}
         title="境界档位：推理等级越高，人物修为/皮肤等级越高（背景·吉祥物·光标随之变化）"
         value={powerTier === 'auto' ? tier : Number(powerTier.slice(1))}
-        onChange={e => { skinStudioSettings.setPowerTier(`t${e.target.value}` as 't0' | 't1' | 't2' | 't3') }}
+        onChange={e => { onSlider(e.target.value) }}
       />
       <span className={styles.tierName}>{tierLabel(skinStudioSettings.getActiveSkin() ?? '', tier)}</span>
     </div>

@@ -120,7 +120,7 @@ export function apply(ctx: ClientContext): void {
       try {
         dispose = injected.slots.register(
           { name: 'conversation.composer.dock', id: 'skin-studio-tier', order: -1 },
-          () => ComposerDockBar(),
+          () => ComposerDockBar({ ctx: injected }),
         )
         if (typeof document !== 'undefined') document.body.dataset.xlDock = 'registered'
       } catch (e) {

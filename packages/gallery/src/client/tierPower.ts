@@ -36,6 +36,11 @@ function readReasoningEffort(): string | null {
   return null
 }
 
+/** 等级 id → 档位强度（供 tierSync 排序 efforts 用）；未识别返回 null。 */
+export function effortTier(id: string): number | null {
+  return effortNameToTier(id)
+}
+
 /** 检测到的推理档位（读不到时 0 档）。 */
 let detectedTier: PowerTier = 0
 

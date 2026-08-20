@@ -72,6 +72,41 @@ declare module '@deepseek-ai/dsh-client-runtime/client' {
     'dispose'(): void
   }
 
+  /** 单个推理等级（模型元数据提供，id+显示名）。 */
+  interface ModelReasoningEffortLike {
+    id: string
+    name?: string
+  }
+
+  /** 一次完整模型选择（与官方菜单提交同构）。 */
+  interface ModelSelectionLike {
+    provider: string
+    model: string
+    reasoningEffort?: string
+  }
+
+  /** 每会话模型目录（官方 ui-model-selection 服务；防御式最小面）。 */
+  interface ModelDirectoryLike {
+    getSnapshot(): {
+      current: ModelSelectionLike | null
+      groups?: Array<{
+        id: string
+        models: Array<{ id: string; reasoning?: { efforts?: ModelReasoningEffortLike[] } | undefined }>
+      }>
+    }
+    select(selection: ModelSelectionLike): Promise<void>
+  }
+
+  /** ctx.modelDirectories（可选服务：宿主装了 ui-model-selection 才有）。 */
+  interface ModelDirectoriesServiceLike {
+    directoryFor(sessionId: string): ModelDirectoryLike
+  }
+
+  /** ctx.sessions 的最小防御面（当前会话选择）。 */
+  interface SessionsServiceLike {
+    list: { getSnapshot?(): { current?: { id?: string } | string | null } | undefined } & { current?: { id?: string } | string | null }
+  }
+
   /**
    * DSH 客户端插件上下文（官方 ClientContext 的最小面）。
    * 与官方一致：所有服务调用都应放在 ctx.inject([...], ...) 回调内。
@@ -79,6 +114,10 @@ declare module '@deepseek-ai/dsh-client-runtime/client' {
   export interface ClientContext {
     readonly theme: ThemeRuntime
     readonly slots: SlotsService
+    /** 官方模型目录服务（ui-model-selection 提供；可选，缺省即无等级同步）。 */
+    readonly modelDirectories?: ModelDirectoriesServiceLike
+    /** 官方会话服务（可选，防御式最小面）。 */
+    readonly sessions?: SessionsServiceLike | null
     /** cordis 依赖注入：所需服务就绪后执行回调，回调内的 ctx 已保证服务可用。 */
     inject(deps: readonly string[], callback: (ctx: ClientContext) => void): void
     /** cordis effect：setup 返回清理函数，ctx 销毁时自动调用（无内存泄漏）。 */
