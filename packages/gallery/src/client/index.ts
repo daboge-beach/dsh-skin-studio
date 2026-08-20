@@ -44,9 +44,6 @@ function restoreSavedSkin(ctx: ClientContext): void {
 /** 内置偏好三值（adoption 顶回与用户切换的共同特征域）。 */
 const BUILT_IN_PREFERENCES = new Set(['light', 'dark', 'system'])
 
-/** 启动收敛窗口：官方 scope 的 adoption 一般在连接建立后的最初几秒到达。 */
-const CONVERGE_WINDOW_MS = 15_000
-
 /**
  * 皮肤中心浏览器半边插件。
  * @param ctx - 客户端插件上下文。
@@ -58,54 +55,27 @@ export function apply(ctx: ClientContext): void {
 
     restoreSavedSkin(ctx)
 
-    // adoption 顶回的判定：preference 与 active 同时变内置。时间窗口只是
-    // 下限——宿主重连场景下 adoption 可能远晚于窗口到达（实测撞见过），
-    // 而 adoption 是程序事件、用户换主题必先有输入：窗口外且用户从未
-    // 交互过的内置翻转仍按 adoption 顶回，只有用户动过（pointer/键盘）
-    // 之后的翻转才视为用户意图（皮肤 → 记忆；内置 → 清除）。
-    // 判据用 snapshot.preference：试穿/应用时 preference 是皮肤 id（非内置），
-    // 不会被误判为 adoption。
-    let windowClosed = skinStudioSettings.getActiveSkin() === null
-    let userTouched = false
-    const windowTimer = windowClosed ? undefined : window.setTimeout(() => {
-      windowClosed = true
-    }, CONVERGE_WINDOW_MS)
-    const markTouched = (): void => { userTouched = true }
-    const hasWindow = typeof window !== 'undefined'
-    if (hasWindow) {
-      window.addEventListener('pointerdown', markTouched, { capture: true })
-      window.addEventListener('keydown', markTouched, { capture: true })
-    }
-
+    // 内置翻转（宿主 adoption / 换模型触发 / 用户经官方外观选择器切明暗）：
+    // 有皮肤记忆一律顶回皮肤。回原生界面的唯一入口是皮肤中心的「还原出厂」
+    // ——不做 userTouched 类猜测（拉境界滑条等普通点击曾被误判为切主题意图，
+    // 导致换模型时皮肤记忆被清、界面黑屏）。
     const off = ctx.on('theme/change', snapshot => {
       const id = snapshot.active.id
       const saved = skinStudioSettings.getActiveSkin()
       if (id === saved) return
-      // 试穿只是临时预览：不写记忆、不触发 adoption 顶回（决策见皮肤中心
-      // 面板的试穿条 —— 「应用并保存」落记忆，「退出还原」切回）。
+      // 试穿只是临时预览：不写记忆、不触发顶回（决策见皮肤中心面板的试穿条）
       if (skinStudioSettings.isTryOnActive()) return
-      const builtInFlip = BUILT_IN_PREFERENCES.has(snapshot.preference)
-        && BUILT_IN_PREFERENCES.has(id)
-      if (saved !== null && builtInFlip && !(windowClosed && userTouched)) {
-        // 启动 adoption 竞态：顶回皮肤（皮肤失效则顺手清记忆）。
-        // 必须异步执行：在本监听器内同步 setTheme 会产生嵌套 publish，
-        // 后注册的订阅者（皮肤特效层 / React 监听）会先收到嵌套事件、
-        // 再收到外层事件的残余，最终停在旧状态。microtask 让事件序列
-        // 对所有订阅者线性化：dark → mupeiling。
-        queueMicrotask(() => { restoreSavedSkin(ctx) })
+      if (BUILT_IN_PREFERENCES.has(id)) {
+        // 内置偏好翻转：有皮肤记忆 → 顶回（microtask 线性化事件序列）
+        if (saved !== null) queueMicrotask(() => { restoreSavedSkin(ctx) })
         return
       }
-      // 记忆跟随当前激活状态：皮肤 → 记 id；内置偏好（含试穿还原）→ 清除
+      // 皮肤 id（官方选择器直接选了已注册皮肤）：跟随记忆
       skinStudioSettings.setActiveSkin(skinRegistry.get(id) === undefined ? null : id)
     })
 
     return () => {
       off()
-      if (windowTimer !== undefined) window.clearTimeout(windowTimer)
-      if (hasWindow) {
-        window.removeEventListener('pointerdown', markTouched, { capture: true })
-        window.removeEventListener('keydown', markTouched, { capture: true })
-      }
       for (const dispose of disposers) dispose()
     }
   }, '@dsh-skin-studio/gallery: theme registration + preference restore')
