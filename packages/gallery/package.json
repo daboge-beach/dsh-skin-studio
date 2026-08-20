@@ -27,7 +27,8 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.build.json && tsdown",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prebuild": "node -e \"const fs=require('fs');fs.mkdirSync('E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery',{recursive:true});fs.copyFileSync('package.json','E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery/package.json')\""
   },
   "dsh": {
     "client": {
