@@ -174,18 +174,19 @@ function buildDialogVeilCss(): string {
 }
 
 function buildPanelVeilCss(): string {
-  // veil 轻纱：bg-* 半透明覆盖（正文无磨砂模糊，但整体仍透出背景图）。
-  // 侧栏的磨砂由 buildGlassCss 单独负责（更透明的 sidebar-fill + blur）。
+  // veil 轻纱（原图透出模式）：bg-base 大幅透明（它只是气泡间隙的底色，
+  // 压在整个背景图上把图压灰——正文文字实际坐在消息气泡的 layer-* 实底
+  // 上，bg-base 降到近透不影响可读性）；侧栏 fill 同步减半让图更净。
   const rules: string[] = []
   for (const [skinId, v] of Object.entries(PANEL_VEIL)) {
     const cssClass = SKIN_CURSORS[skinId]?.cssClass
     if (cssClass === undefined) continue
     rules.push(
       `body.${cssClass} #root {`,
-      `  --dsw-alias-bg-base: rgb(${v.base.join(' ')} / ${v.aBase});`,
+      `  --dsw-alias-bg-base: rgb(${v.base.join(' ')} / ${(v.aBase * 0.3).toFixed(2)});`,
       `  --dsw-alias-bg-layer-1: rgb(${v.layer1.join(' ')} / ${v.aLayer1});`,
       `  --dsw-alias-bg-layer-2: rgb(${v.layer2.join(' ')} / ${v.aLayer2});`,
-      `  --dsw-specific-sidebar-fill: rgb(${v.sidebar.join(' ')} / ${v.aSidebar});`,
+      `  --dsw-specific-sidebar-fill: rgb(${v.sidebar.join(' ')} / ${(v.aSidebar * 0.55).toFixed(2)});`,
       `}`,
     )
   }
