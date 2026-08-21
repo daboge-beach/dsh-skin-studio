@@ -34,6 +34,50 @@ const SKIN_ASSET_PATH = /^\/skins\/([a-z0-9-]+)\/assets\/([A-Za-z0-9_./-]+)$/
  * @param ctx - 宿主插件上下文（webServer 服务）。
  */
 export function apply(ctx: HostContext): void {
+  // 自定义背景上传：POST /skins/upload-bg { skinId, tier, dataBase64 }
+  // 存为 tiers/t{n}/bg.custom.png（不覆盖生图资产，GET 优先返回）。
+  ctx.webServer.register({
+    kind: 'exact',
+    path: '/skins/upload-bg',
+    handler: async (req, res) => {
+      if (req.method !== 'POST') {
+        res.writeHead(405)
+        res.end()
+        return
+      }
+      try {
+        const chunks: Buffer[] = []
+        for await (const chunk of req) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk as string))
+          if (chunks.reduce((n, c) => n + c.length, 0) > 15 * 1024 * 1024) throw new Error('payload too large')
+        }
+        const body = JSON.parse(Buffer.concat(chunks).toString('utf8')) as {
+          skinId?: unknown; tier?: unknown; dataBase64?: unknown
+        }
+        const skinId = String(body.skinId ?? '')
+        const tier = Number(body.tier)
+        const dataBase64 = String(body.dataBase64 ?? '')
+        if (!/^[a-z0-9-]+$/.test(skinId) || !Number.isInteger(tier) || tier < 0 || tier > 4) {
+          res.writeHead(400); res.end('bad skinId/tier'); return
+        }
+        const buf = Buffer.from(dataBase64, 'base64')
+        if (buf.length < 100 || buf.length > 12 * 1024 * 1024) {
+          res.writeHead(400); res.end('bad image size'); return
+        }
+        const dir = resolve(SKINS_ROOT, skinId, 'assets', 'tiers', `t${tier}`)
+        const { mkdir } = await import('node:fs/promises')
+        await mkdir(dir, { recursive: true })
+        const { writeFile } = await import('node:fs/promises')
+        await writeFile(resolve(dir, 'bg.custom.png'), buf)
+        res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-cache' })
+        res.end(JSON.stringify({ ok: true, bytes: buf.length }))
+      } catch (e) {
+        res.writeHead(500)
+        res.end(String(e))
+      }
+    },
+  })
+
   ctx.webServer.register({
     kind: 'prefix',
     path: '/skins',
@@ -53,8 +97,26 @@ export function apply(ctx: HostContext): void {
         return
       }
       // 境界档位资产（tiers/t{n}/x）缺失时回退到原资产（x），避免档位
-      // 资产生成不完整时吉祥物/光标整体消失
+      // 资产生成不完整时吉祥物/光标整体消失；背景图优先用户上传的
+      // bg.custom.png（/skins/upload-bg 写入，不覆盖生图资产）
       const tierMatch = /^tiers\/t\d\/(.+)$/.exec(file)
+      const customMatch = tierMatch !== null && tierMatch[1] === 'bg.png'
+        ? resolve(SKINS_ROOT, skinId, 'assets', `tiers/t${file.slice('tiers/t'.length, 'tiers/t'.length + 1)}`, 'bg.custom.png')
+        : null
+      if (customMatch !== null && customMatch.startsWith(SKINS_ROOT)) {
+        try {
+          const st = await stat(customMatch)
+          if (st.isFile()) {
+            res.writeHead(200, {
+              'content-type': 'image/png',
+              'cache-control': 'no-cache',
+            })
+            if (req.method === 'HEAD') { res.end(); return }
+            createReadStream(customMatch).pipe(res)
+            return
+          }
+        } catch { /* 无自定义图，走正常链 */ }
+      }
       const full = resolve(SKINS_ROOT, skinId, 'assets', file)
       if (!full.startsWith(SKINS_ROOT)) {
         res.writeHead(403)

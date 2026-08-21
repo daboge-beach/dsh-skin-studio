@@ -449,9 +449,11 @@ function buildGlassCss(): string {
     const veil = PANEL_VEIL[skinId]
     if (v === undefined || veil === undefined) continue
     const tiered = TIERED_BG_SKINS.has(skinId)
-    const bg = tiered
+    // bgRev 参数：自定义背景上传后 bump，让浏览器立刻拉新图（CSS url 变化）
+    const bgRev = skinStudioSettings.get().bgRev
+    const bg = (tiered
       ? `/skins/${skinId}/assets/tiers/t${tier}/bg.png`
-      : GLASS_BG[skinId] ?? ''
+      : GLASS_BG[skinId] ?? '') + (bgRev > 0 ? `?v=${bgRev}` : '')
     // 分档图皮肤不加滤镜（图已按档位专门生成）；其余皮肤按档位滤镜递进
     const filter = tiered ? 'none' : TIER_BG_FILTERS[tier] ?? 'none'
     const rgba = (rgb: readonly number[], a: number): string =>
@@ -612,15 +614,17 @@ export function mountSkinEffects(snapshotProvider: () => ThemeSnapshot | null,
   apply(snapshotProvider())
   const off = subscribe(apply)
 
-  // 设置变化（动画策略 / 磨玻璃开关 / 光标开关）：重建 CSS 标签 + 重铺装饰层
+  // 设置变化（动画策略 / 磨玻璃开关 / 光标开关 / 自定义背景版本）：重建 CSS + 重铺装饰层
   let lastAnimations = skinStudioSettings.get().animations
   let lastGlass = skinStudioSettings.get().glass
   let lastCursorFx = skinStudioSettings.get().cursorFx
+  let lastBgRev = skinStudioSettings.get().bgRev
   const offSettings = skinStudioSettings.subscribe(s => {
-    if (s.animations === lastAnimations && s.glass === lastGlass && s.cursorFx === lastCursorFx) return
+    if (s.animations === lastAnimations && s.glass === lastGlass && s.cursorFx === lastCursorFx && s.bgRev === lastBgRev) return
     lastAnimations = s.animations
     lastGlass = s.glass
     lastCursorFx = s.cursorFx
+    lastBgRev = s.bgRev
     rebuild()
   })
 

@@ -408,6 +408,44 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         <span className={styles.tierName}>
           {tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}
         </span>
+        <label
+          className={styles.mascotToggle}
+          title={`上传自定义背景：替换当前皮肤（${activeSkinId ?? '未选皮肤'}）第 ${effective + 1} 档的背景图（仅本机生效，不覆盖生图资产，可反复覆盖上传）`}
+        >
+          上传背景(第{effective + 1}档)
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={e => {
+              const file = e.target.files?.[0]
+              e.target.value = ''
+              if (file === undefined) return
+              if (activeSkinId === '') {
+                showToast({ message: '请先选择一款皮肤再上传背景', type: 'error' })
+                return
+              }
+              const reader = new FileReader()
+              reader.onload = () => {
+                const dataBase64 = String(reader.result ?? '').split(',')[1] ?? ''
+                fetch('/skins/upload-bg', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ skinId: activeSkinId, tier: effective, dataBase64 }),
+                })
+                  .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
+                  .then(() => {
+                    skinStudioSettings.bumpBgRev()
+                    showToast({ message: `第 ${effective + 1} 档自定义背景已更新`, type: 'success' })
+                  })
+                  .catch(err => {
+                    showToast({ message: `上传失败：${String(err)}`, type: 'error' })
+                  })
+              }
+              reader.readAsDataURL(file)
+            }}
+          />
+        </label>
       </div>
 
       <div className={styles.grid}>

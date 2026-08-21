@@ -58,3 +58,4 @@ packages/gallery/*.config.js.map
 packages/gallery/*.config.d.ts
 packages/gallery/*.config.d.ts.map
 assets/skins/
+packages/skins/*/assets/tiers/*/bg.custom.png

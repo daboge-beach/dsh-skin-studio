@@ -54,9 +54,11 @@ export interface SkinStudioSettings {
    * 这会改变实际推理强度/token 消耗，故默认关闭。
    */
   tierSyncEffort: boolean
+  /** 自定义背景版本号（上传成功 +1，触发特效层重建 CSS 让新图立即显示）。 */
+  bgRev: number
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: true }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: true, bgRev: 0 }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -186,6 +188,12 @@ export const skinStudioSettings = {
   setTierSyncEffort(on: boolean): void {
     if (current.tierSyncEffort === on) return
     write({ ...current, tierSyncEffort: on })
+  },
+  getBgRev(): number {
+    return current.bgRev
+  },
+  bumpBgRev(): void {
+    write({ ...current, bgRev: current.bgRev + 1 })
   },
   /**
    * 一键还原出厂：全部设置回默认值、清除皮肤偏好与试穿态
