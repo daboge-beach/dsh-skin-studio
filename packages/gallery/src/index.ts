@@ -78,6 +78,39 @@ export function apply(ctx: HostContext): void {
     },
   })
 
+  // 恢复原图：POST /skins/reset-bg { skinId, tier } 删除该档自定义背景
+  ctx.webServer.register({
+    kind: 'exact',
+    path: '/skins/reset-bg',
+    handler: async (req, res) => {
+      if (req.method !== 'POST') {
+        res.writeHead(405)
+        res.end()
+        return
+      }
+      try {
+        const chunks: Buffer[] = []
+        for await (const chunk of req) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk as string))
+        const body = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { skinId?: unknown; tier?: unknown }
+        const skinId = String(body.skinId ?? '')
+        const tier = Number(body.tier)
+        if (!/^[a-z0-9-]+$/.test(skinId) || !Number.isInteger(tier) || tier < 0 || tier > 4) {
+          res.writeHead(400); res.end('bad skinId/tier'); return
+        }
+        const custom = resolve(SKINS_ROOT, skinId, 'assets', 'tiers', `t${tier}`, 'bg.custom.png')
+        if (custom.startsWith(SKINS_ROOT)) {
+          const { unlink } = await import('node:fs/promises')
+          await unlink(custom).catch(() => undefined) // 无自定义图时幂等成功
+        }
+        res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-cache' })
+        res.end(JSON.stringify({ ok: true }))
+      } catch (e) {
+        res.writeHead(500)
+        res.end(String(e))
+      }
+    },
+  })
+
   ctx.webServer.register({
     kind: 'prefix',
     path: '/skins',

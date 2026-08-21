@@ -446,6 +446,32 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
             }}
           />
         </label>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          title={`删除第 ${effective + 1} 档的自定义背景，恢复该档原本的生图背景（没有上传过时无影响）`}
+          onClick={() => {
+            if (activeSkinId === '') {
+              showToast({ message: '请先选择一款皮肤', type: 'error' })
+              return
+            }
+            fetch('/skins/reset-bg', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ skinId: activeSkinId, tier: effective }),
+            })
+              .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
+              .then(() => {
+                skinStudioSettings.bumpBgRev()
+                showToast({ message: `第 ${effective + 1} 档已恢复原图`, type: 'success' })
+              })
+              .catch(err => {
+                showToast({ message: `恢复失败：${String(err)}`, type: 'error' })
+              })
+          }}
+        >
+          恢复原图
+        </button>
       </div>
 
       <div className={styles.grid}>
