@@ -58,6 +58,18 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.43)(lightningcss@1.33.0)
 
+  packages/skins/ahri-ninefold:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
   packages/skins/aurora:
     devDependencies:
       '@dsh-skin-studio/types':
@@ -70,7 +82,67 @@ importers:
         specifier: ^5.5.0
         version: 5.9.3
 
+  packages/skins/ezreal-relicrun:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
   packages/skins/hanli-daoist:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/jinx-mayhem:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/kaisa-voidborn:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/lux-radiance:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/mf-bountyhunter:
     devDependencies:
       '@dsh-skin-studio/types':
         specifier: workspace:*
@@ -107,6 +179,54 @@ importers:
         version: 5.9.3
 
   packages/skins/nangongwan-moon:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/seraphine-anthem:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/sona-etwahl:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/vayne-nightfall:
+    devDependencies:
+      '@dsh-skin-studio/types':
+        specifier: workspace:*
+        version: link:../../types
+      tsdown:
+        specifier: ^0.0.1
+        version: 0.0.1
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+
+  packages/skins/yasuo-gale:
     devDependencies:
       '@dsh-skin-studio/types':
         specifier: workspace:*
