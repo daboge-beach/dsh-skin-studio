@@ -18,6 +18,10 @@
 [![Status: Preview](https://img.shields.io/badge/status-preview-red)](#项目状态)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
+<!-- 演示 GIF（录制后替换此注释）
+![Demo](docs/demo.gif)
+-->
+
 > ⚠️ **DSH 本身处于 v0.1 开发者预览阶段**，插件 API 尚不稳定。本项目跟随上游版本演进，暂不保证跨版本兼容。
 
 ### 📖 这个项目是什么
