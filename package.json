@@ -17,7 +17,8 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "typecheck": "pnpm -r typecheck",
     "validate-skins": "node scripts/validate-skins.mjs",
-    "clean": "pnpm -r exec rm -rf lib dist node_modules"
+    "clean": "pnpm -r exec rm -rf lib dist node_modules",
+    "setup": "pnpm install && node scripts/download-assets.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
