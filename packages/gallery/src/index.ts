@@ -25,7 +25,11 @@ const MIME: Record<string, string> = {
 }
 
 /** 皮肤包资源根：packages/gallery/../skins（import.meta.url 位于包内 lib/）。 */
-const SKINS_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../skins')
+// SKINS_ROOT：优先环境变量 DSH_SKIN_STUDIO_ROOT；缺省相对包内 lib/ 的
+// ../../skins（monorepo 结构）——npm 安装时用户通过环境变量指向皮肤目录
+const SKINS_ROOT = process.env.DSH_SKIN_STUDIO_ROOT !== undefined
+  ? resolve(process.env.DSH_SKIN_STUDIO_ROOT)
+  : resolve(dirname(fileURLToPath(import.meta.url)), '../../skins')
 
 const SKIN_ASSET_PATH = /^\/skins\/([a-z0-9-]+)\/assets\/([A-Za-z0-9_./-]+)$/
 

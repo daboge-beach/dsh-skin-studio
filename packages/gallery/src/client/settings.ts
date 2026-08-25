@@ -56,9 +56,11 @@ export interface SkinStudioSettings {
   tierSyncEffort: boolean
   /** 自定义背景版本号（上传成功 +1，触发特效层重建 CSS 让新图立即显示）。 */
   bgRev: number
+  bgFit: 'cover' | 'contain'
+  uiLang: 'zh' | 'en' | undefined
 }
 
-const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: true, bgRev: 0 }
+const DEFAULTS: SkinStudioSettings = { mascotEnabled: true, activeSkin: null, quoteLang: 'zh', animations: 'system', notifyTaskDone: 'both', powerTier: 'auto', glass: true, cursorFx: true, tierSyncEffort: true, bgRev: 0, bgFit: 'cover', uiLang: undefined }
 
 type Listener = (settings: SkinStudioSettings) => void
 const listeners = new Set<Listener>()
@@ -194,6 +196,13 @@ export const skinStudioSettings = {
   },
   bumpBgRev(): void {
     write({ ...current, bgRev: current.bgRev + 1 })
+  },
+  getBgFit(): 'cover' | 'contain' {
+    return current.bgFit
+  },
+  setBgFit(mode: 'cover' | 'contain'): void {
+    if (current.bgFit === mode) return
+    write({ ...current, bgFit: mode })
   },
   /**
    * 一键还原出厂：全部设置回默认值、清除皮肤偏好与试穿态

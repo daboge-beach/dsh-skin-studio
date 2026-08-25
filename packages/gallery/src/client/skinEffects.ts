@@ -461,7 +461,7 @@ function buildGlassCss(): string {
     rules.push(
       `body.${v.cssClass}::before {`,
       `  content: ''; position: fixed; inset: 0; z-index: 0;`,
-      `  background: url('${bg}') center/cover no-repeat;`,
+      `  background: url('${bg}') center/${skinStudioSettings.get().bgFit} no-repeat;`,
       filter === 'none' ? '' : `  filter: ${filter};`,
       `}`,
       // 磨砂只做侧栏：半透明化 sidebar-fill（变量按最近祖先解析压过 body

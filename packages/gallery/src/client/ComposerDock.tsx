@@ -11,6 +11,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { skinStudioSettings } from './settings.ts'
 import { effectiveTier, subscribeTier, tierLabel, effortTier, type PowerTier } from './tierPower.ts'
 import { syncTierToEffort } from './tierSync.ts'
+import { pollEvery } from './poll.ts'
 import styles from './ComposerDock.module.css'
 
 /** 镜像官方模型按钮的 aria-label（1s 轮询，轻量）。 */
@@ -23,9 +24,7 @@ function useModelLabel(): string {
         if (v.startsWith('选择模型') || /^select model/i.test(v)) { setLabel(v); return }
       }
     }
-    read()
-    const t = window.setInterval(read, 1000)
-    return () => { window.clearInterval(t) }
+    return pollEvery(read)
   }, [])
   return label
 }
@@ -66,9 +65,8 @@ function useEffortIds(ctx?: ClientContext): string[] {
         setIds([...efforts].sort((a, b) => strength(a.id) - strength(b.id)).map(e => e.id))
       } catch { /* 服务未就绪时静默 */ }
     }
-    read()
-    const t = window.setInterval(read, 1500)
-    return () => { alive = false; window.clearInterval(t) }
+    const stop = pollEvery(read)
+    return () => { alive = false; stop() }
   }, [ctx])
   return ids
 }

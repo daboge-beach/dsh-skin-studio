@@ -7,6 +7,7 @@
  * 吉祥物造型 / 光标配色 / 背景装饰强度。
  */
 import { skinStudioSettings } from './settings.ts'
+import { pollEvery } from './poll.ts'
 
 export type PowerTier = 0 | 1 | 2 | 3 | 4
 
@@ -102,11 +103,11 @@ export function mountTierWatch(): () => void {
 
   // 轮询兜底：MutationObserver 在个别宿主环境下可能漏报 aria-label 变化
   // （按钮被整棵替换等），2s 轮询保证推理等级变化最终一致（值未变时零开销）。
-  const pollTimer = window.setInterval(rescan, 2000)
+  const stopPoll = pollEvery(rescan)
 
   const offSettings = skinStudioSettings.subscribe(() => { publish() })
   return () => {
-    window.clearInterval(pollTimer)
+    stopPoll()
     if (scanTimer !== undefined) window.clearTimeout(scanTimer)
     observer.disconnect()
     offSettings()

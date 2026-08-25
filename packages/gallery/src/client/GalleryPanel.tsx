@@ -472,6 +472,14 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         >
           恢复原图
         </button>
+        <button
+          type="button"
+          className={styles.mascotToggle}
+          title="自定义背景显示模式：裁剪填满（16:9 最佳）/ 完整显示（竖图不裁留边）"
+          onClick={() => skinStudioSettings.setBgFit(skinStudioSettings.get().bgFit === 'cover' ? 'contain' : 'cover')}
+        >
+          {skinStudioSettings.get().bgFit === 'cover' ? '裁剪填满' : '完整显示'}
+        </button>
       </div>
 
       <div className={styles.grid}>
