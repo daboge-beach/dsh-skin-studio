@@ -58,11 +58,4 @@ packages/gallery/*.config.js.map
 packages/gallery/*.config.d.ts
 packages/gallery/*.config.d.ts.map
 assets/skins/
-packages/skins/*/assets/tiers/*/bg.custom.png
 # 皮肤资产（生图 PNG）不进 git——由 GitHub Releases 下载（scripts/download-assets.mjs）
-packages/skins/*/assets/**/*.png
-packages/skins/*/preview.png
-packages/skins/*/hero.png
-packages/skins/*/sprite_anim.png
-packages/skins/*/bg.png
-packages/skins/FANREN_README.md

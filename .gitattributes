@@ -1,10 +1,8 @@
 # 统一行尾为 LF（跨平台协作）
 * text=auto eol=lf
-
 # Windows 批处理强制 CRLF
 *.bat text eol=crlf
 *.cmd text eol=crlf
-
 # 二进制文件不做行尾转换
 *.png binary
 *.jpg binary
@@ -17,3 +15,4 @@
 *.eot binary
 *.otf binary
 *.zip binary
+packages/skins/**/*.png filter=lfs diff=lfs merge=lfs -text
