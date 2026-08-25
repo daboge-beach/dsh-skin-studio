@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck (gallery)
+        run: pnpm --filter @dsh-skin-studio/gallery typecheck
+
+      - name: Test (gallery)
+        run: pnpm --filter @dsh-skin-studio/gallery test
+
+      - name: Build (gallery)
+        run: pnpm --filter @dsh-skin-studio/gallery build
+        env:
+          # prebuild 的 manifest 同步只在本机 DSH 接线时需要，CI 无该目录
+          # ——prebuild 内部已容错（目录不存在时跳过）。
+          CI: true

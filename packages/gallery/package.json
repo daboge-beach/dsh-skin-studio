@@ -28,7 +28,7 @@
     "build": "tsc -p tsconfig.build.json && tsdown",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prebuild": "node -e \"const fs=require('fs');fs.mkdirSync('E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery',{recursive:true});fs.copyFileSync('package.json','E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery/package.json')\""
+    "prebuild": "node -e \"const fs=require('fs');const t='E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery';try{fs.statSync('E:/goodlookingDS/deepseek-harness/packages/client/tsdown.client.ts');fs.mkdirSync(t,{recursive:true});fs.copyFileSync('package.json',t+'/package.json');}catch(e){/* CI 或未接线环境：跳过 manifest 同步 */}\""
   },
   "dsh": {
     "client": {
