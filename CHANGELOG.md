@@ -9,6 +9,67 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.6.0] — 2026-08-25
+
+**简体中文**
+
+「全皮肤五档 + 自定义背景 + 性能与国际化」版本。
+
+### 新增
+
+- **全部 16 款皮肤第 5 档（化神/至臻）**：48 张 AI 生成资产（bg+hero+sprite），
+  凡人修仙传=化神期法则领域，LOL=至臻 Prestige 宇宙光能形态
+- **自定义背景上传**：按皮肤×档位上传自定义背景图（≤12MB），不覆盖生图
+  资产（bg.custom.png），一键恢复原图；裁剪填满/完整显示双模式
+- **滑条档位自适应**：档位数量随当前模型等级列表自动调整（GLM 5 档 /
+  DeepSeek 4 档），档名显示真实等级名
+- **背景原图透出**：压图底色层大幅透明（36%→11%），背景图清晰呈现
+- **UI 中英双语**：i18n 模块，浏览器语言自动检测
+- **npm 发布准备**：SKINS_ROOT 支持环境变量 DSH_SKIN_STUDIO_ROOT
+- **CI**：GitHub Actions（typecheck + 87 tests + build）
+- **演示 GIF**：自动录制嵌入 README
+- **Git LFS**：179 张 PNG 资产（384MB）由 LFS 管理，clone 轻量
+
+### 修复
+
+- 滑条拉不到最右档：视觉档位与滑条位置解耦
+- 换模型（GLM）后皮肤被顶掉黑屏：userTouched 猜测移除
+- 等级识别简化：未识别等级词保持当前档位
+- 推理等级联动（cordis 注入 + store.getSnapshot + 设置版本迁移 v2）
+- 拉克丝 t4 解剖事故（三只手）重生成
+- 3 个独立轮询合并为统一 1s tick
+
+---
+
+**English**
+
+The "all-skins tier-5 + custom backgrounds + perf & i18n" release.
+
+### Added
+
+- **All 16 skins tier-5 (Hua Shen / Prestige)**: 48 AI-generated assets
+  (bg+hero+sprite); Mortal's Journey = law domains, LoL = cosmic light forms
+- **Custom background upload**: per-skin per-tier custom wallpaper (≤12MB),
+  non-destructive overlay (bg.custom.png), one-click reset; crop-fill /
+  full-fit dual mode
+- **Adaptive tier slider**: tier count follows the model's effort list
+  (GLM 5 / DeepSeek 4); shows real effort names
+- **Background see-through boost**: base layer 36%→11%, wallpapers pop
+- **UI bilingual** (zh/en): i18n module with browser language detection
+- **npm-ready**: SKINS_ROOT via DSH_SKIN_STUDIO_ROOT env var
+- **CI**: GitHub Actions (typecheck + 87 tests + build)
+- **Demo GIF**: auto-recorded, embedded in README
+- **Git LFS**: 179 PNG assets (384MB) managed by LFS, lightweight clone
+
+### Fixed
+
+- Slider couldn't reach rightmost tier (visual/slider position decoupled)
+- Black screen after model switch (userTouched guesswork removed)
+- Unknown effort names keep current tier (no more sudden drop to 0)
+- Effort sync chain (cordis injection + store.getSnapshot + settings v2)
+- Lux t4 anatomy accident (three hands) regenerated
+- 3 polling loops consolidated into a single 1s tick
+
 ## [0.5.0] — 2026-08-17
 
 **简体中文**
