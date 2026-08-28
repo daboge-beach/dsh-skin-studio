@@ -38,13 +38,15 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # 架构门禁：生成数据漂移检查（skin.json tokens / builtinSkins.gen /
-      # quotes.json 与源一致）+ client bundle 体积阈值（gzip ≤80KB）
-      - name: Generated-data drift & bundle size
-        run: |
-          node scripts/gen-skin-data.mjs --check
-          node --experimental-strip-types scripts/gen-quotes.mjs --check
-          node scripts/check-bundle-size.mjs
+      # 架构门禁：生成数据漂移检查 + bundle 体积阈值（分步便于定位失败）
+      - name: Drift check (skin data)
+        run: node scripts/gen-skin-data.mjs --check
+
+      - name: Drift check (quotes)
+        run: node --experimental-strip-types scripts/gen-quotes.mjs --check
+
+      - name: Bundle size gate
+        run: node scripts/check-bundle-size.mjs
 
       # 发布门禁放最后：产物检查需要先 build（lib/index.mjs 等真实入口）
       - name: Validate skins (release gate)
