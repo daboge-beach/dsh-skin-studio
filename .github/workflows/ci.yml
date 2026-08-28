@@ -16,7 +16,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24：gen-quotes 的 --experimental-strip-types 依赖较新的
+          # 类型剥离实现（Node 22 的实验版在部分语法上不兼容）
+          node-version: 24
           cache: pnpm
 
       - name: Install
