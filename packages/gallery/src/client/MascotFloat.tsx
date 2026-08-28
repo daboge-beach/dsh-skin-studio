@@ -15,7 +15,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { usePrefersReducedMotion, useThemeSnapshot } from './hooks.ts'
 import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
-import { randomGreeting, randomQuote, type QuoteLang } from './quotes.ts'
+import { randomGreeting, randomQuote, warmQuotes, type QuoteLang } from './quotePool.ts'
 import { onTaskDone, randomDoneQuote } from './taskNotify.ts'
 import { effectiveTier, subscribeTier, TIERED_SPRITE_SKINS, type PowerTier } from './tierPower.ts'
 import styles from './MascotFloat.module.css'
@@ -91,6 +91,9 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
   const dragStartRef = useRef<{ px: number; py: number; ax: number; ay: number; moved: boolean } | null>(null)
   const activeSkin = snapshot !== null ? skinRegistry.get(snapshot.active.id) : undefined
   const skinId = activeSkin?.id ?? ''
+
+  // 语录池预热：切皮肤即取该款 quotes.json（未就绪时 random* 用回退池）
+  useEffect(() => { warmQuotes(skinId) }, [skinId])
 
   // 境界档位：驱动吉祥物造型（分档 sprite；t0 用原形象）
   const [tier, setTier] = useState<PowerTier>(() => effectiveTier())

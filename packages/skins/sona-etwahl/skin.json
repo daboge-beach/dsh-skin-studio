@@ -31,5 +31,21 @@
     "mascot": "assets/sprite_anim.png"
   },
   "specVersion": "0.2.0",
-  "dshVersion": ">=0.1.0-rc.5"
+  "dshVersion": ">=0.1.0-rc.5",
+  "tokens": {
+    "--dsw-alias-bg-base": "#F4F0FA",
+    "--dsw-alias-bg-layer-1": "#FFFFFF",
+    "--dsw-alias-bg-layer-2": "#CFC2E8",
+    "--dsw-alias-bg-overlay": "#F4F0FA",
+    "--dsw-alias-border-l1": "#CFC2E8",
+    "--dsw-alias-border-l2": "#A88FD4",
+    "--dsw-alias-brand-primary": "#7C5CBF",
+    "--dsw-alias-brand-hover": "#A184DD",
+    "--dsw-alias-label-primary": "#442F73",
+    "--dsw-alias-label-secondary": "#6E5AA0",
+    "--dsw-alias-state-error-primary": "#E24B4A",
+    "--dsw-alias-state-success-primary": "#10b981",
+    "--dsw-alias-state-warn-primary": "#FBBF24",
+    "--dsw-specific-sidebar-fill": "#F4F0FA"
+  }
 }

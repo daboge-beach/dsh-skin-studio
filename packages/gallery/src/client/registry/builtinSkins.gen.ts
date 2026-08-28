@@ -1,0 +1,872 @@
+/** 自动生成 — 勿手改（scripts/gen-skin-data.mjs，源：packages/skins 各包 skin.json + src/index.ts tokens）。 */
+export interface GeneratedSkinManifest {
+  id: string
+  name: string
+  description: string
+  colorScheme: 'light' | 'dark'
+  version: string
+  keywords: string[]
+  author: { name: string; url?: string }
+  license: string
+  homepage?: string
+  palette: { primary: string; background: string; surface: string; text: string; border: string }
+  tokens: Record<string, string>
+  images?: { preview?: string; hero?: string; mascot?: string }
+}
+
+export const GENERATED_SKINS: readonly GeneratedSkinManifest[] = [
+  {
+    "id": "ahri-ninefold",
+    "name": "阿狸 · 九尾魅影",
+    "description": "狐火粉金 · 九尾魅影 — 艾欧尼亚的九尾妖狐，狐火宝珠光标 + 樱焰流转特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "ahri",
+      "kumiho",
+      "charm",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#E86A92",
+      "background": "#FDF2F4",
+      "surface": "#FFFFFF",
+      "text": "#8F2F4E",
+      "border": "#F3CFDA"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#FDF2F4",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#F3CFDA",
+      "--dsw-alias-bg-overlay": "#FDF2F4",
+      "--dsw-alias-border-l1": "#F3CFDA",
+      "--dsw-alias-border-l2": "#E8A0B8",
+      "--dsw-alias-brand-primary": "#E86A92",
+      "--dsw-alias-brand-hover": "#F291B2",
+      "--dsw-alias-label-primary": "#8F2F4E",
+      "--dsw-alias-label-secondary": "#B96A84",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#FDF2F4"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "aurora",
+    "name": "Aurora",
+    "description": "极光 — 极简亮色皮肤，柔和的晨光配色，长时间使用不刺眼。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "minimal",
+      "light",
+      "clean"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#3b82f6",
+      "background": "#f8fafc",
+      "surface": "#ffffff",
+      "text": "#0f172a",
+      "border": "#e2e8f0"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#f8fafc",
+      "--dsw-alias-bg-layer-1": "#ffffff",
+      "--dsw-alias-bg-layer-2": "#f1f5f9",
+      "--dsw-alias-bg-overlay": "#ffffff",
+      "--dsw-alias-border-l1": "#e2e8f0",
+      "--dsw-alias-border-l2": "#cbd5e1",
+      "--dsw-alias-brand-primary": "#3b82f6",
+      "--dsw-alias-label-primary": "#0f172a",
+      "--dsw-alias-label-secondary": "#64748b",
+      "--dsw-alias-state-error-primary": "#ef4444",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#f59e0b",
+      "--dsw-specific-sidebar-fill": "#f1f5f9"
+    },
+    "images": {
+      "preview": "preview.png"
+    }
+  },
+  {
+    "id": "ezreal-relicrun",
+    "name": "伊泽瑞尔 · 符文远征",
+    "description": "符文蓝金 · 远征之光 — 皮尔特沃夫的天才探险家，符文护手光标 + 遗迹金辉特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "ezreal",
+      "adventure",
+      "rune",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#2E86D9",
+      "background": "#F2F6FA",
+      "surface": "#FFFFFF",
+      "text": "#1C4F7C",
+      "border": "#BBD6EE"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#F2F6FA",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#BBD6EE",
+      "--dsw-alias-bg-overlay": "#F2F6FA",
+      "--dsw-alias-border-l1": "#BBD6EE",
+      "--dsw-alias-border-l2": "#85B4DC",
+      "--dsw-alias-brand-primary": "#2E86D9",
+      "--dsw-alias-brand-hover": "#5FA8E8",
+      "--dsw-alias-label-primary": "#1C4F7C",
+      "--dsw-alias-label-secondary": "#44719C",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#F2F6FA"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "hanli-daoist",
+    "name": "韩立 · 青竹",
+    "description": "青绿道风 · 翠竹雷光 — 青袍道人的竹剑意境，青竹蜂云剑光标 + 辟邪神雷特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "fanren",
+      "xianxia",
+      "daoist",
+      "green",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#639922",
+      "background": "#EAF3DE",
+      "surface": "#F4F8EC",
+      "text": "#3B6D11",
+      "border": "#C0DD97"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#EAF3DE",
+      "--dsw-alias-bg-layer-1": "#F4F8EC",
+      "--dsw-alias-bg-layer-2": "#C0DD97",
+      "--dsw-alias-bg-overlay": "#F4F8EC",
+      "--dsw-alias-border-l1": "#C0DD97",
+      "--dsw-alias-border-l2": "#97C459",
+      "--dsw-alias-brand-primary": "#639922",
+      "--dsw-alias-brand-hover": "#97C459",
+      "--dsw-alias-label-primary": "#3B6D11",
+      "--dsw-alias-label-secondary": "#5F8A3D",
+      "--dsw-alias-state-error-primary": "#BA7517",
+      "--dsw-alias-state-success-primary": "#639922",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#EAF3DE"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "jinx-mayhem",
+    "name": "金克斯 · 弹幕狂潮",
+    "description": "霓虹深紫 · 弹幕狂潮 — 祖安的暴走炮手，鲨鱼火箭光标 + 弹幕火花特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "jinx",
+      "neon",
+      "chaos",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#22D3EE",
+      "background": "#170F2E",
+      "surface": "#241945",
+      "text": "#CFF5FF",
+      "border": "#3B2A63"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#170F2E",
+      "--dsw-alias-bg-layer-1": "#241945",
+      "--dsw-alias-bg-layer-2": "#3B2A63",
+      "--dsw-alias-bg-overlay": "#241945",
+      "--dsw-alias-border-l1": "#3B2A63",
+      "--dsw-alias-border-l2": "#5A4390",
+      "--dsw-alias-brand-primary": "#22D3EE",
+      "--dsw-alias-brand-hover": "#67E8F9",
+      "--dsw-alias-label-primary": "#CFF5FF",
+      "--dsw-alias-label-secondary": "#8FD7E8",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#170F2E"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "kaisa-voidborn",
+    "name": "卡莎 · 虚空降临",
+    "description": "虚空暗紫 · 蝶翼裂隙 — 来自虚空的女儿，虚空蝶光标 + 暗物质粒子特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "kaisa",
+      "void",
+      "butterfly",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#A78BFA",
+      "background": "#150D22",
+      "surface": "#241638",
+      "text": "#EDE9FE",
+      "border": "#3E2D63"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#150D22",
+      "--dsw-alias-bg-layer-1": "#241638",
+      "--dsw-alias-bg-layer-2": "#3E2D63",
+      "--dsw-alias-bg-overlay": "#241638",
+      "--dsw-alias-border-l1": "#3E2D63",
+      "--dsw-alias-border-l2": "#5C4590",
+      "--dsw-alias-brand-primary": "#A78BFA",
+      "--dsw-alias-brand-hover": "#C4B0FD",
+      "--dsw-alias-label-primary": "#EDE9FE",
+      "--dsw-alias-label-secondary": "#B4A6E4",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#150D22"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "liangshen",
+    "name": "梁神 · 深度求道",
+    "description": "梗文化皮肤 — 推理等级越高，boss 修为越高：凉子（冻得发抖）→ 梁子（淡定从容）→ 梁圣（智慧光环）→ 梁神（始皇帝形态）。社区调侃向卡通 caricature，非真人肖像。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "meme",
+      "liangshen",
+      "liangzi",
+      "dark",
+      "fun"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#4D6BFE",
+      "background": "#0A0F1E",
+      "surface": "#111827",
+      "text": "#E6EAF5",
+      "border": "#263250"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#0A0F1E",
+      "--dsw-alias-bg-layer-1": "#111827",
+      "--dsw-alias-bg-layer-2": "#1A2440",
+      "--dsw-alias-bg-overlay": "#111827",
+      "--dsw-alias-border-l1": "#263250",
+      "--dsw-alias-border-l2": "#34466F",
+      "--dsw-alias-brand-primary": "#4D6BFE",
+      "--dsw-alias-brand-hover": "#7A8FFE",
+      "--dsw-alias-label-primary": "#E6EAF5",
+      "--dsw-alias-label-secondary": "#9AA7C7",
+      "--dsw-alias-state-error-primary": "#F87171",
+      "--dsw-alias-state-success-primary": "#34D399",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsh-specific-sidebar-fill": "#0D1426"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "lux-radiance",
+    "name": "拉克丝 · 光棱圣辉",
+    "description": "圣光暖金 · 彩虹折射 — 德玛西亚的光之魔法少女，星光法杖光标 + 圣光辉环特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "lux",
+      "light",
+      "gold",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#D99A1B",
+      "background": "#FAF6EC",
+      "surface": "#FFFFFF",
+      "text": "#6E5210",
+      "border": "#EED9A0"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#FAF6EC",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#EED9A0",
+      "--dsw-alias-bg-overlay": "#FAF6EC",
+      "--dsw-alias-border-l1": "#EED9A0",
+      "--dsw-alias-border-l2": "#D4B36A",
+      "--dsw-alias-brand-primary": "#D99A1B",
+      "--dsw-alias-brand-hover": "#E8B84B",
+      "--dsw-alias-label-primary": "#6E5210",
+      "--dsw-alias-label-secondary": "#9C7C2E",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#FAF6EC"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "mf-bountyhunter",
+    "name": "厄运小姐 · 赏金女王",
+    "description": "赏金红金 · 弹雨烈焰 — 比尔吉沃特的赏金猎人，金弹光标 + 弹壳纷落特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "missfortune",
+      "bounty",
+      "pirate",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#E0405A",
+      "background": "#221017",
+      "surface": "#351B24",
+      "text": "#F8D8DC",
+      "border": "#5C2A33"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#221017",
+      "--dsw-alias-bg-layer-1": "#351B24",
+      "--dsw-alias-bg-layer-2": "#5C2A33",
+      "--dsw-alias-bg-overlay": "#351B24",
+      "--dsw-alias-border-l1": "#5C2A33",
+      "--dsw-alias-border-l2": "#7E4550",
+      "--dsw-alias-brand-primary": "#E0405A",
+      "--dsw-alias-brand-hover": "#EE6E82",
+      "--dsw-alias-label-primary": "#F8D8DC",
+      "--dsw-alias-label-secondary": "#D49AA4",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#221017"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "midnight",
+    "name": "Midnight",
+    "description": "午夜 — 极简暗色皮肤，深邃的夜空配色，护眼专注。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "minimal",
+      "dark",
+      "focus"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#60a5fa",
+      "background": "#0f172a",
+      "surface": "#1e293b",
+      "text": "#f1f5f9",
+      "border": "#334155"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#0f172a",
+      "--dsw-alias-bg-layer-1": "#1e293b",
+      "--dsw-alias-bg-layer-2": "#334155",
+      "--dsw-alias-bg-overlay": "#1e293b",
+      "--dsw-alias-border-l1": "#334155",
+      "--dsw-alias-border-l2": "#475569",
+      "--dsw-alias-brand-primary": "#60a5fa",
+      "--dsw-alias-label-primary": "#f1f5f9",
+      "--dsw-alias-label-secondary": "#94a3b8",
+      "--dsw-alias-state-error-primary": "#f87171",
+      "--dsw-alias-state-success-primary": "#34d399",
+      "--dsw-alias-state-warn-primary": "#fbbf24",
+      "--dsw-specific-sidebar-fill": "#0f172a"
+    },
+    "images": {
+      "preview": "preview.png"
+    }
+  },
+  {
+    "id": "mupeiling-blossom",
+    "name": "慕沛灵 · 桃夭",
+    "description": "粉白国风 · 桃花薄雾 — 落云宗药园女修的柔美桃花意境，花瓣法宝光标 + 灵气涟漪特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "fanren",
+      "xianxia",
+      "guofeng",
+      "pink",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#D4537E",
+      "background": "#FBEAF0",
+      "surface": "#FFFFFF",
+      "text": "#993556",
+      "border": "#F4C0D1"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#FBEAF0",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#F4C0D1",
+      "--dsw-alias-bg-overlay": "#FBEAF0",
+      "--dsw-alias-border-l1": "#F4C0D1",
+      "--dsw-alias-border-l2": "#ED93B1",
+      "--dsw-alias-brand-primary": "#D4537E",
+      "--dsw-alias-brand-hover": "#ED93B1",
+      "--dsw-alias-label-primary": "#993556",
+      "--dsw-alias-label-secondary": "#C77B98",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#FBEAF0"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "nangongwan-moon",
+    "name": "南宫婉 · 寒梅",
+    "description": "月白清辉 · 朱雀赤纹 — 掩月宗女修的寒梅意境，白玉簪光标 + 朱雀火纹特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "fanren",
+      "xianxia",
+      "plum",
+      "moon-white",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#B4B2A9",
+      "background": "#F1EFE8",
+      "surface": "#FFFFFF",
+      "text": "#444441",
+      "border": "#D3D1C7"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#F1EFE8",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#D3D1C7",
+      "--dsw-alias-bg-overlay": "#F1EFE8",
+      "--dsw-alias-border-l1": "#D3D1C7",
+      "--dsw-alias-border-l2": "#B4B2A9",
+      "--dsw-alias-brand-primary": "#B4B2A9",
+      "--dsw-alias-brand-hover": "#888780",
+      "--dsw-alias-label-primary": "#444441",
+      "--dsw-alias-label-secondary": "#5F5E5A",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#97C459",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#F1EFE8"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "seraphine-anthem",
+    "name": "萨勒芬妮 · 星颂",
+    "description": "星尘紫粉 · 全息颂歌 — 走出皮尔特沃夫的声音魔法师，星光音符光标 + 声波涟漪特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "seraphine",
+      "popstar",
+      "purple",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#A855F7",
+      "background": "#F6EFFC",
+      "surface": "#FFFFFF",
+      "text": "#5B1E96",
+      "border": "#DDC9F5"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#F6EFFC",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#DDC9F5",
+      "--dsw-alias-bg-overlay": "#F6EFFC",
+      "--dsw-alias-border-l1": "#DDC9F5",
+      "--dsw-alias-border-l2": "#B79AE8",
+      "--dsw-alias-brand-primary": "#A855F7",
+      "--dsw-alias-brand-hover": "#C77DFF",
+      "--dsw-alias-label-primary": "#5B1E96",
+      "--dsw-alias-label-secondary": "#8B5FBF",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#F6EFFC"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "sona-etwahl",
+    "name": "娑娜 · 弦语仙音",
+    "description": "琴音紫金 · 音波涟漪 — 艾欧尼亚的琴瑟仙女，竖琴拨光标 + 音符流转特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "sona",
+      "music",
+      "elegant",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#7C5CBF",
+      "background": "#F4F0FA",
+      "surface": "#FFFFFF",
+      "text": "#442F73",
+      "border": "#CFC2E8"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#F4F0FA",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#CFC2E8",
+      "--dsw-alias-bg-overlay": "#F4F0FA",
+      "--dsw-alias-border-l1": "#CFC2E8",
+      "--dsw-alias-border-l2": "#A88FD4",
+      "--dsw-alias-brand-primary": "#7C5CBF",
+      "--dsw-alias-brand-hover": "#A184DD",
+      "--dsw-alias-label-primary": "#442F73",
+      "--dsw-alias-label-secondary": "#6E5AA0",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#F4F0FA"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "vayne-nightfall",
+    "name": "维恩 · 夜狩",
+    "description": "夜幕紫银 · 圣银弩光 — 德玛西亚的暗夜猎手，十字弩箭光标 + 夜狩银光特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "vayne",
+      "night",
+      "hunter",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#8B7BD8",
+      "background": "#171228",
+      "surface": "#241D3E",
+      "text": "#E6E1FA",
+      "border": "#3B3158"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#171228",
+      "--dsw-alias-bg-layer-1": "#241D3E",
+      "--dsw-alias-bg-layer-2": "#3B3158",
+      "--dsw-alias-bg-overlay": "#241D3E",
+      "--dsw-alias-border-l1": "#3B3158",
+      "--dsw-alias-border-l2": "#57497E",
+      "--dsw-alias-brand-primary": "#8B7BD8",
+      "--dsw-alias-brand-hover": "#B3A7EC",
+      "--dsw-alias-label-primary": "#E6E1FA",
+      "--dsw-alias-label-secondary": "#AFA3DC",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#171228"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "yasuo-gale",
+    "name": "亚索 · 斩风疾影",
+    "description": "疾风青蓝 · 斩击光轨 — 艾欧尼亚的流浪剑客，风刃光标 + 疾风残影特效。",
+    "colorScheme": "light",
+    "version": "0.1.0",
+    "keywords": [
+      "lol",
+      "yasuo",
+      "wind",
+      "samurai",
+      "light"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#0E9394",
+      "background": "#EEF5F4",
+      "surface": "#FFFFFF",
+      "text": "#0F4E4E",
+      "border": "#B7DEDB"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#EEF5F4",
+      "--dsw-alias-bg-layer-1": "#FFFFFF",
+      "--dsw-alias-bg-layer-2": "#B7DEDB",
+      "--dsw-alias-bg-overlay": "#EEF5F4",
+      "--dsw-alias-border-l1": "#B7DEDB",
+      "--dsw-alias-border-l2": "#7FB8B4",
+      "--dsw-alias-brand-primary": "#0E9394",
+      "--dsw-alias-brand-hover": "#3BB3B4",
+      "--dsw-alias-label-primary": "#0F4E4E",
+      "--dsw-alias-label-secondary": "#3B7272",
+      "--dsw-alias-state-error-primary": "#E24B4A",
+      "--dsw-alias-state-success-primary": "#10b981",
+      "--dsw-alias-state-warn-primary": "#FBBF24",
+      "--dsw-specific-sidebar-fill": "#EEF5F4"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "yinyue-lunar",
+    "name": "银月 · 月华",
+    "description": "银蓝仙光 · 月华冷辉 — 银月狼族器灵的星河意境，月牙法器光标 + 星辉流转特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "fanren",
+      "xianxia",
+      "lunar",
+      "silver-blue",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#85B7EB",
+      "background": "#042C53",
+      "surface": "#0C447C",
+      "text": "#E6F1FB",
+      "border": "#185FA5"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#042C53",
+      "--dsw-alias-bg-layer-1": "#0C447C",
+      "--dsw-alias-bg-layer-2": "#185FA5",
+      "--dsw-alias-bg-overlay": "#0C447C",
+      "--dsw-alias-border-l1": "#185FA5",
+      "--dsw-alias-border-l2": "#378ADD",
+      "--dsw-alias-brand-primary": "#85B7EB",
+      "--dsw-alias-brand-hover": "#B5D4F4",
+      "--dsw-alias-label-primary": "#E6F1FB",
+      "--dsw-alias-label-secondary": "#B5D4F4",
+      "--dsw-alias-state-error-primary": "#F09595",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FAC775",
+      "--dsw-specific-sidebar-fill": "#042C53"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  },
+  {
+    "id": "ziling-mystic",
+    "name": "紫灵 · 紫霞",
+    "description": "暗紫妖魅 · 紫纱流霞 — 妙音门第一美女的紫雾意境，紫纱面饰光标 + 妙音声波特效。",
+    "colorScheme": "dark",
+    "version": "0.1.0",
+    "keywords": [
+      "fanren",
+      "xianxia",
+      "mystic",
+      "purple",
+      "dark"
+    ],
+    "author": {
+      "name": "DSH Skin Studio",
+      "url": "https://github.com/daboge-beach/dsh-skin-studio"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
+    "palette": {
+      "primary": "#AFA9EC",
+      "background": "#26215C",
+      "surface": "#3C3489",
+      "text": "#EEEDFE",
+      "border": "#534AB7"
+    },
+    "tokens": {
+      "--dsw-alias-bg-base": "#26215C",
+      "--dsw-alias-bg-layer-1": "#3C3489",
+      "--dsw-alias-bg-layer-2": "#534AB7",
+      "--dsw-alias-bg-overlay": "#3C3489",
+      "--dsw-alias-border-l1": "#534AB7",
+      "--dsw-alias-border-l2": "#7F77DD",
+      "--dsw-alias-brand-primary": "#AFA9EC",
+      "--dsw-alias-brand-hover": "#CECBF6",
+      "--dsw-alias-label-primary": "#EEEDFE",
+      "--dsw-alias-label-secondary": "#CECBF6",
+      "--dsw-alias-state-error-primary": "#F09595",
+      "--dsw-alias-state-success-primary": "#5DCAA5",
+      "--dsw-alias-state-warn-primary": "#FAC775",
+      "--dsw-specific-sidebar-fill": "#26215C"
+    },
+    "images": {
+      "preview": "preview.png",
+      "hero": "hero.png",
+      "mascot": "sprite_anim.png"
+    }
+  }
+]

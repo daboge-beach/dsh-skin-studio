@@ -9,6 +9,52 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.10.0] — 2026-08-28
+
+**简体中文**
+
+「架构与性能」版本：bundle 减重 34% + 皮肤数据单一真源 + CI 架构门禁。
+
+### 新增
+
+- **语录外置 JSON（bundle 减重）**：DSH 的插件 client 是单文件契约
+  （动态 import 会被内联、无法懒加载），语录素材改为生成到各皮肤
+  assets/quotes.json（每款 200×2 句 + 问候），运行时按需 fetch
+  （quotePool：预热 + 内存缓存 + 未就绪回退池）——client bundle
+  **345KB → 239KB（gzip 96KB → 63KB，-34%）**
+- **皮肤数据单一真源**：新增 gen-skin-data 生成器——从各皮肤
+  src/index.ts 提取 tokens 合并进 skin.json，再生成 builtinSkins.gen.ts；
+  23KB 手写镜像表缩成 2.5KB 装配层（策展展示顺序保留）。新增皮肤
+  = 建包 + `pnpm gen:skin-data`，不再三处手工同步
+- **CI 架构门禁**：生成数据漂移检查（skin.json tokens /
+  builtinSkins.gen.ts / quotes.json 与源不一致即失败）+ client bundle
+  体积阈值（gzip ≤80KB，超限必须说明理由）
+
+**English**
+
+The "architecture & performance" release: 34% bundle cut + single source
+of truth for skin data + CI architecture gates.
+
+### Added
+
+- **Quotes as external JSON (bundle slimming)**: the DSH plugin client is
+  a single-file contract (dynamic imports get inlined — no true lazy
+  loading), so quote packs are generated into each skin's
+  assets/quotes.json (200×2 lines + greetings per skin) and fetched on
+  demand (quotePool: warm + memory cache + fallback pool until ready) —
+  client bundle **345KB → 239KB (gzip 96KB → 63KB, -34%)**
+- **Single source of truth for skin data**: new gen-skin-data generator —
+  extracts token literals from each skin's src/index.ts into skin.json,
+  then emits builtinSkins.gen.ts; the 23KB hand-maintained mirror table
+  shrinks to a 2.5KB assembly layer (curated display order preserved).
+  Adding a skin = create the package + `pnpm gen:skin-data`
+- **CI architecture gates**: generated-data drift checks (fails when
+  skin.json tokens / builtinSkins.gen.ts / quotes.json drift from source)
+  and a client bundle size threshold (gzip ≤80KB; raising it needs a
+  stated reason)
+
+---
+
 ## [0.9.0] — 2026-08-28
 
 **简体中文**

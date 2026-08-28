@@ -22,6 +22,7 @@ const MIME: Record<string, string> = {
   webp: 'image/webp',
   gif: 'image/gif',
   svg: 'image/svg+xml',
+  json: 'application/json',
 }
 
 /** 皮肤包资源根：packages/gallery/../skins（import.meta.url 位于包内 lib/）。 */

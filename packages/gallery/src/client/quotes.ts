@@ -28,6 +28,20 @@ import { liangshen } from './quotes/liangshen.ts'
 export type { QuoteLang } from './quotes/types.ts'
 export { TARGET_LINES } from './quotes/builder.ts'
 
+/** 全部带语录的皮肤 id（生成脚本与测试共用）。 */
+export const QUOTE_SKIN_IDS = [
+  'mupeiling-blossom', 'hanli-daoist', 'yinyue-lunar', 'nangongwan-moon', 'ziling-mystic',
+  'seraphine-anthem', 'jinx-mayhem', 'lux-radiance', 'yasuo-gale', 'vayne-nightfall',
+  'ezreal-relicrun', 'sona-etwahl', 'mf-bountyhunter', 'ahri-ninefold', 'kaisa-voidborn',
+  'liangshen',
+] as const
+
+/** 某款皮肤的登场问候数组（生成脚本导出 JSON 用）。 */
+export function greetingsForSkin(skinId: string, lang: QuoteLang): readonly string[] {
+  const def = CHARACTER_DEFS.find(d => d.skinId === skinId)
+  return def?.[lang].greetings ?? []
+}
+
 /** 全部 16 款带语录的皮肤（凡人 5 + 英雄联盟 10 + 梗文化 1）。 */
 const CHARACTER_DEFS = [
   blossom, daoist, lunar, moon, mystic,

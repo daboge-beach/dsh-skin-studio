@@ -9,7 +9,13 @@
   "description": "梗文化皮肤 — 推理等级越高，boss 修为越高：凉子（冻得发抖）→ 梁子（淡定从容）→ 梁圣（智慧光环）→ 梁神（始皇帝形态）。社区调侃向卡通 caricature，非真人肖像。",
   "license": "MIT",
   "homepage": "https://github.com/daboge-beach/dsh-skin-studio",
-  "keywords": ["meme", "liangshen", "liangzi", "dark", "fun"],
+  "keywords": [
+    "meme",
+    "liangshen",
+    "liangzi",
+    "dark",
+    "fun"
+  ],
   "colorScheme": "dark",
   "preview": "preview.png",
   "palette": {
@@ -20,5 +26,21 @@
     "border": "#263250"
   },
   "specVersion": "0.2.0",
-  "dshVersion": ">=0.1.0-rc.5"
+  "dshVersion": ">=0.1.0-rc.5",
+  "tokens": {
+    "--dsw-alias-bg-base": "#0A0F1E",
+    "--dsw-alias-bg-layer-1": "#111827",
+    "--dsw-alias-bg-layer-2": "#1A2440",
+    "--dsw-alias-bg-overlay": "#111827",
+    "--dsw-alias-border-l1": "#263250",
+    "--dsw-alias-border-l2": "#34466F",
+    "--dsw-alias-brand-primary": "#4D6BFE",
+    "--dsw-alias-brand-hover": "#7A8FFE",
+    "--dsw-alias-label-primary": "#E6EAF5",
+    "--dsw-alias-label-secondary": "#9AA7C7",
+    "--dsw-alias-state-error-primary": "#F87171",
+    "--dsw-alias-state-success-primary": "#34D399",
+    "--dsw-alias-state-warn-primary": "#FBBF24",
+    "--dsh-specific-sidebar-fill": "#0D1426"
+  }
 }
