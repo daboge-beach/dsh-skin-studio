@@ -228,9 +228,10 @@ dsh-skin-studio/
 - [x] v0.2：拖拽上传、zip 解压、格式校验（浏览器内零依赖解压 + `skin.json` 校验）
 - [x] v0.2.x：英雄联盟英雄皮肤系列 10 款（神话级质感）
 - [x] v0.3.0：吉祥物生态（满屏漫步 · 庆祝动作）+ 任务完成提醒 + 境界档位系统（推理等级联动）+ 梗文化皮肤「梁神」（详见 CHANGELOG.md）
-- [ ] v0.4：皮肤脚手架 CLI、开发热重载
-- [ ] v0.5：插件联动（消费行情/token 统计等数据）
-- [ ] v1.0：跟随 DSH v1.0 稳定 API，正式发布
+- [x] v0.4–v0.9：全皮肤五档资产 · 自定义背景上传 · 滑条↔推理等级同步 · 欢迎页控制条 · 上传持久化（IndexedDB）+ zip 安全限制 + 安装审阅 · 设置面板重构 + 完整中英文 + 无障碍
+- [x] v0.10：bundle 减重 34%（语录外置）· 皮肤数据单一真源（gen-skin-data）· CI 架构门禁（漂移 + 体积阈值）
+- [x] v0.11：皮肤脚手架 CLI（`pnpm gen:skin`，[创作指南](docs/skin-authoring.md)）
+- [ ] v1.0：开发热重载 · 签名/来源可信度 · 跟随 DSH v1.0 稳定 API 正式发布
 
 ### 📄 License
 
@@ -468,9 +469,10 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
 - [x] v0.2: drag & drop upload, zip extraction, format validation (dependency-free in-browser unzip + `skin.json` validation)
 - [x] v0.2.x: League of Legends champion skin series × 10 (mythic-tier polish)
 - [x] v0.3.0: mascot ecosystem (full-screen wandering, celebrations) + task-done alerts + power tier system (reasoning-effort linked) + the "Liang Shen" meme skin (see CHANGELOG.md)
-- [ ] v0.4: skin scaffolder CLI, hot-reload dev flow
-- [ ] v0.5: plugin interop (consume ticker / token stats, etc.)
-- [ ] v1.0: follow DSH v1.0 stable API, official release
+- [x] v0.4–v0.9: tier-5 assets for all skins · custom background upload · slider↔reasoning-effort sync · welcome-page dock · upload persistence (IndexedDB) + zip safety caps + install review · settings drawer + full i18n + a11y
+- [x] v0.10: 34% bundle cut (externalized quotes) · single source of truth for skin data (gen-skin-data) · CI architecture gates (drift + size)
+- [x] v0.11: skin scaffolder CLI (`pnpm gen:skin`, [authoring guide](docs/skin-authoring.md))
+- [ ] v1.0: hot-reload dev flow · signing/provenance · official release on DSH v1.0 stable API
 
 ### 📄 License
 

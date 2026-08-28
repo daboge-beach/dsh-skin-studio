@@ -37,8 +37,20 @@ const LOL_SCHEME: Record<string, 'light' | 'dark'> = {
 }
 
 describe('BUILTIN_SKINS（内置皮肤清单）', () => {
-  it('共 18 款：aurora、midnight + 凡人修仙传 5 款 + 英雄联盟 10 款 + 梗文化 1 款', () => {
-    expect(BUILTIN_SKINS.map(s => s.id)).toEqual(['aurora', 'midnight', ...FANREN_IDS, ...LOL_IDS, 'liangshen'])
+  it('旗舰款全部在册且顺序稳定（基础→凡人→LOL→梗文化；新增皮肤自动追加末尾）', () => {
+    const ids = BUILTIN_SKINS.map(s => s.id)
+    // 旗舰款必须存在且相对顺序稳定
+    const flags = ['aurora', 'midnight', 'hanli-daoist', 'lux-radiance', 'liangshen']
+    for (const flag of flags) expect(ids, flag).toContain(flag)
+    const pos = flags.map(f => ids.indexOf(f))
+    expect([...pos].sort((a, b) => a - b)).toEqual(pos)
+    // 清单结构：id 唯一、来源标记正确
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const skin of BUILTIN_SKINS) {
+      expect(skin.source).toBe('builtin')
+      expect(skin.removable).toBe(false)
+      expect(skin.tokenCount).toBeGreaterThan(0)
+    }
   })
 
   it('凡人 5 款 + LOL 10 款带全套图片资源（preview/hero/mascot）', () => {

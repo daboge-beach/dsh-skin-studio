@@ -104,6 +104,13 @@ Closes #42
 - 皮肤端到端测试：`pnpm test:e2e`
 - 提交前跑 `pnpm lint` 和 `pnpm validate-skins`
 
+### 新增皮肤
+
+- 一条命令出骨架：`pnpm gen:skin -- <id> --name "中文名"`，完整流程见
+  [皮肤创作指南](skin-authoring.md)
+- 之后 `pnpm gen:skin-data` 自动进画廊注册表，`pnpm validate-skins` 过门禁
+- 修改皮肤 tokens / 元信息后同样重跑 `pnpm gen:skin-data`（CI 有漂移检查）
+
 ## 📝 贡献文档
 
 - 修正错别字、补充说明：直接 PR

@@ -9,6 +9,47 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.11.0] — 2026-08-28
+
+**简体中文**
+
+「开发者体验」版本：皮肤脚手架 CLI + 创作指南。
+
+### 新增
+
+- **皮肤脚手架**：`pnpm gen:skin -- <id> --name "中文名" [--scheme]
+  [--primary] [--author]` 一条命令生成皮肤包骨架——完整 manifest
+  （14 个 alias token 按 primary×色系自动推导）+ 800×600 渐变占位
+  预览图（零依赖 PNG 编码器）；接上 v0.10 的单一真源管线：骨架 →
+  `pnpm gen:skin-data` 自动进画廊 → `validate-skins` 过门禁
+- **创作指南**（`docs/skin-authoring.md`）：资产规格表（尺寸/体积红线）、
+  token 语义与配色建议、分档与光标约定、独立 npm 分发指引、提交前
+  检查清单；CONTRIBUTING 已链接
+- **测试与皮肤数量解耦**：内置清单/注册表/探针测试改为结构性断言
+  （旗舰款在册 + 顺序稳定 + 来源正确），新增皮肤不再需要改测试数字
+
+**English**
+
+The "developer experience" release: skin scaffolder CLI + authoring guide.
+
+### Added
+
+- **Skin scaffolder**: `pnpm gen:skin -- <id> --name "..." [--scheme]
+  [--primary] [--author]` generates a complete skin package skeleton —
+  full manifest (14 alias tokens derived from primary×scheme) + an
+  800×600 gradient placeholder preview (dependency-free PNG encoder);
+  wired into the v0.10 single-source pipeline: skeleton →
+  `pnpm gen:skin-data` into the gallery → `validate-skins` gate
+- **Authoring guide** (`docs/skin-authoring.md`): asset spec table
+  (sizes/size caps), token semantics, tier & cursor conventions,
+  standalone npm packaging, pre-submit checklist; linked from
+  CONTRIBUTING
+- **Tests decoupled from skin count**: builtin list / registry / probe
+  tests now use structural assertions (flagship ids present + stable
+  order + correct source), so adding a skin no longer breaks tests
+
+---
+
 ## [0.10.0] — 2026-08-28
 
 **简体中文**

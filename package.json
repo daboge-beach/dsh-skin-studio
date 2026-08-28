@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-studio",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "DeepSeek Harness 皮肤工作室 — 内置精选皮肤 + 用户上传皮肤中心",
   "private": true,
   "type": "module",
@@ -21,7 +21,8 @@
     "setup": "pnpm install && node scripts/download-assets.mjs",
     "gen:quotes": "node --experimental-strip-types scripts/gen-quotes.mjs",
     "gen:skin-data": "node scripts/gen-skin-data.mjs",
-    "check:bundle": "node scripts/check-bundle-size.mjs"
+    "check:bundle": "node scripts/check-bundle-size.mjs",
+    "gen:skin": "node scripts/create-skin.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
