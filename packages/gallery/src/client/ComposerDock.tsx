@@ -6,7 +6,7 @@
  * - 档位滑条：数量自适应当前模型的等级列表（GLM 5 档 / DeepSeek 4 档），
  *   与皮肤中心同一套 tierPower 逻辑；⇄ 同步开=拖动真实改推理等级
  */
-import { useEffect, useState } from 'react'
+import { createElement, useEffect, useState } from 'react'
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { skinStudioSettings } from './settings.ts'
 import { effectiveTier, subscribeTier, tierLabel, effortTier, type PowerTier } from './tierPower.ts'
@@ -77,6 +77,44 @@ function openModelMenu(): void {
     const v = btn.getAttribute('aria-label') ?? ''
     if (v.startsWith('选择模型') || /^select model/i.test(v)) { btn.click(); return }
   }
+}
+
+/**
+ * 是否处于欢迎页（hero 阶段）：ConversationRoot 根节点带 data-phase="hero"。
+ * MutationObserver 监听阶段切换（欢迎页 → 会话页）即时翻转，避免轮询间隙
+ * 出现重复 dock（会话页另有 conversation.composer.dock 注册）。
+ */
+function useHeroPhase(): boolean {
+  const [hero, setHero] = useState(
+    () => typeof document !== 'undefined' && document.querySelector('[data-phase="hero"]') !== null,
+  )
+  useEffect(() => {
+    const read = (): void => {
+      setHero(document.querySelector('[data-phase="hero"]') !== null)
+    }
+    read()
+    const obs = new MutationObserver(read)
+    obs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['data-phase'] })
+    return () => { obs.disconnect() }
+  }, [])
+  return hero
+}
+
+/**
+ * 欢迎页控制条（conversation.input.dock 槽位）。
+ *
+ * 官方将 conversation.composer.dock 显式排除在欢迎页外（ConversationRoot
+ * 的 footer 有 !hero 守卫）；input.dock 在 hero 阶段也渲染（additive list，
+ * 位于输入卡上方）。非 hero 时渲染 null，会话页仍由 composer.dock 的注册
+ * 提供控制条，两页各一条、不重复。
+ *
+ * 注意用 createElement 挂 ComposerDockBar（而非函数式直呼）：hero 翻转时
+ * 条件调用会让本组件的 hook 数量突变，违反 Rules of Hooks，渲染崩溃会被
+ * 槽位错误边界吞掉、dock 静默消失；独立元素则在翻转时正常挂载/卸载。
+ */
+export function HeroDockBar({ ctx }: { ctx?: ClientContext }): JSX.Element | null {
+  if (!useHeroPhase()) return null
+  return createElement(ComposerDockBar, { ctx })
 }
 
 /** 档位控制条（dock 组件；ctx 用于可选的推理等级同步）。 */

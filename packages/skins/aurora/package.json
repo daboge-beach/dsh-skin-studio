@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@dsh-skin-studio/types": "workspace:*",
-    "tsdown": "^0.0.1",
+    "tsdown": "^0.22.2",
     "typescript": "^5.5.0"
   }
 }

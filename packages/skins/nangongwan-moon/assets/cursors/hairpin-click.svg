@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <!-- 南宫婉 · 白玉簪点击态：玉饰闪现朱雀赤纹 + 红色弧光 -->
-  <g transform="translate(16 2)">
+  <g transform="translate(0 2)">
     <!-- 朱雀赤弧光 -->
     <path d="M6 18 q10 -6 20 0 M8 23 q8 -5 16 0" fill="none" stroke="#E24B4A" stroke-width="1.6" stroke-linecap="round" opacity="0.85" />
     <!-- 簪身 -->

@@ -30,24 +30,31 @@ export interface SkinVisual {
   hotspot: [number, number]
 }
 
-/** 全部 18 款皮肤的视觉元数据；aurora/midnight 无光标文件（cursorPrefix 空，光标规则跳过，跟随系统）。 */
+/**
+ * 全部 18 款皮肤的视觉元数据；aurora/midnight 无光标文件（cursorPrefix 空，光标规则跳过，跟随系统）。
+ *
+ * hotspot 为 32×32 光标图的「作用点」（CSS cursor 的点击像素），按各款
+ * cursors/*.svg 的几何逐一校准：有尖端指向的（剑尖/箭头/火箭头/簪首/水滴尖）
+ * 取尖端，对称法器类（花/护手/竖琴/宝珠/音符/蝶/平板）取视觉中心。
+ * 剑（hanli）与簪（nangong）的 SVG transform 已同步修正，使尖端回到画布内。
+ */
 export const SKIN_CURSORS: Record<string, SkinVisual> = {
   'mupeiling-blossom': { cssClass: 'xl-skin-blossom', cursorPrefix: 'blossom', hotspot: [16, 16] },
-  'hanli-daoist': { cssClass: 'xl-skin-daoist', cursorPrefix: 'sword', hotspot: [11, 9] },
-  'yinyue-lunar': { cssClass: 'xl-skin-lunar', cursorPrefix: 'moon', hotspot: [16, 15] },
-  'nangongwan-moon': { cssClass: 'xl-skin-moon', cursorPrefix: 'hairpin', hotspot: [16, 4] },
-  'ziling-mystic': { cssClass: 'xl-skin-mystic', cursorPrefix: 'veil', hotspot: [15, 12] },
-  'seraphine-anthem': { cssClass: 'xl-skin-anthem', cursorPrefix: 'note', hotspot: [16, 16] },
-  'jinx-mayhem': { cssClass: 'xl-skin-mayhem', cursorPrefix: 'rocket', hotspot: [14, 16] },
-  'lux-radiance': { cssClass: 'xl-skin-radiance', cursorPrefix: 'wand', hotspot: [6, 16] },
-  'yasuo-gale': { cssClass: 'xl-skin-gale', cursorPrefix: 'galeblade', hotspot: [6, 16] },
-  'vayne-nightfall': { cssClass: 'xl-skin-nightfall', cursorPrefix: 'bolt', hotspot: [4, 16] },
+  'hanli-daoist': { cssClass: 'xl-skin-daoist', cursorPrefix: 'sword', hotspot: [3, 6] },
+  'yinyue-lunar': { cssClass: 'xl-skin-lunar', cursorPrefix: 'moon', hotspot: [11, 15] },
+  'nangongwan-moon': { cssClass: 'xl-skin-moon', cursorPrefix: 'hairpin', hotspot: [16, 2] },
+  'ziling-mystic': { cssClass: 'xl-skin-mystic', cursorPrefix: 'veil', hotspot: [15, 4] },
+  'seraphine-anthem': { cssClass: 'xl-skin-anthem', cursorPrefix: 'note', hotspot: [11, 25] },
+  'jinx-mayhem': { cssClass: 'xl-skin-mayhem', cursorPrefix: 'rocket', hotspot: [15, 6] },
+  'lux-radiance': { cssClass: 'xl-skin-radiance', cursorPrefix: 'wand', hotspot: [20, 14] },
+  'yasuo-gale': { cssClass: 'xl-skin-gale', cursorPrefix: 'galeblade', hotspot: [22, 7] },
+  'vayne-nightfall': { cssClass: 'xl-skin-nightfall', cursorPrefix: 'bolt', hotspot: [23, 16] },
   'ezreal-relicrun': { cssClass: 'xl-skin-relicrun', cursorPrefix: 'gauntlet', hotspot: [16, 16] },
   'sona-etwahl': { cssClass: 'xl-skin-etwahl', cursorPrefix: 'harp', hotspot: [16, 16] },
-  'mf-bountyhunter': { cssClass: 'xl-skin-bounty', cursorPrefix: 'bullet', hotspot: [16, 12] },
+  'mf-bountyhunter': { cssClass: 'xl-skin-bounty', cursorPrefix: 'bullet', hotspot: [23, 16] },
   'ahri-ninefold': { cssClass: 'xl-skin-ninefold', cursorPrefix: 'orb', hotspot: [16, 16] },
   'kaisa-voidborn': { cssClass: 'xl-skin-voidborn', cursorPrefix: 'voidfly', hotspot: [16, 16] },
-  'liangshen': { cssClass: 'xl-skin-liangshen', cursorPrefix: 'tablet', hotspot: [14, 14] },
+  'liangshen': { cssClass: 'xl-skin-liangshen', cursorPrefix: 'tablet', hotspot: [16, 16] },
   'aurora': { cssClass: 'xl-skin-aurora', cursorPrefix: '', hotspot: [0, 0] },
   'midnight': { cssClass: 'xl-skin-midnight', cursorPrefix: '', hotspot: [0, 0] },
 }

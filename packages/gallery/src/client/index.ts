@@ -25,7 +25,7 @@ import { mountOverlays } from './overlays.ts'
 import { mountSkinEffects } from './skinEffects.ts'
 import { mountTaskNotify } from './taskNotify.ts'
 import { mountTierWatch } from './tierPower.ts'
-import { ComposerDockBar } from './ComposerDock.tsx'
+import { ComposerDockBar, HeroDockBar } from './ComposerDock.tsx'
 
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
 export const inject = ['theme', 'slots']
@@ -111,23 +111,29 @@ export function apply(ctx: ClientContext): void {
   // 7. 境界档位观察（'auto' 模式跟随 DSH 推理等级，DOM 读取）
   ctx.effect(() => mountTierWatch(), '@dsh-skin-studio/gallery: tier watch')
 
-  // 8. 输入区控制条（conversation.composer.dock）：模型选择 + 境界滑条。
-  //    槽位由 conversation 服务声明；modelDirectories 供等级同步（cordis
-  //    要求服务先注入才能访问）。demo/mock 宿主缺这些服务时不注册。
+  // 8. 输入区控制条：会话页走 conversation.composer.dock（输入框下方）；
+  //    欢迎页被官方 footer 的 !hero 守卫排除，补注册 conversation.input.dock
+  //    （hero 阶段也渲染的 additive list，输入卡上方），HeroDockBar 非 hero
+  //    渲染 null，两页各一条不重复。槽位由 conversation 服务声明；
+  //    modelDirectories 供等级同步（cordis 要求服务先注入才能访问）。
+  //    demo/mock 宿主缺这些服务时不注册。
   ctx.inject(['conversation', 'modelDirectories', 'sessions'], injected => {
     injected.effect(() => {
-      let dispose: (() => void) | undefined
+      const disposers: Array<() => void> = []
       try {
-        dispose = injected.slots.register(
+        disposers.push(injected.slots.register(
           { name: 'conversation.composer.dock', id: 'skin-studio-tier', order: -1 },
           () => ComposerDockBar({ ctx: injected }),
-        )
+        ))
+        disposers.push(injected.slots.register(
+          { name: 'conversation.input.dock', id: 'skin-studio-tier-hero', order: -1 },
+          () => HeroDockBar({ ctx: injected }),
+        ))
         if (typeof document !== 'undefined') document.body.dataset.xlDock = 'registered'
       } catch (e) {
         if (typeof document !== 'undefined') document.body.dataset.xlDock = 'err:' + String(e).slice(0, 80)
-        dispose = undefined
       }
-      return () => { dispose?.() }
+      return () => { for (const dispose of disposers) dispose() }
     }, '@dsh-skin-studio/gallery: composer dock')
   })
 }

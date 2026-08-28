@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <!-- 韩立 · 青竹蜂云剑默认态：斜置翠绿竹剑，深绿剑锋 -->
-  <g transform="rotate(-45 11 20)">
+  <g transform="translate(6 0) rotate(-45 11 20)">
     <!-- 剑柄 -->
     <rect x="6" y="22" width="10" height="4" rx="1.2" fill="#5F8A3D" />
     <!-- 剑格 -->

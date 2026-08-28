@@ -9,6 +9,57 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.7.0] — 2026-08-28
+
+**简体中文**
+
+「欢迎页控制条 + 光标热点校准」版本。
+
+### 新增
+
+- **欢迎页控制条**：模型选择 + 档位滑条现在在欢迎页（hero）也可用 ——
+  补注册官方 `conversation.input.dock` 槽位（宿主将 `composer.dock` 排除在
+  hero 之外）；hero ↔ 会话双向切换即时生效，两页各一条不重复
+
+### 修复
+
+- **光标热点逐款校准**：16 款皮肤光标的点击作用点按 SVG 几何重新计算
+  （有尖端的取尖端：剑尖/箭头/火箭头/簪首/水滴尖/音符头；对称法器取
+  中心），全部经浏览器栅格化逐像素验证落在实体图形上，「换了指针点不准」
+  问题解决
+- **韩立剑光标出界**：旋转 transform 使剑尖画出 32×32 画布被裁剪，
+  修正后完整入画
+- **南宫婉玉簪光标错位**：transform 双重偏移把簪子画到画布右边界外，
+  修正为竖直居中
+- **skins 包构建依赖**：17 个皮肤包脚手架误写 `tsdown@^0.0.1`（占位
+  包），对齐 `^0.22.2`，`pnpm build` 全仓 38 包通过
+
+**English**
+
+The "welcome-page dock + cursor hotspot calibration" release.
+
+### Added
+
+- **Welcome-page dock**: model picker + tier slider now also live on the
+  welcome (hero) page via the official `conversation.input.dock` slot (the
+  host excludes `composer.dock` from hero); instant hero ↔ conversation
+  handoff, exactly one dock per page
+
+### Fixed
+
+- **Per-skin cursor hotspot calibration**: all 16 skin cursors' click points
+  recomputed from SVG geometry (tips for pointed cursors — sword tip,
+  arrowheads, rocket nose, hairpin head, teardrop tip, note head; centers for
+  symmetric focuses), each verified pixel-accurate against rasterized SVGs
+- **Han Li sword cursor clipped**: rotation transform drew the blade tip
+  outside the 32×32 canvas; now fully on-canvas
+- **Nangong Wan hairpin cursor misplaced**: double offset pushed the pin past
+  the canvas edge; now vertical and centered
+- **Skins package build deps**: 17 skin packages pinned a placeholder
+  `tsdown@^0.0.1`; aligned to `^0.22.2` — full repo build (38 packages) green
+
+---
+
 ## [0.6.0] — 2026-08-25
 
 **简体中文**

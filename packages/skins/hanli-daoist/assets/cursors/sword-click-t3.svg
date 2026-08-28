@@ -1,6 +1,6 @@
 <svg style="filter: brightness(1.35) saturate(1.6) contrast(1.12) drop-shadow(0 0 2px rgb(255 215 0 / 0.9))" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <!-- 韩立 · 青竹蜂云剑点击态：剑尖迸发三道金色剑气 -->
-  <g transform="rotate(-45 11 20)">
+  <g transform="translate(6 0) rotate(-45 11 20)">
     <!-- 剑柄 -->
     <rect x="6" y="22" width="10" height="4" rx="1.2" fill="#5F8A3D" />
     <rect x="5" y="19.6" width="12" height="2.6" rx="0.8" fill="#3B6D11" />
