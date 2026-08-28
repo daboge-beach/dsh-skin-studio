@@ -9,6 +9,63 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.7.1] — 2026-08-28
+
+**简体中文**
+
+「发布可靠性」补丁：CI 质量门禁完整落地。
+
+### 新增
+
+- **ESLint 10 flat config**（`eslint.config.js`）：`pnpm lint` 从「直接失败」
+  变为可执行门禁（recommended 规则集 + 基线放宽，全仓 0 error 0 warning）
+- **CI 完整流水线**：install → lint → typecheck → test（87）→ build（38 包）
+  → validate-skins（发布门禁，产物检查需要先 build）
+- **皮肤校验器升级**：按 package.json main/exports 检查真实产物（此前写死
+  lib/index.js，实际产物是 lib/index.mjs）；预览图缺失由 warning 升 error；
+  新增资产引用存在性、单文件体积（>12MB error）、PNG 像素（>7680 error）检查
+
+### 修复
+
+- **跨平台**：`clean` 从 `rm -rf` 改为 Node 脚本（Windows 原生环境可用）
+- **去绝对路径**：gallery prebuild 的 `E:/goodlookingDS/...` 硬编码改为
+  `scripts/sync-host-manifest.mjs`（DSH_HOST_ROOT 环境变量或兄弟目录解析；
+  未接线环境打印原因后正常跳过，接线环境同步失败则挡构建不再静默吞掉）
+- **17 个 skins 包 `main` 指向错误产物**（`./lib/index.js` → 实际的
+  `./lib/index.mjs`）
+- **aurora / midnight 补齐预览图**（复用各自 bg，画廊卡片不再只有渐变回退）
+
+**English**
+
+Release-reliability patch: the full CI quality gate.
+
+### Added
+
+- ESLint 10 flat config (`eslint.config.js`): `pnpm lint` goes from
+  "fails outright" to a working gate (recommended ruleset + baseline
+  relaxations; 0 errors, 0 warnings repo-wide)
+- Full CI pipeline: install → lint → typecheck → test (87) → build (38
+  packages) → validate-skins (release gate; artifact checks need the build)
+- Skin validator upgrades: checks real artifacts from package.json
+  main/exports (previously hardcoded lib/index.js while tsdown emits
+  lib/index.mjs); missing preview now an error; added asset-reference
+  existence, per-file size caps (>12MB error), and PNG pixel caps
+  (>7680px error)
+
+### Fixed
+
+- Cross-platform `clean` (Node script instead of `rm -rf`)
+- Removed the hardcoded `E:/goodlookingDS/...` from the gallery prebuild —
+  now `scripts/sync-host-manifest.mjs` (DSH_HOST_ROOT env var or sibling-dir
+  resolution; skips with a printed reason on unwired hosts, and FAILS the
+  build instead of silently swallowing sync errors on wired hosts)
+- 17 skin packages' `main` pointed at the wrong artifact
+  (`./lib/index.js` → the actual `./lib/index.mjs`)
+- aurora / midnight now ship preview images (reusing their bg; gallery
+  cards no longer fall back to gradient-only)
+
+---
+
 ## [0.7.0] — 2026-08-28
 
 **简体中文**

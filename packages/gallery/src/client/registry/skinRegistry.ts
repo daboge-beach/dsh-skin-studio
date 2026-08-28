@@ -147,7 +147,7 @@ class SkinRegistryImpl {
     try {
       manifest = JSON.parse(new TextDecoder().decode(files.get(manifestPath))) as UploadedSkinManifest
     } catch (e) {
-      throw new Error(`skin.json 解析失败: ${e instanceof Error ? e.message : String(e)}`)
+      throw new Error(`skin.json 解析失败: ${e instanceof Error ? e.message : String(e)}`, { cause: e })
     }
 
     // zip 内路径统一剥掉 skin.json 所在目录前缀，让 assets/preview.png 之类的

@@ -70,6 +70,7 @@ export const BUILTIN_SKINS: readonly SkinEntry[] = Object.freeze([
     colorScheme: 'light',
     version: '0.1.0',
     keywords: ['minimal', 'light', 'clean'],
+    images: { preview: 'preview.png' },
     palette: {
       primary: '#3b82f6',
       background: '#f8fafc',
@@ -99,6 +100,7 @@ export const BUILTIN_SKINS: readonly SkinEntry[] = Object.freeze([
     colorScheme: 'dark',
     version: '0.1.0',
     keywords: ['minimal', 'dark', 'focus'],
+    images: { preview: 'preview.png' },
     palette: {
       primary: '#60a5fa',
       background: '#0f172a',

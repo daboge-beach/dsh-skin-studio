@@ -51,10 +51,10 @@ describe('BUILTIN_SKINS（内置皮肤清单）', () => {
     }
   })
 
-  it('aurora / midnight 无图片资源（卡片回退渐变），且各带完整 token 表', () => {
+  it('aurora / midnight 有预览图（bg 复用）、无 hero/mascot，且各带完整 token 表', () => {
     for (const id of ['aurora', 'midnight']) {
       const skin = BUILTIN_SKINS.find(s => s.id === id)
-      expect(skin?.previewUrl).toBeUndefined()
+      expect(skin?.previewUrl).toMatch(new RegExp(`/skins/${id}/assets/preview\\.png$`))
       expect(skin?.heroUrl).toBeUndefined()
       expect(skin?.mascotUrl).toBeUndefined()
       expect(skin?.paletteCssGradient).toMatch(/^linear-gradient/)

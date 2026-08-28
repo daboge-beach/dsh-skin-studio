@@ -82,7 +82,7 @@ export function ExternalLinkIcon({ size, ...rest }: IconProps) {
 }
 
 /** Token 列表展开/收起箭头（替代 ▾ ▴）。 */
-export function ChevronIcon({ expanded = false, size, ...rest }: IconProps & { expanded?: boolean }) {
+export function ChevronIcon({ expanded = false, size: _size, ...rest }: IconProps & { expanded?: boolean }) {
   return (
     <Svg
       style={{ transform: expanded ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }}

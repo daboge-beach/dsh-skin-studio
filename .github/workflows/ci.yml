@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,15 +22,20 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck (gallery)
-        run: pnpm --filter @dsh-skin-studio/gallery typecheck
+      - name: Lint
+        run: pnpm lint
 
-      - name: Test (gallery)
-        run: pnpm --filter @dsh-skin-studio/gallery test
+      - name: Typecheck
+        run: pnpm typecheck
 
-      - name: Build (gallery)
-        run: pnpm --filter @dsh-skin-studio/gallery build
-        env:
-          # prebuild 的 manifest 同步只在本机 DSH 接线时需要，CI 无该目录
-          # ——prebuild 内部已容错（目录不存在时跳过）。
-          CI: true
+      - name: Test
+        run: pnpm test
+
+      # prebuild 的 manifest 同步脚本在无 DSH 宿主的环境自动跳过；
+      # 全仓构建产出 skins 的 lib/ 产物
+      - name: Build
+        run: pnpm build
+
+      # 发布门禁放最后：产物检查需要先 build（lib/index.mjs 等真实入口）
+      - name: Validate skins (release gate)
+        run: pnpm validate-skins

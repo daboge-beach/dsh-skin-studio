@@ -1,6 +1,6 @@
 {
   "name": "@dsh-skin-studio/gallery",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "DSH Skin Studio — 皮肤中心（浏览 / 试穿 / 应用 / 上传皮肤 + 内置 7 款皮肤主题 + /skins 静态资源路由）",
   "type": "module",
   "main": "./lib/index.js",
@@ -28,7 +28,7 @@
     "build": "tsc -p tsconfig.build.json && tsdown",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prebuild": "node -e \"const fs=require('fs');const t='E:/goodlookingDS/deepseek-harness/packages/skin-studio/gallery';try{fs.statSync('E:/goodlookingDS/deepseek-harness/packages/client/tsdown.client.ts');fs.mkdirSync(t,{recursive:true});fs.copyFileSync('package.json',t+'/package.json');}catch(e){/* CI 或未接线环境：跳过 manifest 同步 */}\""
+    "prebuild": "node ../../scripts/sync-host-manifest.mjs"
   },
   "dsh": {
     "client": {

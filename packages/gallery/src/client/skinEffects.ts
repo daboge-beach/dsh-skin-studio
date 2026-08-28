@@ -581,7 +581,6 @@ function installPointerFx(): () => void {
 /** 在按钮内注入涟漪 span（继承其圆角，纯 transform/opacity 动画）。 */
 function spawnRipple(btn: HTMLElement, e: MouseEvent): void {
   const rect = btn.getBoundingClientRect()
-  const d = Math.max(rect.width, rect.height) * 2.2
   const span = document.createElement('span')
   span.className = 'xl-ripple'
   const left = e.clientX - rect.left - 40
