@@ -11,6 +11,7 @@ import { Modal } from './Modal.tsx'
 import { showToast } from './Toast.tsx'
 import type { SkinEntry } from './registry/types.ts'
 import { ensureThemeRegistered } from './themeBridge.ts'
+import { skinRegistry } from './registry/skinRegistry.ts'
 import { skinStudioSettings } from './settings.ts'
 import styles from './SkinDetailModal.module.css'
 
@@ -50,6 +51,28 @@ export function SkinDetailModal({ skin, ctx, onClose, onTryOn }: SkinDetailModal
     } catch (e) {
       showToast({ message: `应用失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     }
+  }
+
+  /** 导出已安装的上传皮肤为 .zip（备份 / 分享 / 换机迁移）。 */
+  const exportZip = (): void => {
+    void (async () => {
+      try {
+        const blob = await skinRegistry.exportSkin(skin.id)
+        if (blob === undefined) {
+          showToast({ message: '没有可导出的安装数据（旧版本安装的皮肤请重新上传一次）', type: 'info' })
+          return
+        }
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${skin.id}-skin.zip`
+        a.click()
+        window.setTimeout(() => { URL.revokeObjectURL(url) }, 10_000)
+        showToast({ message: `${skin.name} 已导出为 .zip`, type: 'success' })
+      } catch (e) {
+        showToast({ message: `导出失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+      }
+    })()
   }
 
   const swatches = paletteEntries(skin)
@@ -142,6 +165,11 @@ export function SkinDetailModal({ skin, ctx, onClose, onTryOn }: SkinDetailModal
         {/* 底部操作栏 */}
         <footer className={styles.actions}>
           <button type="button" className={`${styles.btn} ${styles['btn--ghost']}`} onClick={onClose}>取消</button>
+          {skin.source === 'upload' && (
+            <button type="button" className={`${styles.btn} ${styles['btn--ghost']}`} onClick={exportZip}>
+              导出 .zip
+            </button>
+          )}
           <button
             type="button"
             className={`${styles.btn} ${styles['btn--primary']}`}

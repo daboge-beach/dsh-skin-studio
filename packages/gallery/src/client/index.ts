@@ -55,6 +55,13 @@ export function apply(ctx: ClientContext): void {
 
     restoreSavedSkin(ctx)
 
+    // 上传皮肤持久化恢复：IndexedDB 里的已安装款注册主题 + 重放启动恢复
+    //（#ready 完成前 setTheme(上传 id) 会因主题未注册而失败清记忆，这里补）
+    void skinRegistry.restored().then(restored => {
+      for (const skin of restored) disposers.push(ctx.theme.register(toThemeDefinition(skin)))
+      if (restored.length > 0) restoreSavedSkin(ctx)
+    })
+
     // 内置翻转（宿主 adoption / 换模型触发 / 用户经官方外观选择器切明暗）：
     // 有皮肤记忆一律顶回皮肤。回原生界面的唯一入口是皮肤中心的「还原出厂」
     // ——不做 userTouched 类猜测（拉境界滑条等普通点击曾被误判为切主题意图，

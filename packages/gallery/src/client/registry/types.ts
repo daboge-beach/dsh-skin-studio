@@ -54,6 +54,16 @@ export interface SkinEntry {
 
   /** 是否可删除（内置不可删）。 */
   removable: boolean
+
+  /** 上传包统计（安装审阅 / 导出展示用；内置款无）。 */
+  packageStats?: {
+    /** zip 内图片文件数。 */
+    files: number
+    /** 图片总字节。 */
+    bytes: number
+    /** 每张图片：路径、体积、像素尺寸（SVG/未知格式无宽高）。 */
+    images: Array<{ path: string; bytes: number; width?: number; height?: number }>
+  }
 }
 
 /** 上传/安装过程中的结构化 manifest（skin.json + token 表合并视图）。 */

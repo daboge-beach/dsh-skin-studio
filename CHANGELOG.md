@@ -9,6 +9,57 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.8.0] — 2026-08-28
+
+**简体中文**
+
+「上传中心可信化」版本：持久化 + 安全限制 + 安装审阅。
+
+### 新增
+
+- **上传皮肤持久化（IndexedDB）**：安装过的皮肤刷新后自动恢复（manifest +
+  图片字节入库；启动时重建注册与主题），「已上传」从会话级变成真正的
+  「已安装」；隐私模式等无 IndexedDB 环境自动降级为内存实现并提示
+- **zip 安全限制**：解压前预检条目数（≤2000）、单文件解压量（≤60MB）、
+  总解压量（≤240MB）、异常压缩比（>100:1 拒绝，疑似 zip bomb）；路径
+  安全拒绝绝对路径 / `..` 穿越 / 重复条目 / 深度 >8；压缩包本体 ≤50MB
+- **图片尺寸守卫**：PNG/JPEG/GIF 文件头直读像素（不解码），任一边
+  >8192px 拒绝安装（防超大像素图拖垮浏览器）
+- **安装前能力审阅**：上传后先弹审阅窗——覆盖多少 token、使用哪些图片
+  （路径/像素/体积）、包大小、作者与许可证、校验警告、本地性承诺
+  （不上传服务器、卸载即全删），确认后才安装
+- **导出 .zip**：已安装的上传皮肤可一键导回 zip（零依赖 STORE 打包器，
+  UTF-8 文件名），备份 / 分享 / 换机迁移
+- **更新安装**：同 id 重复上传从报错改为原位替换（覆盖安装），object URL
+  无泄漏释放
+
+**English**
+
+The "trustworthy upload center" release: persistence + safety caps + install review.
+
+### Added
+
+- **Uploaded-skin persistence (IndexedDB)**: installed skins survive refresh
+  (manifest + image bytes stored; registry and themes rebuilt at startup);
+  "uploaded" becomes truly "installed"; graceful in-memory fallback where
+  IndexedDB is unavailable (private mode)
+- **Zip safety caps**: pre-inflate checks on entry count (≤2000), per-entry
+  (≤60MB) and total (≤240MB) uncompressed sizes, compression ratio (>100:1
+  rejected as suspected zip bomb); path safety rejects absolute paths, `..`
+  traversal, duplicates, depth >8; archive itself capped at 50MB
+- **Image dimension guard**: header-parsed PNG/JPEG/GIF pixel sizes (no
+  decode); any side >8192px rejected
+- **Install review modal**: before installing, shows exactly what the skin
+  overrides (token count), which images it uses (path/pixels/size), package
+  size, author/license, validation warnings, and the locality promise
+  (nothing leaves the browser; uninstall removes everything)
+- **Export to .zip**: one-click re-pack of any installed upload (dependency-
+  free STORE writer, UTF-8 names) for backup / sharing / migration
+- **Update installs**: re-uploading the same id now replaces in place instead
+  of erroring; object URLs revoked without leaks
+
+---
+
 ## [0.7.1] — 2026-08-28
 
 **简体中文**

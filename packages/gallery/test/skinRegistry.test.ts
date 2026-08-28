@@ -112,11 +112,22 @@ describe('skinRegistry 上传链路', () => {
     expect(validation.errors.join()).toContain('light 或 dark')
   })
 
-  it('重复 id 安装被拒绝', async () => {
+  it('重复 id 上传款按更新安装处理（原位替换，不重复）', async () => {
     const first = await skinRegistry.upload(toFile(validZip()))
     await skinRegistry.install(first)
     const second = await skinRegistry.upload(toFile(validZip()))
-    await expect(skinRegistry.install(second)).rejects.toThrow('已存在')
+    await skinRegistry.install(second) // 更新安装：不再抛「已存在」
+    const uploaded = await skinRegistry.list('uploaded')
+    expect(uploaded.filter(s => s.id === 'moon-fox')).toHaveLength(1)
+  })
+
+  it('与内置款撞 id 的安装被拒绝', async () => {
+    const hostile = buildZip([
+      { name: 'skin.json', data: encoder.encode(JSON.stringify({ ...VALID_MANIFEST, id: 'aurora' })) },
+      { name: 'assets/preview.png', data: new Uint8Array([0x89, 0x50, 0x4e, 0x47, 1]), method: 0 },
+    ])
+    const entry = await skinRegistry.upload(toFile(hostile))
+    await expect(skinRegistry.install(entry)).rejects.toThrow('内置皮肤冲突')
   })
 
   it('remove 释放条目且内置皮肤不可删', async () => {

@@ -10,6 +10,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { SearchIcon, UploadIcon } from './icons.tsx'
 import { SkinCard } from './SkinCard.tsx'
 import { SkinDetailModal } from './SkinDetailModal.tsx'
+import { InstallReviewModal } from './InstallReviewModal.tsx'
 import { ToastHost, showToast } from './Toast.tsx'
 import { UploadDropZone } from './UploadDropZone.tsx'
 import { useThemeSnapshot } from './hooks.ts'
@@ -91,6 +92,8 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [tryOnSkinId, setTryOnSkinId] = useState<string | null>(() => skinStudioSettings.getTryOn()?.skinId ?? null)
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
+  /** 安装审阅态：upload 校验通过后挂起，等用户在弹窗里确认。 */
+  const [review, setReview] = useState<{ entry: SkinEntry; validation: Awaited<ReturnType<typeof skinRegistry.validate>> } | null>(null)
   const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
   const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
   const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
@@ -196,7 +199,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     }
   }, [ctx, tryOnSkinId, revertTryOn])
 
-  // ── 上传：校验 zip → 解析 skin.json → validate → install ──
+  // ── 上传：校验 zip → 安全解压 → validate → 安装审阅 → install ──
   const handleUpload = useCallback(async (file: File): Promise<void> => {
     // 1. 校验文件类型
     if (!file.name.endsWith('.zip')) {
@@ -218,21 +221,26 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         showToast({ message: `${entry.name} 校验失败：\n${validation.errors.join('\n')}`, type: 'error', duration: 0 })
         return
       }
-      if (validation.warnings.length > 0) {
-        showToast({ message: `${entry.name} 有警告：\n${validation.warnings.join('\n')}`, type: 'info' })
-      }
 
-      // 4. 加载到注册表（但不自动启用）
-      await skinRegistry.install(entry)
-
-      // 5. 切到「已上传」tab 让用户看到
-      setActiveTab('uploaded')
-      showToast({ message: `${entry.name} 已添加，点击卡片试用`, type: 'success' })
+      // 4. 安装审阅：展示能力面（token/图片/体积/警告），用户确认后才 install
+      setReview({ entry, validation })
     } catch (e) {
       showToast({ message: `上传失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     } finally {
       setUploading(false)
       setUploadProgress(undefined)
+    }
+  }, [])
+
+  // ── 审阅确认 → 载入注册表（不自动启用）并持久化 ──
+  const handleInstallConfirmed = useCallback(async (entry: SkinEntry): Promise<void> => {
+    setReview(null)
+    try {
+      await skinRegistry.install(entry)
+      setActiveTab('uploaded')
+      showToast({ message: `${entry.name} 已安装（刷新后保留），点击卡片试用`, type: 'success' })
+    } catch (e) {
+      showToast({ message: `安装失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     }
   }, [])
 
@@ -515,6 +523,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           ctx={ctx}
           onClose={() => setSelectedSkin(null)}
           onTryOn={onTryOnSkin => handleTryOn(onTryOnSkin)}
+        />
+      )}
+
+      {review !== null && (
+        <InstallReviewModal
+          entry={review.entry}
+          validation={review.validation}
+          onCancel={() => { setReview(null) }}
+          onConfirm={() => { void handleInstallConfirmed(review.entry) }}
         />
       )}
 
