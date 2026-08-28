@@ -9,6 +9,48 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.9.0] — 2026-08-28
+
+**简体中文**
+
+「交互体验」版本：设置面板重构 + 完整中英文 + 无障碍。
+
+### 新增
+
+- **设置面板**：顶部 8 个开关按钮全部收进 ⚙ 设置抽屉，按
+  外观 / 动效 / 吉祥物 / 提醒 / 高级 分组（每项带说明文字）；
+  画廊一级操作只留 搜索 / 上传 / 设置入口
+- **完整中英文**：主画廊、设置面板、审阅与确认弹窗、toast 全部经
+  i18n 取词；新增「界面语言」设置（自动跟随浏览器 / 中文 / English，
+  实时切换）；搜索同时匹配名称 / 描述 / 关键词（描述双语，天然兼容
+  中英检索）
+- **模态无障碍**：焦点陷阱（Tab 循环）、打开聚焦首个控件、关闭把
+  焦点还给触发元素、背景滚动锁定（全部模态受益：详情 / 审阅 /
+  确认 / 设置）
+- **危险操作确认**：删除上传皮肤、还原出厂均先弹确认对话框（红色
+  主按钮），不再一键直删
+
+**English**
+
+The "interaction polish" release: settings drawer + full i18n + a11y.
+
+### Added
+
+- **Settings drawer**: the 8 toolbar toggles collapse into a ⚙ drawer
+  grouped by Appearance / Motion / Mascot / Alerts / Advanced (each with
+  description); the gallery keeps only Search / Upload / Settings
+- **Full i18n**: main gallery, settings drawer, review & confirm dialogs,
+  toasts all localized; new "UI language" setting (auto / Chinese /
+  English, live switching); search matches name / description / keywords
+  (bilingual descriptions cover both languages)
+- **Modal accessibility**: focus trap (Tab cycling), initial focus on
+  open, focus returned to the trigger on close, background scroll lock —
+  all modals benefit
+- **Danger confirmations**: deleting an uploaded skin and factory reset
+  now confirm first (red primary button) instead of firing immediately
+
+---
+
 ## [0.8.0] — 2026-08-28
 
 **简体中文**

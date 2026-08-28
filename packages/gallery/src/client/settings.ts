@@ -204,6 +204,11 @@ export const skinStudioSettings = {
     if (current.bgFit === mode) return
     write({ ...current, bgFit: mode })
   },
+  /** 界面语言：undefined = 跟随浏览器（auto）。 */
+  setUiLang(lang: 'zh' | 'en' | undefined): void {
+    if (current.uiLang === lang) return
+    write({ ...current, uiLang: lang })
+  },
   /**
    * 一键还原出厂：全部设置回默认值、清除皮肤偏好与试穿态
    * （主题本身由调用方切回原生偏好，见 GalleryPanel 的还原入口）。

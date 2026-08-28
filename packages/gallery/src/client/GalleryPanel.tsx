@@ -11,6 +11,9 @@ import { SearchIcon, UploadIcon } from './icons.tsx'
 import { SkinCard } from './SkinCard.tsx'
 import { SkinDetailModal } from './SkinDetailModal.tsx'
 import { InstallReviewModal } from './InstallReviewModal.tsx'
+import { SettingsDrawer } from './SettingsDrawer.tsx'
+import { ConfirmDialog } from './ConfirmDialog.tsx'
+import { t } from './i18n.ts'
 import { ToastHost, showToast } from './Toast.tsx'
 import { UploadDropZone } from './UploadDropZone.tsx'
 import { useThemeSnapshot } from './hooks.ts'
@@ -94,14 +97,11 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
   /** 安装审阅态：upload 校验通过后挂起，等用户在弹窗里确认。 */
   const [review, setReview] = useState<{ entry: SkinEntry; validation: Awaited<ReturnType<typeof skinRegistry.validate>> } | null>(null)
-  const [mascotEnabled, setMascotEnabled] = useState<boolean>(() => skinStudioSettings.get().mascotEnabled)
-  const [quoteLang, setQuoteLang] = useState<'zh' | 'en'>(() => skinStudioSettings.get().quoteLang)
-  const [animations, setAnimations] = useState<'system' | 'always'>(() => skinStudioSettings.get().animations)
-  const [notifyTaskDone, setNotifyTaskDone] = useState<'off' | 'sound' | 'motion' | 'both'>(() => skinStudioSettings.get().notifyTaskDone)
+  /** 设置面板（v0.9：顶部按钮群收拢于此）。 */
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  /** 删除确认态（危险操作确认）。 */
+  const [pendingRemove, setPendingRemove] = useState<SkinEntry | null>(null)
   const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3' | 't4'>(() => skinStudioSettings.get().powerTier)
-  const [glass, setGlass] = useState<boolean>(() => skinStudioSettings.get().glass)
-  const [cursorFx, setCursorFx] = useState<boolean>(() => skinStudioSettings.get().cursorFx)
-  const [tierSync, setTierSync] = useState<boolean>(() => skinStudioSettings.get().tierSyncEffort)
   const [effective, setEffective] = useState<number>(() => effectiveTier())
   useEffect(() => subscribeTier(t => setEffective(t)), [])
 
@@ -109,23 +109,16 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const snapshot = useThemeSnapshot(ctx)
   const activeSkinId = snapshot?.active.id
 
-  // 吉祥物浮层开关 + 语录语言 + 动画策略 + 任务提醒 + 境界档位（settings.*）
+  // 境界档位（settings.*；其余开关已收进 SettingsDrawer 自管）
   useEffect(() => skinStudioSettings.subscribe(s => {
-    setMascotEnabled(s.mascotEnabled)
-    setQuoteLang(s.quoteLang)
-    setAnimations(s.animations)
-    setNotifyTaskDone(s.notifyTaskDone)
     setPowerTier(s.powerTier)
-    setGlass(s.glass)
-    setCursorFx(s.cursorFx)
-    setTierSync(s.tierSyncEffort)
   }), [])
 
   /** 试穿前的用户偏好已并入模块级试穿态（skinStudioSettings.getTryOn）。 */
 
   const refreshList = useCallback((tab: GalleryTab): void => {
     skinRegistry.list(tab).then(setSkins).catch((e: unknown) => {
-      showToast({ message: `皮肤列表加载失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+      showToast({ message: `${t('listLoadFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     })
   }, [])
 
@@ -134,9 +127,10 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     refreshList(activeTab)
   }, [activeTab, refreshList])
 
-  // 过滤搜索（名称 / 关键词，大小写不敏感）
+  // 搜索：名称 / 描述 / 关键词（描述含中英双语，天然兼容两种语言检索）
   const filtered = useMemo(() => skins.filter(s =>
     s.name.toLowerCase().includes(searchQuery.toLowerCase())
+    || s.description.toLowerCase().includes(searchQuery.toLowerCase())
     || s.keywords?.some(k => k.includes(searchQuery.toLowerCase())),
   ), [skins, searchQuery])
 
@@ -194,7 +188,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
       })
     } catch (e) {
       skinStudioSettings.setTryOn(null)
-      showToast({ message: `试穿失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+      showToast({ message: `${t('tryOnFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
       setTryOnSkinId(null)
     }
   }, [ctx, tryOnSkinId, revertTryOn])
@@ -203,29 +197,29 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const handleUpload = useCallback(async (file: File): Promise<void> => {
     // 1. 校验文件类型
     if (!file.name.endsWith('.zip')) {
-      showToast({ message: '请上传 .zip 格式的皮肤包', type: 'error' })
+      showToast({ message: t('zipOnly'), type: 'error' })
       return
     }
 
     // 2. 解压并校验
     setUploading(true)
-    setUploadProgress('正在解析皮肤包...')
+    setUploadProgress(t('parsing'))
     try {
       const entry = await skinRegistry.upload(file, {
-        onProgress: p => setUploadProgress(p < 1 ? `正在解析皮肤包... ${Math.round(p * 100)}%` : '校验中...'),
+        onProgress: p => setUploadProgress(p < 1 ? `${t('parsing')} ${Math.round(p * 100)}%` : t('validating')),
       })
 
       // 3. 校验 skin.json
       const validation = await skinRegistry.validate(entry)
       if (!validation.passed) {
-        showToast({ message: `${entry.name} 校验失败：\n${validation.errors.join('\n')}`, type: 'error', duration: 0 })
+        showToast({ message: `${entry.name} ${t('validateFailed')}：\n${validation.errors.join('\n')}`, type: 'error', duration: 0 })
         return
       }
 
       // 4. 安装审阅：展示能力面（token/图片/体积/警告），用户确认后才 install
       setReview({ entry, validation })
     } catch (e) {
-      showToast({ message: `上传失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+      showToast({ message: `${t('uploadFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     } finally {
       setUploading(false)
       setUploadProgress(undefined)
@@ -244,125 +238,66 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     }
   }, [])
 
-  // ── 删除上传皮肤 ─────────────────────────────────────────
+  // ── 删除上传皮肤（危险操作：先确认再执行）─────────────────
   const handleRemove = useCallback((skin: SkinEntry): void => {
+    setPendingRemove(null)
     skinRegistry.remove(skin.id)
       .then(() => {
         unregisterGalleryTheme(ctx, skin)
         if (selectedSkin?.id === skin.id) setSelectedSkin(null)
         if (tryOnSkinId === skin.id) setTryOnSkinId(null)
         refreshList(activeTab)
-        showToast({ message: `${skin.name} 已删除`, type: 'info' })
+        showToast({ message: `${skin.name} ${t('removed')}`, type: 'info' })
       })
       .catch((e: unknown) => {
-        showToast({ message: `删除失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+        showToast({ message: `${t('removeFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
       })
   }, [activeTab, ctx, refreshList, selectedSkin?.id, tryOnSkinId])
+
+  /** 还原出厂（设置面板注入；确认已在面板内完成）。 */
+  const handleFactoryReset = useCallback((): void => {
+    skinStudioSettings.resetAll()
+    try { ctx.theme.setTheme('system') } catch { /* 主题服务不可用时仅还原设置 */ }
+    showToast({ message: t('resetDone'), type: 'success' })
+  }, [ctx])
 
   return (
     <div className={styles.panel}>
       <header className={styles.header}>
         <div>
           <h1>Skin Studio</h1>
-          <p className={styles.subtitle}>选一张皮肤，让 agent 也有自己的脸</p>
+          <p className={styles.subtitle}>{t('panelTitle')}</p>
         </div>
         <div className={styles.headerActions}>
-          <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="搜索皮肤..." />
+          <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder={t('searchPlaceholder')} />
           <UploadButton onUpload={file => { void handleUpload(file) }} busy={uploading} />
+          <button
+            type="button"
+            className={styles.mascotToggle}
+            aria-haspopup="dialog"
+            aria-expanded={settingsOpen}
+            title={t('settingsOpen')}
+            onClick={() => { setSettingsOpen(true) }}
+          >
+            ⚙ {t('settingsTitle')}
+          </button>
         </div>
       </header>
 
       <nav className={styles.tabs}>
-        <Tab active={activeTab === 'builtin'} onClick={() => setActiveTab('builtin')}>内置</Tab>
-        <Tab active={activeTab === 'mine'} onClick={() => setActiveTab('mine')}>我的</Tab>
-        <Tab active={activeTab === 'uploaded'} onClick={() => setActiveTab('uploaded')}>已上传</Tab>
+        <Tab active={activeTab === 'builtin'} onClick={() => setActiveTab('builtin')}>{t('tabBuiltin')}</Tab>
+        <Tab active={activeTab === 'mine'} onClick={() => setActiveTab('mine')}>{t('tabMine')}</Tab>
+        <Tab active={activeTab === 'uploaded'} onClick={() => setActiveTab('uploaded')}>{t('tabUploaded')}</Tab>
         <span className={styles.count}>
-          共 {filtered.length} 款{activeSkinId && ` · 已启用 ${activeSkinId}`}
+          {t('countOf')} {filtered.length} 款{activeSkinId && ` · ${t('activeSkin')} ${activeSkinId}`}
         </span>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={mascotEnabled}
-          title="应用皮肤后，在主界面右下角显示吉祥物浮层"
-          onClick={() => skinStudioSettings.setMascotEnabled(!mascotEnabled)}
-        >
-          吉祥物浮层：{mascotEnabled ? '开' : '关'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          title="切换吉祥物语录语言（中文 / English），每款皮肤每种语言各 200 句"
-          onClick={() => skinStudioSettings.setQuoteLang(quoteLang === 'zh' ? 'en' : 'zh')}
-        >
-          语录语言：{quoteLang === 'zh' ? '中文' : 'English'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={animations === 'always'}
-          title="动画播放策略：跟随系统「减少动态效果」（默认，无障碍友好）或忽略系统设置始终播放。系统关闭了动画效果时，吉祥物/特效静止的话切到「始终播放」即可。"
-          onClick={() => skinStudioSettings.setAnimations(animations === 'always' ? 'system' : 'always')}
-        >
-          动画：{animations === 'always' ? '始终播放' : '跟随系统'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={notifyTaskDone !== 'off'}
-          title="任务完成后提醒：提示音（音色随皮肤系列）与/或吉祥物庆祝动作。点击循环切换：关 → 声音 → 动作 → 声音+动作。"
-          onClick={() => {
-            const next = notifyTaskDone === 'off' ? 'sound' : notifyTaskDone === 'sound' ? 'motion' : notifyTaskDone === 'motion' ? 'both' : 'off'
-            skinStudioSettings.setNotifyTaskDone(next)
-          }}
-        >
-          任务提醒：{notifyTaskDone === 'off' ? '关' : notifyTaskDone === 'sound' ? '声音' : notifyTaskDone === 'motion' ? '动作' : '声音+动作'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={glass}
-          title="背景透出：皮肤背景图铺满窗口，界面面板半透明直接透出背景（无磨砂模糊）。有背景图的皮肤生效。"
-          onClick={() => skinStudioSettings.setGlass(!glass)}
-        >
-          背景透出：{glass ? '开' : '关'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={cursorFx}
-          title="皮肤光标：三态自定义光标（默认/悬停/点击）。若光标热点偏移导致点击不准，可关闭回退系统光标。"
-          onClick={() => skinStudioSettings.setCursorFx(!cursorFx)}
-        >
-          光标：{cursorFx ? '开' : '关'}
-        </button>
-        <button
-          type="button"
-          className={styles.mascotToggle}
-          aria-pressed={tierSync}
-          title="滑条同步推理等级：开启后手动拉动境界滑条会真实修改当前会话的推理等级（官方接口，与模型菜单同路径）。注意会改变实际推理强度与 token 消耗，默认关闭。"
-          onClick={() => skinStudioSettings.setTierSyncEffort(!tierSync)}
-        >
-          等级同步：{tierSync ? '开' : '关'}
-        </button>
-        <button
-          type="button"
-          className={styles.factoryReset}
-          title="一键还原出厂设置：清除皮肤偏好与全部皮肤中心设置，界面回到 DSH 原生外观（跟随系统的明暗主题）。皮肤中心本身保留，随时可以再换皮肤。"
-          onClick={() => {
-            skinStudioSettings.resetAll()
-            try { ctx.theme.setTheme('system') } catch { /* 主题服务不可用时仅还原设置 */ }
-            showToast({ message: '已还原出厂设置 — 界面回到 DSH 原生外观', type: 'success' })
-          }}
-        >
-          还原出厂
-        </button>
       </nav>
 
       {/* 试穿决策条：试穿期间的常驻决策入口（取代旧的常驻 toast） */}
       {tryOnSkinEntry !== null && (
         <div className={styles.tryOnBar} role="status">
           <span className={styles.tryOnBarText}>
-            正在试穿：{tryOnSkinEntry.name}（临时预览，刷新自动还原）
+            {t('tryOnBar')}：{tryOnSkinEntry.name}（{t('tempNote')}）
           </span>
           <span className={styles.tryOnBarActions}>
             <button
@@ -370,33 +305,33 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
               className={styles.tryOnBarPrimary}
               onClick={() => confirmTryOn(tryOnSkinEntry)}
             >
-              应用并保存
+              {t('applySave')}
             </button>
             <button
               type="button"
               className={styles.tryOnBarGhost}
               onClick={() => {
                 revertTryOn(tryOnSkinEntry)
-                showToast({ message: `已退出试穿 ${tryOnSkinEntry.name}`, type: 'info' })
+                showToast({ message: `${t('exitedTryOn')} ${tryOnSkinEntry.name}`, type: 'info' })
               }}
             >
-              退出还原
+              {t('exitRevert')}
             </button>
           </span>
         </div>
       )}
 
       {/* 境界滑条：拉动改变档位（auto 时跟随 DSH 推理等级） */}
-      <div className={styles.tierRow} role="group" aria-label="境界档位">
-        <span className={styles.tierLabel}>境界</span>
+      <div className={styles.tierRow} role="group" aria-label={t('tierLabel')}>
+        <span className={styles.tierLabel}>{t('tierLabel')}</span>
         <button
           type="button"
           className={styles.mascotToggle}
           aria-pressed={powerTier === 'auto'}
-          title="跟随 DSH 推理等级自动升降档（推荐）；再点恢复手动滑条控制"
+          title={t('tierFollow')}
           onClick={() => skinStudioSettings.setPowerTier(powerTier === 'auto' ? `t${effective}` as 't0' | 't1' | 't2' | 't3' | 't4' : 'auto')}
         >
-          {powerTier === 'auto' ? `跟随推理（${effective + 1}档）` : '手动'}
+          {powerTier === 'auto' ? `${t('tierFollow')}（${effective + 1}${t('tierOf')}）` : t('tierManual')}
         </button>
         <input
           type="range"
@@ -404,8 +339,8 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           max={4}
           step={1}
           value={powerTier === 'auto' ? effective : Number(powerTier.slice(1))}
-          aria-label={`境界档位，当前第 ${effective + 1} 档 ${tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}`}
-          title="境界档位：推理等级越高，角色修为/皮肤等级越高（造型、光标、背景随之变化）"
+          aria-label={`${t('tierSliderAria')} ${effective + 1} ${t('tierOf')} ${tierLabel(activeSkinId ?? '', effective as 0 | 1 | 2 | 3)}`}
+          title={t('tierSliderHint')}
           className={styles.tierSlider}
           onChange={e => {
             const v = Number(e.target.value)
@@ -418,9 +353,9 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         </span>
         <label
           className={styles.mascotToggle}
-          title={`上传自定义背景：替换当前皮肤（${activeSkinId ?? '未选皮肤'}）第 ${effective + 1} 档的背景图（仅本机生效，不覆盖生图资产，可反复覆盖上传）`}
+          title={t('uploadBgHint')}
         >
-          上传背景(第{effective + 1}档)
+          {t('uploadBg')}({effective + 1})
           <input
             type="file"
             accept="image/*"
@@ -471,22 +406,22 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
               .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
               .then(() => {
                 skinStudioSettings.bumpBgRev()
-                showToast({ message: `第 ${effective + 1} 档已恢复原图`, type: 'success' })
+                showToast({ message: `${effective + 1} ${t('bgReset')}`, type: 'success' })
               })
               .catch(err => {
-                showToast({ message: `恢复失败：${String(err)}`, type: 'error' })
+                showToast({ message: `${t('bgResetFailed')}：${String(err)}`, type: 'error' })
               })
           }}
         >
-          恢复原图
+          {t('resetBg')}
         </button>
         <button
           type="button"
           className={styles.mascotToggle}
-          title="自定义背景显示模式：裁剪填满（16:9 最佳）/ 完整显示（竖图不裁留边）"
+          title={t('bgFitHint')}
           onClick={() => skinStudioSettings.setBgFit(skinStudioSettings.get().bgFit === 'cover' ? 'contain' : 'cover')}
         >
-          {skinStudioSettings.get().bgFit === 'cover' ? '裁剪填满' : '完整显示'}
+          {skinStudioSettings.get().bgFit === 'cover' ? t('bgFitCover') : t('bgFitContain')}
         </button>
       </div>
 
@@ -499,7 +434,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
             tryOn={skin.id === tryOnSkinId}
             onClick={() => setSelectedSkin(skin)}
             onTryOn={() => handleTryOn(skin)}
-            onRemove={handleRemove}
+            onRemove={setPendingRemove}
           />
         ))}
         <UploadDropZone
@@ -512,8 +447,8 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
       {activeTab !== 'builtin' && filtered.length === 0 && (
         <p className={styles.empty}>
           {activeTab === 'uploaded'
-            ? '还没有上传过皮肤 — 把皮肤包（.zip）拖到上面的上传格试试。'
-            : '「我的」收录通过 npm 安装的皮肤，目前为空。'}
+            ? t('emptyUploaded')
+            : t('emptyMine')}
         </p>
       )}
 
@@ -532,6 +467,24 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           validation={review.validation}
           onCancel={() => { setReview(null) }}
           onConfirm={() => { void handleInstallConfirmed(review.entry) }}
+        />
+      )}
+
+      {settingsOpen && (
+        <SettingsDrawer
+          onClose={() => { setSettingsOpen(false) }}
+          onFactoryReset={handleFactoryReset}
+        />
+      )}
+
+      {pendingRemove !== null && (
+        <ConfirmDialog
+          title={`${t('confirmDeleteTitle')}：${pendingRemove.name}`}
+          message={t('confirmDeleteMsg')}
+          danger
+          confirmLabel={t('confirmDeleteTitle')}
+          onCancel={() => { setPendingRemove(null) }}
+          onConfirm={() => { handleRemove(pendingRemove) }}
         />
       )}
 
