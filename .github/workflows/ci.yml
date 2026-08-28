@@ -46,6 +46,7 @@ jobs:
         run: node --experimental-strip-types scripts/gen-quotes.mjs --check
 
       - name: Bundle size gate
+        # client.js 仅接线环境产出；CI 回退构建无该产物时脚本自动跳过
         run: node scripts/check-bundle-size.mjs
 
       # 发布门禁放最后：产物检查需要先 build（lib/index.mjs 等真实入口）
