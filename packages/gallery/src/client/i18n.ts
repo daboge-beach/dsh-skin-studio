@@ -101,6 +101,21 @@ const STRINGS: Record<string, [string, string]> = {
   diagnosticsCopy: ['复制诊断信息', 'Copy diagnostics'],
   diagnosticsHint: ['复制宿主/插件/皮肤/设置的技术快照，报 Issue 时粘贴（不含对话内容）', 'Copies a technical snapshot (host/plugin/skin/settings) for bug reports — no conversation content'],
   diagnosticsCopied: ['诊断信息已复制到剪贴板', 'Diagnostics copied to clipboard'],
+  // 使用统计（纯本地）
+  usageStats: ['使用统计', 'Usage stats'],
+  usageStatsHint: ['仅存本机的皮肤使用时长与试穿转化统计，可随时清除', 'Local-only skin usage duration and try-on conversion; clear anytime'],
+  statsSince: ['统计自', 'Since'],
+  statsLocalOnly: ['仅存本机，不上传', 'local only, never uploaded'],
+  statsOverview: ['总览', 'Overview'],
+  tryOns: ['试穿次数', 'Try-ons'],
+  applies: ['转正应用', 'Applied'],
+  conversion: ['转化率', 'conversion'],
+  statsPerSkin: ['皮肤排行（时长 · 激活）', 'Per skin (duration · activations)'],
+  statsNoData: ['还没有数据 — 使用一段时间后再来看。', 'No data yet — check back after some use.'],
+  switchesShort: ['激活', 'act.'],
+  clearStats: ['清除统计', 'Clear stats'],
+  clearStatsMsg: ['将删除本机的全部使用统计（时长/激活/试穿转化），不可恢复。', 'This permanently deletes all local usage stats (duration / activations / try-on conversion).'],
+  statsCleared: ['使用统计已清除', 'Usage stats cleared'],
   diagnosticsFailed: ['剪贴板不可用，诊断信息如下：', 'Clipboard unavailable — diagnostics below:'],
 }
 

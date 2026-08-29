@@ -9,6 +9,43 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.14.0] — 2026-08-28
+
+**简体中文**
+
+「本地统计」版本：使用时长 / 激活 / 试穿转化，全本机零上传。
+
+### 新增
+
+- **使用统计面板**（设置 → 高级 → 使用统计）：
+  - 各皮肤**累计使用时长**与**激活次数**排行（前 10）
+  - **试穿 → 转正**次数与转化率
+  - 统计起点日期；一键清除（红色确认，不可恢复）
+- **隐私边界**：数据只存本机 localStorage（上限 50 皮肤条目自动剪枝），
+  不上传任何服务器；后台标签页不计时长（前台可见才累计，30s 节流
+  落盘 + pagehide 兜底）；安全模式下插件不启动，零采集
+- 测试 107 → 113（计数 / 心跳可见性 / 清除 / 时长格式化）
+
+**English**
+
+The "local stats" release: usage duration / activations / try-on
+conversion — all on-device, zero upload.
+
+### Added
+
+- **Usage stats panel** (Settings → Advanced → Usage stats):
+  - per-skin **usage duration** and **activation** ranking (top 10)
+  - **try-on → apply** counts with conversion rate
+  - collection start date; one-click clear (red confirm, irreversible)
+- **Privacy boundary**: data lives only in localStorage (auto-pruned to
+  50 skin entries), never uploaded; background tabs don't accrue time
+  (visible-only accumulation, 30s write throttling, pagehide flush);
+  safe mode never starts the plugin, so zero collection
+- Tests 107 → 113 (counters / tick visibility / clear / duration
+  formatting)
+
+---
+
 ## [0.13.0] — 2026-08-28
 
 **简体中文**

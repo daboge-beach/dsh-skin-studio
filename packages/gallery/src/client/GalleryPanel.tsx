@@ -14,6 +14,7 @@ import { InstallReviewModal } from './InstallReviewModal.tsx'
 import { SettingsDrawer } from './SettingsDrawer.tsx'
 import { ConfirmDialog } from './ConfirmDialog.tsx'
 import { t } from './i18n.ts'
+import { recordApply, recordTryOn } from './usageStats.ts'
 import { ToastHost, showToast } from './Toast.tsx'
 import { UploadDropZone } from './UploadDropZone.tsx'
 import { useThemeSnapshot } from './hooks.ts'
@@ -151,6 +152,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     skinStudioSettings.setTryOn(null)
     skinStudioSettings.setActiveSkin(skin.id)
     setTryOnSkinId(null)
+    recordApply()
     showToast({ message: `${skin.name} 已应用并保存`, type: 'success' })
   }, [])
 
@@ -185,6 +187,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
       ctx.theme.setTheme(skin.id)
       setTryOnSkinId(skin.id)
 
+      recordTryOn()
       // 短提示自动消失；常驻决策入口在面板内的试穿条（不再用常驻 toast）
       showToast({
         message: `正在试穿 ${skin.name} —— 满意点「应用并保存」，或等刷新自动还原`,

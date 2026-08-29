@@ -13,6 +13,7 @@ import { Modal } from './Modal.tsx'
 import { ConfirmDialog } from './ConfirmDialog.tsx'
 import { t } from './i18n.ts'
 import { collectDiagnostics } from './diagnostics.ts'
+import { StatsModal } from './StatsModal.tsx'
 import { showToast } from './Toast.tsx'
 import styles from './SkinDetailModal.module.css'
 import panelStyles from './GalleryPanel.module.css'
@@ -94,6 +95,7 @@ export interface SettingsDrawerProps {
 export function SettingsDrawer({ onClose, onFactoryReset, activeSkinId }: SettingsDrawerProps): JSX.Element {
   const s = useSettingsSnapshot()
   const [confirmReset, setConfirmReset] = useState(false)
+  const [statsOpen, setStatsOpen] = useState(false)
 
   /** 复制诊断信息到剪贴板（报障用；只含技术状态，不含对话内容）。 */
   const copyDiagnostics = (): void => {
@@ -191,6 +193,15 @@ export function SettingsDrawer({ onClose, onFactoryReset, activeSkinId }: Settin
                 {t('factoryReset')}
               </button>
             </Row>
+            <Row label={t('usageStats')} hint={t('usageStatsHint')}>
+              <button
+                type="button" className={panelStyles.mascotToggle} style={{ padding: '3px 10px', fontSize: 12 }}
+                aria-haspopup="dialog"
+                onClick={() => { setStatsOpen(true) }}
+              >
+                {t('settingsOpen')}
+              </button>
+            </Row>
             <Row label={t('diagnosticsCopy')} hint={t('diagnosticsHint')}>
               <button
                 type="button" className={panelStyles.mascotToggle} style={{ padding: '3px 10px', fontSize: 12 }}
@@ -202,6 +213,10 @@ export function SettingsDrawer({ onClose, onFactoryReset, activeSkinId }: Settin
           </section>
         </div>
       </Modal>
+
+      {statsOpen && (
+        <StatsModal onClose={() => { setStatsOpen(false) }} />
+      )}
 
       {confirmReset && (
         <ConfirmDialog

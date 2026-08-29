@@ -141,6 +141,10 @@ export const skinStudioSettings = {
   setActiveSkin(id: string | null): void {
     if (current.activeSkin === id) return
     write({ ...current, activeSkin: id })
+    // 激活计数（纯本地统计；恢复流程写 null/重放不产生计数）
+    if (id !== null) {
+      try { void import('./usageStats.ts').then(m => m.recordSwitch(id)) } catch { /* 统计失败不影响主流程 */ }
+    }
   },
   getQuoteLang(): 'zh' | 'en' {
     return current.quoteLang

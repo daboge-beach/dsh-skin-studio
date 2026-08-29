@@ -27,6 +27,8 @@ import { mountOverlays } from './overlays.ts'
 import { mountSkinEffects } from './skinEffects.ts'
 import { mountTaskNotify } from './taskNotify.ts'
 import { mountTierWatch } from './tierPower.ts'
+import { tick } from './usageStats.ts'
+import { pollEvery } from './poll.ts'
 import { ComposerDockBar, HeroDockBar } from './ComposerDock.tsx'
 
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
@@ -131,6 +133,13 @@ export function apply(ctx: ClientContext): void {
 
   // 7. 境界档位观察（'auto' 模式跟随 DSH 推理等级，DOM 读取）
   ctx.effect(() => mountTierWatch(), '@dsh-skin-studio/gallery: tier watch')
+
+  // 7.5 使用统计时长心跳（1s tick；前台才累计，30s 落盘，pagehide 兜底）
+  ctx.effect(() => {
+    if (typeof window === 'undefined') return () => {} // Node 测试环境无定时器
+    const stop = pollEvery(() => { tick(ctx.theme.getTheme()?.active.id ?? '') })
+    return stop
+  }, '@dsh-skin-studio/gallery: usage stats tick')
 
   // 8. 输入区控制条：会话页走 conversation.composer.dock（输入框下方）；
   //    欢迎页被官方 footer 的 !hero 守卫排除，补注册 conversation.input.dock
