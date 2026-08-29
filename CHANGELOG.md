@@ -9,6 +9,58 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.15.0] — 2026-08-28
+
+**简体中文**
+
+「皮肤工坊」版本：无代码可视化编辑器（战略 review 第 4 条）。
+
+### 新增
+
+- **皮肤工坊**（画廊 🎨 创作皮肤入口）：
+  - 名称/色系/品牌色三步生成标准皮肤包——14 个 alias token 按
+    primary×色系自动推导（与脚手架同一套规则），5 个核心 token 可
+    用取色器微调、一键重新推导
+  - 可选上传 preview / hero / mascot（复用像素守卫）；未传预览图时
+    自动生成品牌色渐变占位（内置零依赖 PNG 编码器：CompressionStream
+    优先、stored-blocks deflate 兜底）
+  - **实时预览**迷你聊天界面（侧栏/气泡/输入框/按钮随 token 渲染）
+  - **WCAG 对比度检查**：正文/底色、正文/卡片、品牌色/底色三对，
+    <3:1 不可读时阻止安装
+  - **安装到本机**（registry 新增 installFromParts，与 zip 上传同一条
+    审阅/更新替换/回滚/持久化管线）或**导出 .zip** 分享
+- 测试 113 → 123（推导/对比度/PNG stored-deflate 经真实 zlib inflate
+  往返校验）
+- CI 体积阈值 80→88KB（工坊功能增量 +3KB gzip，理由已写入门禁注释）
+
+**English**
+
+The "Skin Composer" release: no-code visual editor (strategy item 4).
+
+### Added
+
+- **Skin Composer** (gallery 🎨 entry):
+  - name/scheme/primary → a full standard skin package; 14 alias tokens
+    derived from primary×scheme (same rules as the scaffolder), 5 core
+    tokens editable via color pickers with one-click re-derive
+  - optional preview / hero / mascot uploads (pixel guard reused); a
+    gradient placeholder preview is auto-generated when absent
+    (dependency-free PNG encoder: CompressionStream first, stored-blocks
+    deflate fallback)
+  - **live preview** of a mini chat UI (sidebar/bubbles/input/button
+    rendered from tokens)
+  - **WCAG contrast check** on three readability pairs; ratios below 3:1
+    block install
+  - **install locally** (registry installFromParts — same review /
+    update / rollback / persistence pipeline as zip upload) or
+    **export .zip** to share
+- Tests 113 → 123 (derivation / contrast / PNG stored-deflate verified
+  through real zlib inflate round-trips)
+- CI size gate 80→88KB (composer adds ~3KB gzip; reason recorded in the
+  gate)
+
+---
+
 ## [0.14.0] — 2026-08-28
 
 **简体中文**

@@ -13,6 +13,7 @@ import { SkinDetailModal } from './SkinDetailModal.tsx'
 import { InstallReviewModal } from './InstallReviewModal.tsx'
 import { SettingsDrawer } from './SettingsDrawer.tsx'
 import { ConfirmDialog } from './ConfirmDialog.tsx'
+import { SkinComposerModal } from './SkinComposerModal.tsx'
 import { t } from './i18n.ts'
 import { recordApply, recordTryOn } from './usageStats.ts'
 import { ToastHost, showToast } from './Toast.tsx'
@@ -107,6 +108,8 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [settingsOpen, setSettingsOpen] = useState(false)
   /** 删除确认态（危险操作确认）。 */
   const [pendingRemove, setPendingRemove] = useState<SkinEntry | null>(null)
+  /** 皮肤工坊（无代码编辑器）。 */
+  const [composerOpen, setComposerOpen] = useState(false)
   const [powerTier, setPowerTier] = useState<'auto' | 't0' | 't1' | 't2' | 't3' | 't4'>(() => skinStudioSettings.get().powerTier)
   const [effective, setEffective] = useState<number>(() => effectiveTier())
   useEffect(() => subscribeTier(t => setEffective(t)), [])
@@ -322,6 +325,15 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
             type="button"
             className={styles.mascotToggle}
             aria-haspopup="dialog"
+            title={t('composerOpen')}
+            onClick={() => { setComposerOpen(true) }}
+          >
+            🎨 {t('composerOpen')}
+          </button>
+          <button
+            type="button"
+            className={styles.mascotToggle}
+            aria-haspopup="dialog"
             aria-expanded={settingsOpen}
             title={t('settingsOpen')}
             onClick={() => { setSettingsOpen(true) }}
@@ -516,6 +528,18 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           updateOf={review.updateFromVersion !== undefined ? { fromVersion: review.updateFromVersion } : undefined}
           onCancel={() => { setReview(null) }}
           onConfirm={() => { void handleInstallConfirmed(review.entry) }}
+        />
+      )}
+
+      {composerOpen && (
+        <SkinComposerModal
+          ctx={ctx}
+          onClose={() => { setComposerOpen(false) }}
+          onInstalled={(_id, name) => {
+            setActiveTab('uploaded')
+            refreshList('uploaded')
+            showToast({ message: `${name} 已生成并安装，点击卡片试用`, type: 'success' })
+          }}
         />
       )}
 

@@ -239,6 +239,18 @@ class SkinRegistryImpl {
     return entry
   }
 
+  /**
+   * 从内存部件直接安装（皮肤工坊用；与 zip 上传同一条 install 管线，
+   * 含更新替换 / 回滚快照 / 持久化）。manifest 即原样数据。
+   */
+  async installFromParts(manifest: UploadedSkinManifest, images: Map<string, Uint8Array>): Promise<SkinEntry> {
+    const entry = toSkinEntry({ manifest, images })
+    this.#rawManifests.set(entry, manifest)
+    this.#pending.set(entry, { manifest, images })
+    await this.install(entry)
+    return entry
+  }
+
   /** 校验一个已解析的条目（数据来自 zip 内 skin.json 的原样内容）。 */
   async validate(entry: SkinEntry): Promise<ValidationResult & { skinId: string }> {
     const manifest = this.#rawManifests.get(entry) ?? {
