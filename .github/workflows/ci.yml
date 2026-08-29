@@ -24,31 +24,8 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
-
-      # prebuild 的 manifest 同步脚本在无 DSH 宿主的环境自动跳过；
-      # 全仓构建产出 skins 的 lib/ 产物
-      - name: Build
-        run: pnpm build
-
-      # 架构门禁：生成数据漂移检查 + bundle 体积阈值（分步便于定位失败）
-      - name: Drift check (skin data)
-        run: node scripts/gen-skin-data.mjs --check
-
-      - name: Drift check (quotes)
-        run: node --experimental-strip-types scripts/gen-quotes.mjs --check
-
-      - name: Bundle size gate
-        # client.js 仅接线环境产出；CI 回退构建无该产物时脚本自动跳过
-        run: node scripts/check-bundle-size.mjs
-
-      # 发布门禁放最后：产物检查需要先 build（lib/index.mjs 等真实入口）
-      - name: Validate skins (release gate)
-        run: pnpm validate-skins
+      # 统一验收入口（与本地 pnpm verify 完全同一串）：
+      # lint → typecheck → test → skin-data 漂移 → quotes 漂移
+      # → build → bundle 体积门禁 → validate-skins
+      - name: Verify
+        run: pnpm verify

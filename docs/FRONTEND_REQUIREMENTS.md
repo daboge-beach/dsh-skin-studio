@@ -1,5 +1,10 @@
 # 前端开发需求 · DSH Skin Studio 皮肤中心
 
+> **📌 文档状态（2026-08-29）**：本文是 v0.1 时期的**历史设计稿**，其中的
+> 需求清单与勾选项**不再维护**。当前已实现能力以根目录 `CHANGELOG.md`、
+> `README.md` 和 `docs/verification-matrix.md`（自动测试/真实验证/待手测
+> 三分档）为准；验收入口为 `pnpm verify`。请勿按本文未勾选项判断项目现状。
+
 > **给前端 AI 的话**：本文档是 DeepSeek Harness 皮肤中心（Skin Studio）的前端开发需求。请基于 React + TypeScript 实现，遵循 DSH 官方 UI 设计语言。所有交互细节、组件结构、状态管理、API 调用方式都在本文档中明确给出。如有疑问直接问我，不要自己脑补设计。
 
 ---

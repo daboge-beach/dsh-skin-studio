@@ -9,6 +9,80 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.16.0] — 2026-08-29
+
+**简体中文**
+
+「发布前质量加固」版本：生命周期修复 + 零警告基线 + 验收收敛。
+
+### 修复
+
+- **皮肤工坊主题注册生命周期**：移除未托管的裸 `ctx.theme.register` 与
+  动态 import——工坊只负责安装（安装后不自动应用、不暗中注册），主题
+  注册统一由试穿路径 `ensureThemeRegistered` 与启动恢复管理，删除/替换
+  经 `unregisterGalleryTheme` 反注册无残留
+- **动态+静态混合导入警告清零**：themeBridge、usageStats 改为明确静态
+  导入（单文件 bundle 契约下动态导入本就不产生独立 chunk）；
+  `pnpm lint` 与 `pnpm build` 均 0 警告
+
+### 新增
+
+- **回归测试**：主题注册生命周期三例（工坊安装不自动注册/不自动应用、
+  ensure 幂等 + unregister 无残留、更新后注册新版本 + 删除后同时干净）；
+  测试 123 → 126
+- **统一验收入口 `pnpm verify`**：lint → typecheck → test → skin-data
+  漂移 → quotes 漂移 → build → 体积门禁 → validate-skins，CI 与本地
+  完全同一串
+- **验证矩阵文档**（`docs/verification-matrix.md`）：如实三分档——自动
+  测试覆盖 / 真实 DSH 已验证（含证据日期）/ 待真实手测（给步骤），
+  并列明已知未覆盖项（焦点陷阱 DOM 行为、真实 IndexedDB 路径、跨浏览器
+  矩阵）
+- 工坊描述补成可编辑字段（中英 i18n）
+
+### 文档
+
+- `FRONTEND_REQUIREMENTS.md` / `FANREN_SKINS_DESIGN.md` 标注为历史设计稿，
+  现状以 CHANGELOG / verification-matrix 为准
+- `CONTRIBUTING.md` / `DEVELOPMENT.md` 验收入口指向 `pnpm verify`
+
+**English**
+
+The "pre-release quality hardening" release: lifecycle fix + zero-warning
+baseline + acceptance convergence.
+
+### Fixed
+
+- Skin Composer theme-registration lifecycle: removed the un-managed bare
+  `ctx.theme.register` and dynamic import — the composer only installs
+  (no auto-apply, no shadow registration); registration is owned by the
+  try-on path (`ensureThemeRegistered`) and startup restore, with clean
+  disposal via `unregisterGalleryTheme`
+- Mixed dynamic+static import warnings eliminated (themeBridge, usageStats
+  now plain static imports — dynamic imports never create chunks under the
+  single-file bundle contract); `pnpm lint` and `pnpm build` are both
+  zero-warning
+
+### Added
+
+- Lifecycle regression tests (composer-style install neither
+  auto-registers nor auto-applies; idempotent ensure + residue-free
+  unregister; post-update registration of the new version); tests
+  123 → 126
+- Unified acceptance entry `pnpm verify`: lint → typecheck → test →
+  drift checks → build → bundle gate → validate-skins — identical local
+  and CI
+- **Verification matrix** (`docs/verification-matrix.md`): honest
+  three-way split — automated coverage / verified-in-real-DSH (with
+  dated evidence) / manual steps — plus known-uncovered items
+- Composer description is now an editable field (bilingual)
+
+### Docs
+
+- FRONTEND_REQUIREMENTS / FANREN_SKINS_DESIGN marked as historical design
+  docs; CONTRIBUTING / DEVELOPMENT point at `pnpm verify`
+
+---
+
 ## [0.15.1] — 2026-08-28
 
 **简体中文**

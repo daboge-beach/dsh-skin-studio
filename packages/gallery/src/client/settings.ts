@@ -5,6 +5,8 @@
  * 关闭浮层。接入真实 DSH 后应迁移到官方 settingsScope 持久化；当前用
  * localStorage 的自身命名空间（SKIN_SPEC §10 允许自身命名空间）。
  */
+import { recordSwitch } from './usageStats.ts'
+
 const STORAGE_KEY = 'dsh-skin-studio:settings'
 
 export interface SkinStudioSettings {
@@ -143,7 +145,7 @@ export const skinStudioSettings = {
     write({ ...current, activeSkin: id })
     // 激活计数（纯本地统计；恢复流程写 null/重放不产生计数）
     if (id !== null) {
-      try { void import('./usageStats.ts').then(m => m.recordSwitch(id)) } catch { /* 统计失败不影响主流程 */ }
+      try { recordSwitch(id) } catch { /* 统计失败不影响主流程 */ }
     }
   },
   getQuoteLang(): 'zh' | 'en' {

@@ -9,7 +9,6 @@
  * visible 才累计（后台标签页自动暂停）；内存累计、每 30s 才落盘一次，
  * pagehide 时兜底落盘。
  */
-import { skinStudioSettings } from './settings.ts'
 
 export interface UsageStats {
   __v: 1
@@ -129,9 +128,4 @@ export function formatDuration(totalSeconds: number): string {
   if (minutes < 60) return `${minutes} 分钟`
   const hours = Math.floor(minutes / 60)
   return `${hours} 小时 ${minutes % 60} 分`
-}
-
-/** 当前激活皮肤 id（时长归属用；设置模块的活跃值）。 */
-export function currentSkinId(): string {
-  return skinStudioSettings.getActiveSkin() ?? ''
 }

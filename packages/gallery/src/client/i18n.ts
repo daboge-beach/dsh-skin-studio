@@ -125,6 +125,8 @@ const STRINGS: Record<string, [string, string]> = {
   composerNameRequired: ['请先填写皮肤名称', 'Skin name is required'],
   composerId: ['皮肤 id（kebab-case）', 'Skin id (kebab-case)'],
   composerIdInvalid: ['皮肤 id 不合法（小写字母数字连字符，3-64 位）', 'Invalid skin id (lowercase letters, digits, hyphens; 3-64 chars)'],
+  composerDesc: ['皮肤介绍（可选）', 'Description (optional)'],
+  composerDescPlaceholder: ['一句话介绍这款皮肤的灵感与风格', 'One line about this skin style and inspiration'],
   composerScheme: ['色系', 'Scheme'],
   composerDark: ['暗色', 'Dark'],
   composerLight: ['亮色', 'Light'],

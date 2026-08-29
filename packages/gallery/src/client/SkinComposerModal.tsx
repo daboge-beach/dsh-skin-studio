@@ -9,7 +9,6 @@
  * zipWriter 打包分享。
  */
 import { useMemo, useState } from 'react'
-import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { Modal } from './Modal.tsx'
 import { showToast } from './Toast.tsx'
 import { t } from './i18n.ts'
@@ -18,7 +17,7 @@ import { validateSkinManifest } from './registry/validate.ts'
 import { zipStore } from './registry/zipWriter.ts'
 import type { UploadedSkinManifest } from './registry/types.ts'
 import { assertImageBounds } from './registry/imageGuard.ts'
-import { checkReadability, contrastLevel, deriveTheme } from './composer/derive.ts'
+import { checkReadability, deriveTheme } from './composer/derive.ts'
 import { gradientPng } from './composer/pngEncoder.ts'
 import styles from './SkinDetailModal.module.css'
 import panelStyles from './GalleryPanel.module.css'
@@ -47,13 +46,12 @@ const kb = (n: number): string => `${Math.max(1, Math.round(n / 1024))} KB`
 const LEVEL_COLOR: Record<string, string> = { good: '#10b981', ok: '#f59e0b', poor: '#dc2626' }
 
 export interface SkinComposerModalProps {
-  ctx: ClientContext
   onClose: () => void
   /** 安装成功后回调（画廊刷新 + 切到已上传 tab）。 */
   onInstalled: (id: string, name: string) => void
 }
 
-export function SkinComposerModal({ ctx, onClose, onInstalled }: SkinComposerModalProps): JSX.Element {
+export function SkinComposerModal({ onClose, onInstalled }: SkinComposerModalProps): JSX.Element {
   const [name, setName] = useState('')
   const [id, setId] = useState('')
   const [description, setDescription] = useState('')
@@ -68,7 +66,7 @@ export function SkinComposerModal({ ctx, onClose, onInstalled }: SkinComposerMod
   const tokens = useMemo(() => ({ ...derived.tokens, ...overrides }), [derived, overrides])
   const readability = useMemo(() => checkReadability(tokens), [tokens])
   const hasUnreadable = readability.some(c => c.level === 'poor')
-  const idValid = ID_REGEX.test(finalId) && finalId !== id.toLowerCase() ? ID_REGEX.test(finalId) : ID_REGEX.test(finalId)
+  const idValid = ID_REGEX.test(finalId)
   const idTaken = skinRegistry.get(finalId) !== undefined && skinRegistry.get(finalId)?.source === 'builtin'
 
   const onImagePicked = (slot: 'preview' | 'hero' | 'mascot') => (file: File | undefined): void => {
@@ -126,8 +124,9 @@ export function SkinComposerModal({ ctx, onClose, onInstalled }: SkinComposerMod
           imagesMap.set('assets/preview.png', await gradientPng(primary, tokens['--dsw-alias-bg-base'] ?? '#0f172a'))
           manifest.assets = { ...manifest.assets, preview: 'assets/preview.png' }
         }
+        // 只安装到「已上传」，不自动应用：主题注册统一由试穿路径
+        // （ensureThemeRegistered）与启动恢复管理，避免未托管的裸注册
         await skinRegistry.installFromParts(manifest, imagesMap)
-        ensureRegisteredAndApply(manifest.id)
         onInstalled(manifest.id, manifest.name)
         onClose()
       } catch (e) {
@@ -136,22 +135,6 @@ export function SkinComposerModal({ ctx, onClose, onInstalled }: SkinComposerMod
         setBusy(false)
       }
     })()
-  }
-
-  const ensureRegisteredAndApply = (skinId: string): void => {
-    const entry = skinRegistry.get(skinId)
-    if (entry === undefined) return
-    try {
-      ctx.theme.register({ id: entry.id, colorScheme: entry.colorScheme, tokens: Object.fromEntries(entry.tokens) })
-    } catch { /* 已注册时部分宿主会抛错，忽略 */ }
-    skinStudioSettingsApply(skinId)
-  }
-
-  const skinStudioSettingsApply = (skinId: string): void => {
-    void import('./themeBridge.ts').then(m => {
-      const entry = skinRegistry.get(skinId)
-      if (entry !== undefined) m.ensureThemeRegistered(ctx, entry)
-    })
   }
 
   const exportZip = (): void => {
@@ -215,6 +198,14 @@ export function SkinComposerModal({ ctx, onClose, onInstalled }: SkinComposerMod
               />
             </label>
           </div>
+          <label style={{ fontSize: 12, display: 'block', marginTop: 8 }}>
+            {t('composerDesc')}
+            <textarea
+              value={description} placeholder={t('composerDescPlaceholder')} maxLength={200} rows={2}
+              onChange={e => { setDescription(e.target.value) }}
+              style={{ width: '100%', marginTop: 2, padding: '4px 8px', borderRadius: 6, border: `1px solid ${pv.border}`, background: pv.surface, color: pv.text, resize: 'vertical', fontFamily: 'inherit' }}
+            />
+          </label>
           <div style={{ display: 'flex', gap: 12, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
             <label style={{ fontSize: 12 }}>
               {t('composerScheme')}{' '}

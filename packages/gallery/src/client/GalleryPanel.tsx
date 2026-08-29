@@ -533,7 +533,6 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
 
       {composerOpen && (
         <SkinComposerModal
-          ctx={ctx}
           onClose={() => { setComposerOpen(false) }}
           onInstalled={(_id, name) => {
             setActiveTab('uploaded')

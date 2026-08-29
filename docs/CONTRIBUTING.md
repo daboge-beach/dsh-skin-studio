@@ -102,7 +102,8 @@ Closes #42
 
 - 皮肤相关的逻辑：`pnpm test`
 - 皮肤端到端测试：`pnpm test:e2e`
-- 提交前跑 `pnpm lint` 和 `pnpm validate-skins`
+- 提交前跑 `pnpm verify`（一条命令串起 lint/typecheck/test/漂移检查/构建/体积门禁/皮肤校验，与 CI 完全同一串）
+- 浏览器端验证项与手测步骤见 [验证矩阵](verification-matrix.md)
 
 ### 新增皮肤
 
