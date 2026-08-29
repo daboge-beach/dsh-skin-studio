@@ -88,6 +88,34 @@ src/index.ts      # ctx.theme.register({ id, colorScheme, tokens })
 
 参考 `packages/skins/hanli-daoist/`。构建：`pnpm --filter <pkg> build`。
 
+## 版权与免责 / IP & Disclaimer
+
+- **同人定位**：涉及第三方 IP（英雄联盟 / 凡人修仙传 / 现实人物梗）的皮肤是社区
+  同人创作，与权利方无任何隶属。请在皮肤包 `skin.json.description` 里如实标注
+  灵感来源；**不要**在包名、标题里暗示官方合作
+- **卡通演绎**：角色形象用 AI 生成或重绘的卡通风格，不使用官方原画/截图/拆包素材
+- **现实人物**：以真实人物为梗的皮肤（如「梁神」）保持调侃但不贬损的卡通夸张，
+  避免肖像化、错误暗示或令人误解的言论代言
+- **可下架**：内容包与核心项目解耦——权利人异议时单个包可独立移除，不影响
+  Skin Runtime 与其他皮肤
+- 推荐新作者从**原创角色**起步（参考 aurora / midnight 的极简路线），作品寿命更长
+
+## 性能预算 / Performance Budget
+
+皮肤跑在宿主主线程上，预算是体验底线（`validate-skins` 强制加粗项）：
+
+| 维度 | 预算 | 强制 |
+|---|---|---|
+| 单文件体积 | 建议 ≤6MB，**≤12MB** | ✓ error |
+| PNG 像素 | 建议 ≤4096px，**≤7680px** | ✓ error |
+| 皮肤包总量（zip） | 建议 ≤40MB，**≤50MB** | ✓ error（上传口） |
+| 光标 | 32×32 SVG，静态（不用 SMIL/CSS 动画） | 建议 |
+| 吉祥物 sprite | 2×2 四帧，动画由宿主按帧切换（非 GIF 循环） | 建议 |
+| 同时动画 | 涟漪 / 装饰 / 吉祥物至多各一；尊重 prefers-reduced-motion | 建议 |
+| 后台标签页 | 吉祥物漫步与装饰动画随 document.hidden 自动暂停 | 运行时行为 |
+
+详情页/安装审阅会展示包体与图片清单（文件数 · 像素 · 体积），提交前先自查。
+
 ## 检查清单 / Checklist
 
 - [ ] `pnpm gen:skin` 生成的骨架能过 `pnpm validate-skins`
@@ -95,6 +123,8 @@ src/index.ts      # ctx.theme.register({ id, colorScheme, tokens })
 - [ ] 明暗两款对照检查过文字可读性（label-primary vs bg-base）
 - [ ] 光标热点校准过（点击点在图形尖端，不在画布中心）
 - [ ] 新增语录跑过 `pnpm gen:quotes`（若做了语录）
+- [ ] 涉及第三方 IP 时已在 description 标注灵感来源（见版权与免责）
+- [ ] 体积/像素在性能预算内（validate-skins 会拦）
 - [ ] `pnpm build && pnpm test` 全绿，提交 PR
 
 设计参考：`docs/SKIN_SPEC.md`（完整规范）、`docs/FANREN_SKINS_DESIGN.md`

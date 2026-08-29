@@ -97,6 +97,11 @@ const STRINGS: Record<string, [string, string]> = {
   emptyUploaded: ['还没有上传过皮肤 — 把皮肤包（.zip）拖到上面的上传格试试。', 'No uploaded skins yet — drop a skin package (.zip) onto the upload tile above.'],
   emptyMine: ['「我的」收录通过 npm 安装的皮肤，目前为空。', '"Mine" lists npm-installed skins; currently empty.'],
   listLoadFailed: ['皮肤列表加载失败', 'Failed to load skin list'],
+  // 诊断
+  diagnosticsCopy: ['复制诊断信息', 'Copy diagnostics'],
+  diagnosticsHint: ['复制宿主/插件/皮肤/设置的技术快照，报 Issue 时粘贴（不含对话内容）', 'Copies a technical snapshot (host/plugin/skin/settings) for bug reports — no conversation content'],
+  diagnosticsCopied: ['诊断信息已复制到剪贴板', 'Diagnostics copied to clipboard'],
+  diagnosticsFailed: ['剪贴板不可用，诊断信息如下：', 'Clipboard unavailable — diagnostics below:'],
 }
 
 export function t(key: string): string {

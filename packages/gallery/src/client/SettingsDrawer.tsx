@@ -12,6 +12,8 @@ import { skinStudioSettings } from './settings.ts'
 import { Modal } from './Modal.tsx'
 import { ConfirmDialog } from './ConfirmDialog.tsx'
 import { t } from './i18n.ts'
+import { collectDiagnostics } from './diagnostics.ts'
+import { showToast } from './Toast.tsx'
 import styles from './SkinDetailModal.module.css'
 import panelStyles from './GalleryPanel.module.css'
 
@@ -85,11 +87,21 @@ export interface SettingsDrawerProps {
   onClose: () => void
   /** 还原出厂（需要 ctx.theme + toast，由宿主面板注入）。 */
   onFactoryReset: () => void
+  /** 当前激活皮肤 id（诊断信息用）。 */
+  activeSkinId?: string | null
 }
 
-export function SettingsDrawer({ onClose, onFactoryReset }: SettingsDrawerProps): JSX.Element {
+export function SettingsDrawer({ onClose, onFactoryReset, activeSkinId }: SettingsDrawerProps): JSX.Element {
   const s = useSettingsSnapshot()
   const [confirmReset, setConfirmReset] = useState(false)
+
+  /** 复制诊断信息到剪贴板（报障用；只含技术状态，不含对话内容）。 */
+  const copyDiagnostics = (): void => {
+    const text = collectDiagnostics(activeSkinId)
+    void navigator.clipboard?.writeText(text)
+      .then(() => { showToast({ message: t('diagnosticsCopied'), type: 'success' }) })
+      .catch(() => { showToast({ message: `${t('diagnosticsFailed')}\n${text.slice(0, 400)}`, type: 'error', duration: 0 }) })
+  }
 
   const notifyOptions = [
     { key: 'off', label: t('off') },
@@ -177,6 +189,14 @@ export function SettingsDrawer({ onClose, onFactoryReset }: SettingsDrawerProps)
                 onClick={() => { setConfirmReset(true) }}
               >
                 {t('factoryReset')}
+              </button>
+            </Row>
+            <Row label={t('diagnosticsCopy')} hint={t('diagnosticsHint')}>
+              <button
+                type="button" className={panelStyles.mascotToggle} style={{ padding: '3px 10px', fontSize: 12 }}
+                onClick={copyDiagnostics}
+              >
+                {t('diagnosticsCopy')}
               </button>
             </Row>
           </section>

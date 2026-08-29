@@ -17,6 +17,8 @@
  * 所有 ctx 调用都在本 apply 内完成；卸载时逐项 disposer。
  */
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
+import { isSafeMode } from './hostAdapter.ts'
+import { mountSafeModeBanner } from './safeMode.ts'
 import { BUILTIN_SKINS } from './registry/builtinSkins.ts'
 import { skinRegistry, toThemeDefinition } from './registry/skinRegistry.ts'
 import { skinStudioSettings } from './settings.ts'
@@ -30,14 +32,19 @@ import { ComposerDockBar, HeroDockBar } from './ComposerDock.tsx'
 /** 浏览器半边需要的服务：官方主题运行时 + slot 系统。 */
 export const inject = ['theme', 'slots']
 
-/** 皮肤 id → 恢复失败时清除记忆（皮肤已不在注册表，如上传款刷新后丢失）。 */
+/** 皮肤 id → 恢复失败时清除记忆并回原生主题（诊断标记落在 body dataset）。 */
 function restoreSavedSkin(ctx: ClientContext): void {
   const saved = skinStudioSettings.getActiveSkin()
   if (saved === null || ctx.theme.getTheme().active.id === saved) return
   try {
     ctx.theme.setTheme(saved)
   } catch {
+    // 恢复失败（皮肤不存在/主题服务异常）：回原生外观 + 清记忆，绝不黑屏
     skinStudioSettings.setActiveSkin(null)
+    try {
+      ctx.theme.setTheme('system')
+      if (typeof document !== 'undefined') document.body.dataset.xlSafeFallback = '1'
+    } catch { /* 主题服务整体不可用：只能清记忆等待重试 */ }
   }
 }
 
@@ -49,6 +56,13 @@ const BUILT_IN_PREFERENCES = new Set(['light', 'dark', 'system'])
  * @param ctx - 客户端插件上下文。
  */
 export function apply(ctx: ClientContext): void {
+  // 0. 安全模式（?safe-theme=1）：跳过全部第三方视觉，只挂原生横幅。
+  //    界面被皮肤弄到不可读时的救援通道；「恢复正常视觉」按钮清除参数重载。
+  if (isSafeMode()) {
+    mountSafeModeBanner()
+    return
+  }
+
   // 1+2. 内置皮肤主题注册 + 皮肤偏好的会话恢复与收敛
   ctx.effect(() => {
     const disposers = BUILTIN_SKINS.map(skin => ctx.theme.register(toThemeDefinition(skin)))

@@ -10,6 +10,7 @@
  * 吉祥物庆祝：模块级监听器分发，MascotFloat 订阅后跳跃庆祝 + 冒完成语录。
  */
 import type { QuoteLang } from './quotes/types.ts'
+import { findSendButton, isButtonBusy as isBusy } from './hostAdapter.ts'
 
 /** 任务完成提醒模式（settings.notifyTaskDone）。 */
 export type TaskNotifyMode = 'off' | 'sound' | 'motion' | 'both'
@@ -26,22 +27,6 @@ export function onTaskDone(listener: DoneListener): () => void {
 
 /** 当前是否处于「刚完成」节流窗口（3 秒内多次边沿只触发一次）。 */
 let lastFiredAt = 0
-
-/** 查找 DSH 发送按钮（aria-label 随界面语言变化，中英都认）。 */
-function findSendButton(): HTMLButtonElement | null {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('button')
-  for (const btn of buttons) {
-    const label = btn.getAttribute('aria-label') ?? btn.title ?? btn.textContent ?? ''
-    if (/发送消息|发送|send message/i.test(label)) return btn
-  }
-  return null
-}
-
-/** 按钮当前是否禁用（disabled 属性或 aria-disabled）。 */
-function isBusy(btn: HTMLButtonElement | null): boolean {
-  if (btn === null) return false
-  return btn.disabled || btn.getAttribute('aria-disabled') === 'true'
-}
 
 // ── 提示音（Web Audio 合成） ────────────────────────────────────────────
 

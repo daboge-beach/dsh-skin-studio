@@ -474,6 +474,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         <SettingsDrawer
           onClose={() => { setSettingsOpen(false) }}
           onFactoryReset={handleFactoryReset}
+          activeSkinId={activeSkinId}
         />
       )}
 

@@ -12,17 +12,16 @@ import { skinStudioSettings } from './settings.ts'
 import { effectiveTier, subscribeTier, tierLabel, effortTier, type PowerTier } from './tierPower.ts'
 import { syncTierToEffort } from './tierSync.ts'
 import { pollEvery } from './poll.ts'
+import { readHeroPhase, readModelLabel, openModelMenu } from './hostAdapter.ts'
 import styles from './ComposerDock.module.css'
 
-/** 镜像官方模型按钮的 aria-label（1s 轮询，轻量）。 */
+/** 镜像官方模型按钮的 aria-label（1s 轮询，轻量；寻址集中在 hostAdapter）。 */
 function useModelLabel(): string {
   const [label, setLabel] = useState('')
   useEffect(() => {
     const read = (): void => {
-      for (const btn of document.querySelectorAll<HTMLButtonElement>('button[aria-label]')) {
-        const v = btn.getAttribute('aria-label') ?? ''
-        if (v.startsWith('选择模型') || /^select model/i.test(v)) { setLabel(v); return }
-      }
+      const v = readModelLabel()
+      if (v !== null) setLabel(v)
     }
     return pollEvery(read)
   }, [])
@@ -71,26 +70,16 @@ function useEffortIds(ctx?: ClientContext): string[] {
   return ids
 }
 
-/** 点击代理：触发官方模型按钮打开原菜单。 */
-function openModelMenu(): void {
-  for (const btn of document.querySelectorAll<HTMLButtonElement>('button[aria-label]')) {
-    const v = btn.getAttribute('aria-label') ?? ''
-    if (v.startsWith('选择模型') || /^select model/i.test(v)) { btn.click(); return }
-  }
-}
-
 /**
- * 是否处于欢迎页（hero 阶段）：ConversationRoot 根节点带 data-phase="hero"。
- * MutationObserver 监听阶段切换（欢迎页 → 会话页）即时翻转，避免轮询间隙
- * 出现重复 dock（会话页另有 conversation.composer.dock 注册）。
+ * 是否处于欢迎页（hero 阶段）。阶段寻址集中在 hostAdapter；
+ * MutationObserver 监听阶段切换（欢迎页 → 会话页）即时翻转，避免轮询
+ * 间隙出现重复 dock（会话页另有 conversation.composer.dock 注册）。
  */
 function useHeroPhase(): boolean {
-  const [hero, setHero] = useState(
-    () => typeof document !== 'undefined' && document.querySelector('[data-phase="hero"]') !== null,
-  )
+  const [hero, setHero] = useState(() => readHeroPhase())
   useEffect(() => {
     const read = (): void => {
-      setHero(document.querySelector('[data-phase="hero"]') !== null)
+      setHero(readHeroPhase())
     }
     read()
     const obs = new MutationObserver(read)

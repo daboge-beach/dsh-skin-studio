@@ -6,9 +6,9 @@
 
 ## 🎨 DSH Skin Studio · 中文
 
-> DeepSeek Harness 皮肤工作室 —— 内置精选皮肤 · 用户上传皮肤中心 · 让每个 agent 都有专属面孔。
+> **DSH 的可安装视觉主题平台** —— 主题运行时负责加载 / 切换 / 恢复与兼容，角色皮肤和动态效果只是主题能力的一部分。内置精选内容：**英雄联盟（LOL）** ×10 · **凡人修仙传** ×5 · **DeepSeek 梗文化（梁神）** ×1 · 极简原创 ×2，支持随推理等级切换的**修仙境界 / 皮肤等级**分档形态（人物背景 · 吉祥物 · 光标 · 提示音）。
 >
-> 主题覆盖：**英雄联盟（LOL / League of Legends）英雄皮肤** ×10 · **凡人修仙传（A Record of a Mortal's Journey to Immortality，国漫修仙）** ×5 · **DeepSeek 梗文化（梁神）** ×1 · 极简基础 ×2 —— 支持随推理等级切换的**修仙境界 / 皮肤等级**分档形态（人物背景 · 吉祥物 · 光标 · 提示音）。
+> **三层架构**：🧩 Skin Runtime（主题加载/切换/恢复/兼容，宿主适配层集中管理能力探测与降级）→ 🖼 Skin Studio（浏览 / 上传 / 审阅 / 设置 / 安全模式）→ 📦 Skin Packs（LOL · 凡人 · 梗文化内容包，与核心解耦，可独立下架）。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
@@ -233,6 +233,13 @@ dsh-skin-studio/
 - [x] v0.11：皮肤脚手架 CLI（`pnpm gen:skin`，[创作指南](docs/skin-authoring.md)）
 - [ ] v1.0：开发热重载 · 签名/来源可信度 · 跟随 DSH v1.0 稳定 API 正式发布
 
+### ⚖️ 免责声明
+
+- 本项目是**独立的社区同人作品**，与 Riot Games（英雄联盟）、忘语/万维猫动画（凡人修仙传）及 DeepSeek 官方**无任何隶属或合作关系**；包名与标题中的第三方 IP 仅为内容指代
+- 所有角色形象均为 AI 生成或社区重绘的**卡通演绎**，非官方素材；如权利人提出异议，对应内容包可独立下架且不影响核心项目
+- 「梁神」为社区梗文化的调侃演绎，**非真实人物肖像**，避免任何贬损性或错误暗示的使用
+- 原创旗舰皮肤 **Aurora / Midnight** 是项目的默认宣传素材，欢迎作为接入示例
+
 ### 📄 License
 
 MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 上游协议。
@@ -249,9 +256,9 @@ MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 
 ## 🎨 DSH Skin Studio · English
 
-> The skin studio for DeepSeek Harness — curated built-in skins · a community skin gallery · give every agent its own face.
+> **An installable visual theme platform for DSH** — a theme runtime handles loading / switching / restoration / compatibility; character skins and dynamic effects are just part of the theme capability. Curated content: **League of Legends (LOL)** ×10 · **A Record of a Mortal's Journey to Immortality (凡人修仙传)** ×5 · **DeepSeek meme (Liang Shen)** ×1 · original minimal ×2 — with **cultivation-stage / skin-tier** forms that follow the reasoning-effort level (character backgrounds · mascot · cursors · chimes).
 >
-> Themes: **League of Legends (LOL) champion skins** ×10 · **A Record of a Mortal's Journey to Immortality (凡人修仙传, Chinese xiuxian novel / donghua)** ×5 · **DeepSeek meme (Liang Shen)** ×1 · minimal essentials ×2 — with **cultivation-stage / skin-tier** forms that follow the reasoning-effort level (character backgrounds · mascot · cursors · chimes).
+> **Three layers**: 🧩 Skin Runtime (theme loading / switching / restoration / compatibility — a host-adapter layer centralizes capability detection and graceful degradation) → 🖼 Skin Studio (browse / upload / review / settings / safe mode) → 📦 Skin Packs (LOL · Fanren · meme packs, decoupled from the core and independently removable).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
@@ -473,6 +480,13 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
 - [x] v0.10: 34% bundle cut (externalized quotes) · single source of truth for skin data (gen-skin-data) · CI architecture gates (drift + size)
 - [x] v0.11: skin scaffolder CLI (`pnpm gen:skin`, [authoring guide](docs/skin-authoring.md))
 - [ ] v1.0: hot-reload dev flow · signing/provenance · official release on DSH v1.0 stable API
+
+### ⚖️ Disclaimer
+
+- This project is an **independent fan-work** — not affiliated with, endorsed by, or connected to Riot Games (League of Legends), Wang Yu / Wan Wei Mao Animation (A Record of a Mortal's Journey to Immortality), or DeepSeek. Third-party IPs in package names and titles are content references only
+- All character art is **AI-generated or community-redrawn cartoon interpretation**, never official assets. If a rights holder objects, the affected content pack can be removed independently without affecting the core project
+- "Liang Shen" is a tongue-in-cheek community-meme persona, **not a portrait of any real person**; avoid any derogatory or misleading use
+- The original flagship skins **Aurora / Midnight** serve as the project's default showcase and integration examples
 
 ### 📄 License
 

@@ -9,6 +9,70 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.12.0] — 2026-08-28
+
+**简体中文**
+
+「稳定性与可恢复性」版本：宿主适配层 + 安全模式 + 诊断出口。
+
+### 新增
+
+- **HostAdapter 宿主适配层**：对宿主的全部 DOM 观察（模型按钮 / 推理
+  等级 / 发送按钮忙碌态 / hero 阶段标记）从 4 个组件集中到单一适配层
+  ——上游 DSH 改 UI 时只改一处；能力探测（detectCapabilities）+ 各
+  消费方自带降级路径
+- **安全模式**：皮肤把界面弄到不可读时的救援通道 —— URL 加
+  `?safe-theme=1` 重开即跳过全部第三方视觉（皮肤恢复/特效/吉祥物/
+  控制条），原生横幅一键恢复；`?safe-theme=0` 显式清除记忆；标记
+  记忆在 sessionStorage（同一标签页持续有效）
+- **启动失败回退**：皮肤恢复异常时自动回原生主题并清记忆
+  （body dataset 留诊断标记），绝不黑屏
+- **诊断出口**：设置面板「复制诊断信息」一键复制宿主构建号 / 插件
+  版本 / 能力面 / 活动皮肤 / 设置快照（只含技术状态，不含对话内容）
+
+### 文档
+
+- **产品定位**：README 主标题句改为「DSH 的可安装视觉主题平台」，
+  明确三层架构（Skin Runtime / Skin Studio / Skin Packs）
+- **IP 免责声明**（中英双语）：社区同人定位、卡通演绎、可独立下架、
+  原创旗舰（Aurora/Midnight）作为默认宣传素材
+- **性能预算**：创作指南新增体积/像素/动画预算表与自查清单
+
+**English**
+
+The "stability & recoverability" release: host adapter + safe mode +
+diagnostics.
+
+### Added
+
+- **HostAdapter layer**: all host DOM probing (model button / reasoning
+  effort / send-button busy / hero phase) centralized from 4 components
+  into one adapter — upstream UI changes now touch a single file;
+  capability detection with per-consumer graceful degradation
+- **Safe mode**: rescue hatch when a skin makes the UI unreadable —
+  load with `?safe-theme=1` to skip all third-party visuals (skin
+  restore / effects / mascot / docks) with a native banner to restore;
+  `?safe-theme=0` explicitly clears; flag persists in sessionStorage
+- **Startup failure fallback**: skin restore errors fall back to the
+  native theme and clear memory (diagnostic flag on body dataset) —
+  never a black screen
+- **Diagnostics**: "Copy diagnostics" in settings grabs host build /
+  plugin version / capabilities / active skin / settings snapshot
+  (technical state only, no conversation content)
+
+### Docs
+
+- **Positioning**: README headline now "an installable visual theme
+  platform for DSH" with the three-layer architecture (Skin Runtime /
+  Skin Studio / Skin Packs)
+- **IP disclaimer** (bilingual): fan-work positioning, cartoon
+  interpretation, per-pack removal, original flagships as default
+  showcase
+- **Performance budget**: size/pixel/animation budget table and
+  checklist in the authoring guide
+
+---
+
 ## [0.11.0] — 2026-08-28
 
 **简体中文**

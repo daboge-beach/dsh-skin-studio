@@ -8,6 +8,7 @@
  */
 import { skinStudioSettings } from './settings.ts'
 import { pollEvery } from './poll.ts'
+import { readReasoningEffort } from './hostAdapter.ts'
 
 export type PowerTier = 0 | 1 | 2 | 3 | 4
 
@@ -25,16 +26,9 @@ function effortNameToTier(name: string): PowerTier | null {
   return null
 }
 
-/** 从 DOM 读当前推理等级名（模型触发按钮的 aria-label 含 "推理等级 X" / "reasoning effort X"）。 */
-function readReasoningEffort(): string | null {
-  if (typeof document === 'undefined') return null
-  const buttons = document.querySelectorAll<HTMLButtonElement>('button[aria-label]')
-  for (const btn of buttons) {
-    const label = btn.getAttribute('aria-label') ?? ''
-    const m = /(?:推理等级|reasoning effort)\s+([A-Za-z\u4e00-\u9fa5]+)/i.exec(label)
-    if (m?.[1] !== undefined) return m[1]
-  }
-  return null
+/** 从 DOM 读当前推理等级名（hostAdapter 寻址模型按钮，此处只做业务判定）。 */
+function readReasoningEffortName(): string | null {
+  return readReasoningEffort()
 }
 
 /** 等级 id → 档位强度（供 tierSync 排序 efforts 用）；未识别返回 null。 */
@@ -81,7 +75,7 @@ export function mountTierWatch(): () => void {
     if (scanTimer !== undefined) window.clearTimeout(scanTimer)
     scanTimer = window.setTimeout(() => {
       scanTimer = undefined
-      const name = readReasoningEffort()
+      const name = readReasoningEffortName()
       // 未识别的等级名（换了模型/新档位词）→ 保持当前档位，不突变
       if (name === null) return
       const next = effortNameToTier(name)

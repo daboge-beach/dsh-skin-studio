@@ -169,6 +169,11 @@ class SkinRegistryImpl {
     return [...BUILTIN_SKINS, ...this.#npm, ...this.#uploaded].find(s => s.id === id)
   }
 
+  /** 各来源数量（同步读；诊断信息用）。 */
+  counts(): { builtin: number; uploaded: number } {
+    return { builtin: BUILTIN_SKINS.length, uploaded: this.#uploaded.length }
+  }
+
   /**
    * 解析上传的 zip：体积预检 → 安全解压 → 定位 skin.json → 图片尺寸守卫 →
    * 组装条目（未入表）。
