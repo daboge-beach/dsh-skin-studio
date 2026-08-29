@@ -191,8 +191,18 @@ ctx.on('theme/change', (snapshot) => {
 ## 6. 构建与发布
 
 ```bash
-pnpm build      # 构建 lib/index.js
-pnpm validate   # 校验 skin.json
+pnpm build          # 构建全部包（gallery client bundle + skins 产物）
+pnpm test           # vitest 全量（含 zip 安全 / 语录 / 工坊推导）
+pnpm lint           # ESLint 10 flat config
+pnpm typecheck      # tsc --noEmit
+pnpm validate-skins # 皮肤包发布门禁（manifest/产物/预览图/资产/体积/像素）
+
+# 皮肤数据单一真源（改完皮肤包必跑，CI 有漂移检查）
+pnpm gen:skin        # 脚手架：生成新皮肤包骨架（见 docs/skin-authoring.md）
+pnpm gen:skin-data   # skin.json+src tokens → 画廊注册表 builtinSkins.gen.ts
+pnpm gen:quotes      # 语录源数据 → 各皮肤 assets/quotes.json
+
+pnpm check:bundle    # client bundle 体积门禁（gzip ≤88KB）
 ```
 
 ### 本地试装

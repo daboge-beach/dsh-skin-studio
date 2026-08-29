@@ -15,9 +15,29 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
 const REPO = 'daboge-beach/dsh-skin-studio'
 const VERSION = process.argv[2] ?? 'latest'
-const API = VERSION === 'latest'
-  ? `https://api.github.com/repos/${REPO}/releases/latest`
-  : `https://api.github.com/repos/${REPO}/releases/tags/${VERSION}`
+
+/** 解析目标 Release：具名 tag 直接取；latest = 遍历列表取最新的「含资产包」的 Release（纯代码 Release 不打断 setup）。 */
+async function resolveRelease() {
+  if (VERSION !== 'latest') {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/releases/tags/${VERSION}`)
+    if (!res.ok) throw new Error(`GitHub API ${res.status}（tag ${VERSION}）`)
+    return res.json()
+  }
+  for (let page = 1; page <= 5; page += 1) {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=30&page=${page}`)
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`)
+    const releases = await res.json()
+    if (releases.length === 0) break
+    for (const release of releases) {
+      const hasAsset = (release.assets ?? []).some(a => /^dsh-skin-assets-\d+\.zip$/.test(a.name))
+      if (hasAsset) {
+        console.log(`→ 最新的含资产 Release：${release.tag_name}（其后的代码版 Release 不携带资产）`)
+        return release
+      }
+    }
+  }
+  throw new Error('所有 Release 都没有 dsh-skin-assets-*.zip 附件（检查 https://github.com/' + REPO + '/releases）')
+}
 
 async function main() {
   // 已有资产则跳过
@@ -30,10 +50,7 @@ async function main() {
     return
   }
 
-  console.log(`→ 获取 Release ${VERSION}...`)
-  const res = await fetch(API)
-  if (!res.ok) throw new Error(`GitHub API ${res.status}`)
-  const release = await res.json()
+  const release = await resolveRelease()
 
   // 按编号排序的 asset chunks（dsh-skin-assets-1.zip, -2.zip, ...）
   const assets = (release.assets ?? [])

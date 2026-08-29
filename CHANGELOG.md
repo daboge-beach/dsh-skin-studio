@@ -9,6 +9,39 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.15.1] — 2026-08-28
+
+**简体中文**
+
+收尾整理：文档与现实同步 + setup 健壮性。
+
+### 修复 / 改进
+
+- **README 双语特性表重写**：旧表还在描述不存在的 `dsh-skin init`；
+  现完整反映 v0.15 全貌（18 款五档、持久化上传+回滚、皮肤工坊、
+  安全模式、本地统计、开发者工具链）
+- **setup 脚本加固**：`download-assets` 的 latest 解析改为「遍历
+  Release 列表取最新的含资产包的那个」——未来发纯代码 Release
+  （无 zip 附件）不再打断新用户的资产下载
+- **DEVELOPMENT.md 命令表**：补全 gen:skin / gen:skin-data /
+  gen:quotes / check:bundle 等全部现行命令
+
+**English**
+
+Housekeeping: docs synced to reality + setup robustness.
+
+### Fixed / improved
+
+- README bilingual feature tables rewritten (the old one still described
+  a nonexistent `dsh-skin init`); now reflects the full v0.15 surface
+- `download-assets` latest resolution now walks the release list for the
+  newest release that carries asset zips — future code-only releases
+  won't break fresh setups
+- DEVELOPMENT.md command table now lists every current command
+  (gen:skin / gen:skin-data / gen:quotes / check:bundle …)
+
+---
+
 ## [0.15.0] — 2026-08-28
 
 **简体中文**

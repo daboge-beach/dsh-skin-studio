@@ -36,12 +36,13 @@
 
 | 特性 | 说明 |
 |---|---|
-| 🎨 **内置精选皮肤** | 随包附带若干高质量开箱皮肤，装完即用 |
-| 📥 **用户上传皮肤** | 拖拽 `skin.json` + 资源到皮肤中心即可加载，无需重新构建 |
-| 🖼️ **可视化画廊** | 全屏预览、亮/暗变体切换、试穿→确认两段式交互 |
-| 🔌 **官方格式兼容** | `skin.json` 字段与 `dsh-web-ui` 对齐，已有皮肤可直接迁移 |
-| 🧩 **插件联动** | 皮肤可消费其他 DSH 插件的数据（行情、宠物、token 统计等） |
-| 🛠️ **皮肤开发工具** | 提供 `dsh-skin init` 脚手架 + 类型定义 + 校验器，降低造皮肤门槛 |
+| 🎨 **内置精选皮肤 ×18** | LOL ×10 · 凡人修仙传 ×5 · 梗文化 ×1 · 极简原创 ×2，全部带 5 档境界形态（背景/吉祥物/光标/提示音随推理等级变化） |
+| 📥 **上传皮肤 · 真正的已安装** | 拖入 .zip → 安全解压（zip bomb/路径穿越防护）→ 安装审阅 → **IndexedDB 持久化**（刷新不丢）；同 id 更新自动保留旧版，**一键回滚** |
+| 🎨 **皮肤工坊（无代码编辑器）** | 选配色/传图/实时预览/WCAG 对比度检查，一键安装本机或导出 .zip 分享，不用写任何代码 |
+| 🖼️ **可视化画廊** | 全屏预览、试穿→确认两段式、自定义背景上传、安装前能力审阅 |
+| 🛡️ **安全模式与诊断** | 界面被皮肤弄坏时 `?safe-theme=1` 一键救援；设置面板复制诊断信息报障 |
+| 📊 **本地使用统计** | 各皮肤使用时长/激活/试穿转化率，只存本机可随时清除，绝不上传 |
+| 🛠️ **开发者工具链** | `pnpm gen:skin` 脚手架 + 数据单一真源生成器 + 校验器 + CI 漂移/体积门禁（见[创作指南](docs/skin-authoring.md)） |
 
 ### 🎨 内置皮肤一览（18 款）
 
@@ -284,12 +285,13 @@ Not "N curated picks by the author", but a marketplace where anyone can contribu
 
 | Feature | Description |
 |---|---|
-| 🎨 **Curated built-in skins** | Ships with several high-quality skins, ready out of the box |
-| 📥 **User-uploaded skins** | Drag & drop `skin.json` + assets into the gallery — no rebuild required |
-| 🖼️ **Visual gallery** | Full-screen preview, light/dark variant toggle, try → confirm two-step flow |
-| 🔌 **Official format compatible** | `skin.json` fields align with `dsh-web-ui`; existing skins migrate as-is |
-| 🧩 **Plugin interop** | Skins can consume data from other DSH plugins (tickers, pets, token stats, …) |
-| 🛠️ **Skin dev tooling** | `dsh-skin init` scaffolder + type definitions + validator to lower the barrier |
+| 🎨 **18 curated skins** | LOL ×10 · Fanren ×5 · meme ×1 · original minimal ×2 — all with 5 effort-linked tier forms (background/mascot/cursor/chime) |
+| 📥 **Uploaded skins that truly install** | Drop a .zip → safe extraction (zip-bomb & traversal hardened) → install review → **IndexedDB persistence** (survives refresh); updates keep the old version with **one-click rollback** |
+| 🎨 **Skin Composer (no-code editor)** | Pick colors / drop images / live preview / WCAG contrast check — install locally or export .zip, zero code |
+| 🖼️ **Visual gallery** | Full previews, try→confirm two-step, custom background upload, pre-install capability review |
+| 🛡️ **Safe mode & diagnostics** | `?safe-theme=1` rescues a broken UI; copy a diagnostics snapshot from settings |
+| 📊 **Local usage stats** | Per-skin duration / activations / try-on conversion — on-device only, clearable anytime |
+| 🛠️ **Dev toolchain** | `pnpm gen:skin` scaffolder + single-source data generators + validator + CI drift/size gates (see the [authoring guide](docs/skin-authoring.md)) |
 
 ### 🎨 Built-in skins (18)
 
