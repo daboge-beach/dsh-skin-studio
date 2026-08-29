@@ -1,6 +1,6 @@
 {
   "name": "@dsh-skin-studio/gallery",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "DSH Skin Studio — 皮肤中心（浏览 / 试穿 / 应用 / 上传皮肤 + 内置 7 款皮肤主题 + /skins 静态资源路由）",
   "type": "module",
   "main": "./lib/index.js",

@@ -9,6 +9,50 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.13.0] — 2026-08-28
+
+**简体中文**
+
+「版本与更新管理」版本：更新审阅 + 一键回滚 + 删除激活皮肤回退。
+
+### 新增
+
+- **manifest 版本管理字段**：`changelog`（本版更新说明数组）、
+  `deprecated`（作者弃用标记）、`replaces`（换代关系，不得指向自身）
+  ——校验器同步拦截格式错误
+- **更新审阅**：同 id 重新上传且版本不同 → 审阅窗展示「v旧 → v新 +
+  更新内容 + 回滚提示」，替代静默覆盖；作者没写 changelog 时明确
+  告知旧版仍可回滚
+- **一键版本切换**：更新安装自动保留旧版整包快照（IndexedDB，单级）；
+  详情页「切到 vX」在两个版本间双向切换（再点一次切回来），激活中的
+  皮肤切换时实时重注册主题
+- **删除激活皮肤回退**：删除正在使用的皮肤立即回原生主题 + 清记忆
+  （此前界面会挂在已删除的主题上直到刷新）
+
+**English**
+
+The "versioning & updates" release: update review + one-click rollback +
+active-skin removal fallback.
+
+### Added
+
+- **Manifest versioning fields**: `changelog` (per-version notes),
+  `deprecated` (author flag), `replaces` (supersession, must not be
+  self) — the validator enforces their shapes
+- **Update review**: re-uploading the same id with a different version
+  shows "vOld → vNew + changelog + rollback note" instead of silently
+  overwriting; missing changelog still tells you the old version is
+  recoverable
+- **One-click version switch**: update installs keep the previous full
+  snapshot (IndexedDB, single level); the detail page offers "switch to
+  vX" toggling between both versions (click again to go forward);
+  switching the active skin re-registers its theme live
+- **Active-skin removal fallback**: deleting the skin in use immediately
+  returns to the native theme and clears memory (previously the UI hung
+  on the deleted theme until refresh)
+
+---
+
 ## [0.12.0] — 2026-08-28
 
 **简体中文**

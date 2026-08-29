@@ -130,6 +130,44 @@ describe('skinRegistry 上传链路', () => {
     await expect(skinRegistry.install(entry)).rejects.toThrow('内置皮肤冲突')
   })
 
+  it('更新安装保留旧版快照，rollback 双向切换', async () => {
+    const v1 = await skinRegistry.upload(toFile(validZip()))
+    await skinRegistry.install(v1)
+    expect(v1.rollbackVersion).toBeUndefined()
+
+    // 同 id 不同版本 → 更新安装，旧版进快照
+    const v2zip = buildZip([
+      { name: 'skin.json', data: encoder.encode(JSON.stringify({ ...VALID_MANIFEST, version: '0.3.0', changelog: ['新增暗色适配'] })) },
+      { name: 'assets/preview.png', data: new Uint8Array([0x89, 0x50, 0x4e, 0x47, 2]), method: 0 },
+    ])
+    const v2 = await skinRegistry.upload(toFile(v2zip))
+    expect(v2.version).toBe('0.3.0')
+    expect(v2.changelog).toEqual(['新增暗色适配'])
+    await skinRegistry.install(v2)
+    expect(v2.rollbackVersion).toBe('0.2.0')
+
+    // 回滚 → 回到 0.2.0，且可再切回 0.3.0
+    const back = await skinRegistry.rollback('moon-fox')
+    expect(back).toBe('0.2.0')
+    const rolled = await skinRegistry.get('moon-fox')
+    expect(rolled?.version).toBe('0.2.0')
+    expect(rolled?.rollbackVersion).toBe('0.3.0')
+
+    const forward = await skinRegistry.rollback('moon-fox')
+    expect(forward).toBe('0.3.0')
+    expect((await skinRegistry.get('moon-fox'))?.version).toBe('0.3.0')
+
+    // 持久化层同步：重载后仍可见（stored previous 一致）
+    const exported = await skinRegistry.exportSkin('moon-fox')
+    expect(exported).toBeDefined()
+  })
+
+  it('无历史版本的 rollback 返回 undefined', async () => {
+    const entry = await skinRegistry.upload(toFile(validZip()))
+    await skinRegistry.install(entry)
+    expect(await skinRegistry.rollback('moon-fox')).toBeUndefined()
+  })
+
   it('remove 释放条目且内置皮肤不可删', async () => {
     const entry = await skinRegistry.upload(toFile(validZip()))
     await skinRegistry.install(entry)

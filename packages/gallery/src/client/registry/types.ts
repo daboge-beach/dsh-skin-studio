@@ -55,6 +55,14 @@ export interface SkinEntry {
   /** 是否可删除（内置不可删）。 */
   removable: boolean
 
+  /** 存在可回滚的上一版时的版本号（更新安装后才有；内置款无）。 */
+  rollbackVersion?: string
+
+  /** 本版本更新说明（manifest.changelog 原样；安装审阅展示）。 */
+  changelog?: string[]
+  /** 作者标记的弃用状态（manifest.deprecated）。 */
+  deprecated?: boolean
+
   /** 上传包统计（安装审阅 / 导出展示用；内置款无）。 */
   packageStats?: {
     /** zip 内图片文件数。 */

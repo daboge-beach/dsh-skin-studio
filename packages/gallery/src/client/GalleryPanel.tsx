@@ -96,7 +96,12 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | undefined>(undefined)
   /** 安装审阅态：upload 校验通过后挂起，等用户在弹窗里确认。 */
-  const [review, setReview] = useState<{ entry: SkinEntry; validation: Awaited<ReturnType<typeof skinRegistry.validate>> } | null>(null)
+  const [review, setReview] = useState<{
+    entry: SkinEntry
+    validation: Awaited<ReturnType<typeof skinRegistry.validate>>
+    /** 更新安装：已安装版本号（同 id 不同版本时存在）。 */
+    updateFromVersion?: string
+  } | null>(null)
   /** 设置面板（v0.9：顶部按钮群收拢于此）。 */
   const [settingsOpen, setSettingsOpen] = useState(false)
   /** 删除确认态（危险操作确认）。 */
@@ -216,8 +221,16 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         return
       }
 
-      // 4. 安装审阅：展示能力面（token/图片/体积/警告），用户确认后才 install
-      setReview({ entry, validation })
+      // 4. 安装审阅：展示能力面（token/图片/体积/警告），用户确认后才 install；
+      //    同 id 已装且版本不同 → 更新审阅（展示 版本迁移 + changelog + 回滚提示）
+      const installed = await skinRegistry.get(entry.id)
+      setReview({
+        entry,
+        validation,
+        updateFromVersion: installed !== undefined && installed.version !== entry.version
+          ? installed.version
+          : undefined,
+      })
     } catch (e) {
       showToast({ message: `${t('uploadFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
     } finally {
@@ -244,6 +257,11 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
     skinRegistry.remove(skin.id)
       .then(() => {
         unregisterGalleryTheme(ctx, skin)
+        // 删除的是激活皮肤：立即回原生主题 + 清记忆（不能让界面挂在已删除的主题上）
+        if (activeSkinId === skin.id) {
+          skinStudioSettings.setActiveSkin(null)
+          try { ctx.theme.setTheme('system') } catch { /* 主题服务不可用时记忆已清，刷新即原生 */ }
+        }
         if (selectedSkin?.id === skin.id) setSelectedSkin(null)
         if (tryOnSkinId === skin.id) setTryOnSkinId(null)
         refreshList(activeTab)
@@ -252,7 +270,33 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
       .catch((e: unknown) => {
         showToast({ message: `${t('removeFailed')}：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
       })
-  }, [activeTab, ctx, refreshList, selectedSkin?.id, tryOnSkinId])
+  }, [activeSkinId, activeTab, ctx, refreshList, selectedSkin?.id, tryOnSkinId])
+
+  // ── 回滚到上一版（上传款更新后；再点一次切回新版）──────────────
+  const handleRollback = useCallback((skin: SkinEntry): void => {
+    void (async () => {
+      try {
+        const version = await skinRegistry.rollback(skin.id)
+        if (version === undefined) {
+          showToast({ message: '没有可切换的历史版本', type: 'info' })
+          return
+        }
+        // 当前激活/试穿的是该皮肤 → 重新注册新版本主题并应用
+        if (activeSkinId === skin.id || tryOnSkinId === skin.id) {
+          const updated = await skinRegistry.get(skin.id)
+          if (updated !== undefined) {
+            ensureThemeRegistered(ctx, updated)
+            ctx.theme.setTheme(skin.id)
+          }
+        }
+        refreshList(activeTab)
+        if (selectedSkin?.id === skin.id) setSelectedSkin(await skinRegistry.get(skin.id) ?? null)
+        showToast({ message: `${skin.name} 已切换到 v${version}`, type: 'success' })
+      } catch (e) {
+        showToast({ message: `回滚失败：${e instanceof Error ? e.message : String(e)}`, type: 'error' })
+      }
+    })()
+  }, [activeSkinId, activeTab, ctx, refreshList, selectedSkin?.id, tryOnSkinId])
 
   /** 还原出厂（设置面板注入；确认已在面板内完成）。 */
   const handleFactoryReset = useCallback((): void => {
@@ -458,6 +502,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
           ctx={ctx}
           onClose={() => setSelectedSkin(null)}
           onTryOn={onTryOnSkin => handleTryOn(onTryOnSkin)}
+          onRollback={handleRollback}
         />
       )}
 
@@ -465,6 +510,7 @@ export function GalleryPanel({ ctx }: GalleryPanelProps): JSX.Element {
         <InstallReviewModal
           entry={review.entry}
           validation={review.validation}
+          updateOf={review.updateFromVersion !== undefined ? { fromVersion: review.updateFromVersion } : undefined}
           onCancel={() => { setReview(null) }}
           onConfirm={() => { void handleInstallConfirmed(review.entry) }}
         />

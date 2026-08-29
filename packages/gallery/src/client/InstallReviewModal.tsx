@@ -12,6 +12,8 @@ import styles from './SkinDetailModal.module.css'
 export interface InstallReviewModalProps {
   entry: SkinEntry
   validation: ValidationResult
+  /** 更新安装：已安装版本的差异信息（版本号 + 本版 changelog）。 */
+  updateOf?: { fromVersion: string }
   onConfirm: () => void
   onCancel: () => void
 }
@@ -19,7 +21,7 @@ export interface InstallReviewModalProps {
 const kb = (n: number): string => `${Math.max(1, Math.round(n / 1024))} KB`
 const mb = (n: number): string => `${(n / 1048576).toFixed(1)} MB`
 
-export function InstallReviewModal({ entry, validation, onConfirm, onCancel }: InstallReviewModalProps): JSX.Element {
+export function InstallReviewModal({ entry, validation, updateOf, onConfirm, onCancel }: InstallReviewModalProps): JSX.Element {
   const stats = entry.packageStats
   const authorName = typeof entry.author === 'string' ? entry.author : entry.author.name
   const shownImages = stats?.images.slice(0, 6) ?? []
@@ -31,11 +33,34 @@ export function InstallReviewModal({ entry, validation, onConfirm, onCancel }: I
       <div className={styles.detail}>
 
         <div className={styles.meta}>
-          <h2 id="install-review-title">安装审阅 · {entry.name}</h2>
+          <h2 id="install-review-title">
+            {updateOf !== undefined ? '更新皮肤' : '安装审阅'} · {entry.name}
+          </h2>
           <p className={styles.author}>
-            v{entry.version} · 作者 {authorName} · 许可证 {entry.license ?? '未声明'} · {entry.colorScheme}
+            {updateOf !== undefined && <>v{updateOf.fromVersion} → </>}v{entry.version} · 作者 {authorName} · 许可证 {entry.license ?? '未声明'} · {entry.colorScheme}
           </p>
         </div>
+
+        {updateOf !== undefined && (
+          <section className={styles.tokens}>
+            <h3>更新内容</h3>
+            {entry.changelog?.length ? (
+              <ul>
+                {entry.changelog.slice(0, 6).map((line, i) => <li key={i}>{line}</li>)}
+              </ul>
+            ) : (
+              <p style={{ fontSize: 12, opacity: 0.7, margin: 0 }}>
+                作者未提供本版更新说明；旧版 v{updateOf.fromVersion} 会保留，安装后可一键回滚。
+              </p>
+            )}
+          </section>
+        )}
+
+        {entry.deprecated === true && (
+          <section className={styles.tokens}>
+            <h3 style={{ color: '#dc2626' }}>⚠ 此皮肤已被作者标记为弃用</h3>
+          </section>
+        )}
 
         <section className={styles.tokens}>
           <h3>它将获得的能力</h3>

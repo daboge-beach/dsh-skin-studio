@@ -17,6 +17,8 @@ export interface StoredSkin {
   installedAt: number
   manifest: UploadedSkinManifest
   images: Array<{ path: string; bytes: Uint8Array }>
+  /** 更新安装时保留的上一版快照（单级；回滚 = 与当前互换）。 */
+  previous?: { installedAt: number; manifest: UploadedSkinManifest; images: Array<{ path: string; bytes: Uint8Array }> }
 }
 
 const DB_NAME = 'dsh-skin-studio'

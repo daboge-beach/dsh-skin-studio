@@ -21,6 +21,8 @@ export interface SkinDetailModalProps {
   onClose: () => void
   /** 与画廊共享的试穿入口（保持卡片「试穿中」状态一致）。 */
   onTryOn: (skin: SkinEntry) => void
+  /** 回滚到上一版（上传款更新后有历史时显示；画廊负责刷新与 toast）。 */
+  onRollback?: (skin: SkinEntry) => void
 }
 
 /** palette 摘要 → swatch 展示项（label 为中文语义名）。 */
@@ -34,7 +36,7 @@ function paletteEntries(skin: SkinEntry): Array<[label: string, color: string]> 
   ]
 }
 
-export function SkinDetailModal({ skin, ctx, onClose, onTryOn }: SkinDetailModalProps): JSX.Element {
+export function SkinDetailModal({ skin, ctx, onClose, onTryOn, onRollback }: SkinDetailModalProps): JSX.Element {
   const [tokenExpanded, setTokenExpanded] = useState(false)
   const snapshot = ctx.theme.getTheme()
   const isActive = snapshot?.active.id === skin.id
@@ -168,6 +170,15 @@ export function SkinDetailModal({ skin, ctx, onClose, onTryOn }: SkinDetailModal
           {skin.source === 'upload' && (
             <button type="button" className={`${styles.btn} ${styles['btn--ghost']}`} onClick={exportZip}>
               导出 .zip
+            </button>
+          )}
+          {skin.rollbackVersion !== undefined && onRollback !== undefined && (
+            <button
+              type="button" className={`${styles.btn} ${styles['btn--ghost']}`}
+              title={`在 v${skin.version} 与 v${skin.rollbackVersion} 之间切换（再点一次切回来）`}
+              onClick={() => { onRollback(skin) }}
+            >
+              切到 v{skin.rollbackVersion}
             </button>
           )}
           <button

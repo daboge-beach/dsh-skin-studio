@@ -195,6 +195,23 @@ function validateSkin(skinDir, skinId) {
     scan(assetRoot, 0);
   }
 
+  // 版本管理字段（v0.13）：changelog / deprecated / replaces
+  if (manifest.changelog !== undefined) {
+    if (!Array.isArray(manifest.changelog) || manifest.changelog.some(x => typeof x !== 'string')) {
+      error(skinId, 'changelog 必须是字符串数组（每条一句话）');
+    }
+  }
+  if (manifest.deprecated !== undefined && typeof manifest.deprecated !== 'boolean') {
+    error(skinId, 'deprecated 必须是 boolean');
+  }
+  if (manifest.replaces !== undefined) {
+    if (manifest.replaces === manifest.id) {
+      error(skinId, 'replaces 不能指向自身');
+    } else if (!ID_REGEX.test(manifest.replaces)) {
+      error(skinId, 'replaces "' + manifest.replaces + '" 不符合 kebab-case 规则');
+    }
+  }
+
   // （旧字段已废弃提示）
   if (manifest.variants) {
     warn(skinId, 'variants 字段已废弃，改用 colorScheme: "light" | "dark"');

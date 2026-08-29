@@ -102,6 +102,8 @@ function toSkinEntry(skin: UploadedSkin): SkinEntry {
     source: 'upload',
     removable: true,
     packageStats,
+    changelog: manifest.changelog,
+    deprecated: manifest.deprecated === true,
   }
 }
 
@@ -138,6 +140,7 @@ class SkinRegistryImpl {
         for (const row of rows) {
           const images = new Map(row.images.map(img => [img.path, img.bytes]))
           const entry = toSkinEntry({ manifest: row.manifest, images })
+          entry.rollbackVersion = row.previous?.manifest.version
           this.#rawManifests.set(entry, row.manifest)
           this.#uploaded.push(entry)
           this.#stored.set(row.id, row)
@@ -248,7 +251,8 @@ class SkinRegistryImpl {
 
   /**
    * 载入注册表（不自动启用）。已存在同 id 的上传款按「更新安装」处理：
-   * 释放旧 object URL、原位替换、覆盖持久化记录。与内置款撞 id 仍拒绝。
+   * 释放旧 object URL、原位替换、旧版整包留作回滚快照（单级）。
+   * 与内置款撞 id 仍拒绝。
    */
   async install(entry: SkinEntry): Promise<void> {
     if (BUILTIN_SKINS.some(s => s.id === entry.id) || this.#npm.some(s => s.id === entry.id)) {
@@ -258,24 +262,61 @@ class SkinRegistryImpl {
     if (pending === undefined) {
       throw new Error('该条目没有待安装的解析产物（刷新后请重新上传）')
     }
-    const prev = this.#uploaded.find(s => s.id === entry.id)
-    if (prev !== undefined) {
-      for (const url of [prev.previewUrl, prev.heroUrl, prev.mascotUrl]) {
+    const prevEntry = this.#uploaded.find(s => s.id === entry.id)
+    if (prevEntry !== undefined) {
+      for (const url of [prevEntry.previewUrl, prevEntry.heroUrl, prevEntry.mascotUrl]) {
         if (url !== undefined) URL.revokeObjectURL(url)
       }
     }
-    this.#uploaded = prev !== undefined
+    this.#uploaded = prevEntry !== undefined
       ? this.#uploaded.map(s => s.id === entry.id ? entry : s)
       : [...this.#uploaded, entry]
 
+    const prevRecord = this.#stored.get(entry.id)
     const record: StoredSkin = {
       id: entry.id,
       installedAt: Date.now(),
       manifest: pending.manifest,
       images: [...pending.images.entries()].map(([path, bytes]) => ({ path, bytes })),
+      // 更新安装：旧版整包留作回滚快照（回滚 = 与当前互换，可再切回来）
+      ...(prevEntry !== undefined && prevRecord !== undefined
+        ? { previous: { installedAt: prevRecord.installedAt, manifest: prevRecord.manifest, images: prevRecord.images } }
+        : {}),
     }
     this.#stored.set(entry.id, record)
+    entry.rollbackVersion = record.previous?.manifest.version
     await skinStore.save(record)
+  }
+
+  /**
+   * 回滚/前进：当前版与上一版快照互换（再调一次即切回新版）。
+   * @returns 切换后的版本号；无历史快照时 undefined。
+   */
+  async rollback(id: string): Promise<string | undefined> {
+    const record = this.#stored.get(id)
+    if (record?.previous === undefined) return undefined
+    const restored = record.previous
+    const current: NonNullable<StoredSkin['previous']> = {
+      installedAt: record.installedAt, manifest: record.manifest, images: record.images,
+    }
+    const oldEntry = this.#uploaded.find(s => s.id === id)
+    if (oldEntry !== undefined) {
+      for (const url of [oldEntry.previewUrl, oldEntry.heroUrl, oldEntry.mascotUrl]) {
+        if (url !== undefined) URL.revokeObjectURL(url)
+      }
+    }
+    const images = new Map(restored.images.map(img => [img.path, img.bytes]))
+    const newEntry = toSkinEntry({ manifest: restored.manifest, images })
+    newEntry.rollbackVersion = current.manifest.version
+    this.#rawManifests.set(newEntry, restored.manifest)
+    this.#uploaded = this.#uploaded.map(s => s.id === id ? newEntry : s)
+    const updated: StoredSkin = {
+      id, installedAt: restored.installedAt, manifest: restored.manifest, images: restored.images,
+      previous: current,
+    }
+    this.#stored.set(id, updated)
+    await skinStore.save(updated)
+    return newEntry.version
   }
 
   /** 删除上传款（内置不可删），释放 object URL 并卸载持久化记录。 */

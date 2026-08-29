@@ -104,6 +104,12 @@ export interface SkinManifest {
   dshVersion?: string;
   /** 规范版本 */
   specVersion?: string;
+  /** 本版本更新说明（安装审阅展示；每条一句话） */
+  changelog?: string[];
+  /** 已弃用标记（安装审阅警示；配合 changelog 说明替代方案） */
+  deprecated?: boolean;
+  /** 取代的旧皮肤 id（同一作者的换代关系；不得指向自身） */
+  replaces?: string;
 }
 
 /** 皮肤包校验结果 */
