@@ -9,6 +9,46 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.18.0] — 2026-08-29
+
+**简体中文**
+
+「在线演示」版本：GitHub Pages 静态站（mock 宿主，无需本机 DSH）。
+
+### 新增
+
+- **资产基址层**（assetBase.ts）：全部 GET 型 `/skins/…` URL 统一经
+  基址构造——真实 DSH 空基址、静态演示注入 Vite base，同一份插件
+  bundle 在两种宿主下路径都正确（builtinSkins / quotePool / skinEffects
+  / MascotFloat 五处收敛；upload-bg 等 DSH 服务端路由保持原样，演示态
+  自然降级）
+- **静态演示构建**：`pnpm build:demo`（vite.demo.config + 资产按原路径
+  拷入 + 产物自检）；dev 壳基址注入先于插件动态加载；预览图懒加载
+- **Pages workflow**（.github/workflows/pages.yml）：LFS 检出 → 构建 →
+  deploy-pages；本地静态服务验证 5/5（子路径下首页/预览/语录/光标/
+  分档图全 200）
+- 上线需一次性仓库设置：Settings → Pages → Source 选 GitHub Actions
+  后重跑工作流（API 无凭据无法代办）
+
+**English**
+
+The "online demo" release: a GitHub Pages static site on the mock host
+(no local DSH needed).
+
+### Added
+
+- **Asset base layer**: all GET-style `/skins/…` URLs go through one base
+  prefix (empty under real DSH, Vite base injected in the static demo) —
+  the same plugin bundle is path-correct on both hosts
+- **Static demo build**: `pnpm build:demo` (vite demo config + assets
+  copied at their canonical paths + output self-check); the shell injects
+  the base before dynamically loading the plugin; lazy preview images
+- **Pages workflow**; local static-serve verification 5/5; going live
+  needs a one-time repo toggle (Settings → Pages → Source: GitHub
+  Actions) then a workflow re-run
+
+---
+
 ## [0.17.0] — 2026-08-29
 
 **简体中文**
