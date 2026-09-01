@@ -9,6 +9,68 @@ This file documents user-facing changes. Format loosely follows
 
 ---
 
+## [0.17.0] — 2026-08-29
+
+**简体中文**
+
+「获客与可信安装链路」版本。
+
+### 新增
+
+- **真实安装链路**：新增 `pnpm install-to-dsh`（幂等接入本机 DSH：
+  定位/创建 profile → 写入 link 依赖 → 安装）；README 从 507 行双语混杂
+  精简为 英文 `README.md` + 中文 `README.zh-CN.md` 双档互链，首屏 30 秒
+  给出定位/差异/三步 Quick Start/Star 提示；18 款图鉴与架构移
+  `docs/skin-gallery.md`
+- **README 命令防失效门禁**：新增 5 项测试扫描两份 README 的全部
+  bash 代码块——pnpm 命令必须对应真实 script、scripts/*.mjs 必须存在、
+  npx/npm/dsh-plugin 安装命令禁止出现（除非整块标注 TODO(npm-publish)），
+  从根上防止再宣传不存在的包
+- **安全提醒**：审计发现 npm 非同名包 `dsh-skin-studio` 系第三方发布
+  （无仓库链接），README/SECURITY 均明示本项目未发 npm、勿装来路包
+- **社区模板**：bug（内置诊断信息粘贴位）/ feature / **skin_submission
+  （皮肤投稿：截图·下载·兼容版本·原创与授权声明）** / PR 模板 /
+  SECURITY / SUPPORT / CODE_OF_CONDUCT
+- **发布物料**：v0.17.0 Release 完整草稿（`docs/release-draft-v0.17.0.md`）；
+  1280×640 社交预览图（`docs/social-preview.png`，纯原创渐变生成）；
+  Pages 部署评估与最小方案（`docs/pages-plan.md`，gallery 需 DSH 宿主，
+  不部署打不开的页面）
+
+### 修复
+
+- README 删除全部 4 处不存在的 npm 安装命令（`@dsh-skin-studio/gallery`/
+  `studio`/`create` 均未发布）
+
+**English**
+
+The "acquisition & trustworthy install chain" release.
+
+### Added
+
+- **Real install chain**: new `pnpm install-to-dsh` (idempotent local DSH
+  wiring); README split from a 507-line bilingual mix into English
+  `README.md` + Chinese `README.zh-CN.md` with a 30-second first screen;
+  the 18-skin gallery tables moved to `docs/skin-gallery.md`
+- **README command anti-rot gate**: 5 new tests scanning every bash block
+  in both READMEs — pnpm commands must map to real scripts, referenced
+  scripts must exist, npx/npm/dsh-plugin install commands are banned
+  unless the block carries a TODO(npm-publish) marker
+- **Security note**: audit found the non-scoped npm package
+  `dsh-skin-studio` is published by a third party (no repo link);
+  README/SECURITY now state this project ships no npm and to avoid
+  unknown same-name packages
+- **Community templates**: bug (with diagnostics paste slot) / feature /
+  **skin_submission** / PR template / SECURITY / SUPPORT / CODE_OF_CONDUCT
+- **Release materials**: full v0.17.0 release draft, a generated
+  1280×640 social preview, and a Pages deployment assessment + minimal
+  plan (the gallery needs the DSH host, so no dead page deployed)
+
+### Fixed
+
+- Removed all 4 nonexistent npm install commands from the README
+
+---
+
 ## [0.16.0] — 2026-08-29
 
 **简体中文**

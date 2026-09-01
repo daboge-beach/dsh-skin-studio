@@ -1,0 +1,57 @@
+name: 🎨 皮肤投稿 / Skin submission
+description: 把你做的皮肤分享给社区（无需写代码也能投）
+title: "[Skin] "
+labels: [skin-submission]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投稿！可以用皮肤工坊（画廊 → 🎨 创作皮肤 → 导出 .zip）零代码制作。
+        Third-party IP skins are welcome as clearly-labeled fan works — see the repo disclaimer.
+
+  - type: input
+    id: name
+    attributes:
+      label: 皮肤名称 / Skin name
+    validations:
+      required: true
+
+  - type: textarea
+    id: preview
+    attributes:
+      label: 截图或演示 / Screenshots or demo
+      description: 拖入图片或 GIF（预览图 + 应用后效果最好各一张）
+    validations:
+      required: true
+
+  - type: input
+    id: download
+    attributes:
+      label: 下载地址或 PR / Download link or PR
+      description: .zip 直链 / 网盘 / 仓库 PR 号 任一
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 兼容版本 / Tested against
+      description: 例如 dsh-skin-studio v0.16.0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: originality
+    attributes:
+      label: 原创与授权 / Originality & licensing
+      options:
+        - label: 图片素材为原创或已获授权，或为标注来源的同人卡通演绎（非官方素材、非拆包资源）
+          required: true
+        - label: 不含贬损现实人物的内容；涉及第三方 IP 已在描述中注明灵感来源
+          required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 补充说明（可选）/ Notes (optional)
+      description: 设计灵感、色板、语录等

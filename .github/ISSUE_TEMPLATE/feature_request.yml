@@ -1,0 +1,30 @@
+name: ✨ 功能建议 / Feature request
+description: 想要的新能力或改进
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题 / What problem are you trying to solve
+      description: 先说场景和痛点，而不是直接说实现方式 / Describe the scenario and pain first, not the implementation
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 你期望的方案 / What you'd like
+      description: 可以附草图或参考项目 / Sketches or references welcome
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 影响区域 / Area
+      options:
+        - 皮肤工坊 / Skin Composer
+        - 上传与安装 / Upload & install
+        - 画廊与试穿 / Gallery & try-on
+        - 吉祥物/特效 / Mascot & effects
+        - 稳定性 / Stability (host adapter, safe mode)
+        - 文档 / Docs
+        - 其他 / Other

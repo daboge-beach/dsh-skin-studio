@@ -1,0 +1,50 @@
+name: 🐛 Bug 报告 / Bug report
+description: 皮肤中心出了问题（界面 / 安装 / 皮肤异常）
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        报障前请先在设置 → 高级 → 「复制诊断信息」，把结果粘贴到下面——包含宿主构建号、插件版本、能力面，能省一轮来回。
+        Before filing, please paste the diagnostics snapshot (Settings → Advanced → Copy diagnostics).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么 / What happened
+      description: 具体描述 + 复现步骤 / Description + steps to reproduce
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 / Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: 诊断信息 / Diagnostics snapshot
+      description: 设置 → 高级 → 复制诊断信息 的输出 / Output of "Copy diagnostics"
+      render: json
+    validations:
+      required: true
+
+  - type: dropdown
+    id: skin
+    attributes:
+      label: 涉及皮肤 / Affected skin
+      options:
+        - 不涉及特定皮肤 / None in particular
+        - 内置皮肤 / Built-in skin
+        - 上传皮肤 / Uploaded skin
+        - 皮肤工坊生成 / Composer-generated
+        - 安全模式相关 / Safe mode related
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 控制台报错（可选）/ Console errors (optional)
+      render: shell

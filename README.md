@@ -1,507 +1,72 @@
+<div align="center">
+
 # 🎨 DSH Skin Studio
 
-**[简体中文](#-dsh-skin-studio--中文) | [English](#-dsh-skin-studio--english)**
+**Create, try on, install and share DeepSeek Harness skins — no code required.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![CI](https://github.com/daboge-beach/dsh-skin-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/daboge-beach/dsh-skin-studio/actions/workflows/ci.yml)
+[![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
+
+**[简体中文](./README.zh-CN.md)** · English
+
+</div>
 
 ---
-
-## 🎨 DSH Skin Studio · 中文
-
-> **DSH 的可安装视觉主题平台** —— 主题运行时负责加载 / 切换 / 恢复与兼容，角色皮肤和动态效果只是主题能力的一部分。内置精选内容：**英雄联盟（LOL）** ×10 · **凡人修仙传** ×5 · **DeepSeek 梗文化（梁神）** ×1 · 极简原创 ×2，支持随推理等级切换的**修仙境界 / 皮肤等级**分档形态（人物背景 · 吉祥物 · 光标 · 提示音）。
->
-> **三层架构**：🧩 Skin Runtime（主题加载/切换/恢复/兼容，宿主适配层集中管理能力探测与降级）→ 🖼 Skin Studio（浏览 / 上传 / 审阅 / 设置 / 安全模式）→ 📦 Skin Packs（LOL · 凡人 · 梗文化内容包，与核心解耦，可独立下架）。
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
-[![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
-[![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 18](https://img.shields.io/badge/skins-18-ff69b4)](#-内置皮肤一览)
-[![Status: Preview](https://img.shields.io/badge/status-preview-red)](#项目状态)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
 
 ![Demo](docs/demo.gif)
 
-> ⚠️ **DSH 本身处于 v0.1 开发者预览阶段**，插件 API 尚不稳定。本项目跟随上游版本演进，暂不保证跨版本兼容。
+**Why not just a theme pack?** Skins here are *alive*: characters, mascots, cursors and chimes
+evolve with the model's reasoning effort — and you can build your own in minutes with the
+no-code composer, safely install community packs, and roll anything back.
 
-### 📖 这个项目是什么
+## ⚡ Quick Start (3 steps)
 
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）把"万物皆插件"做到了极致——模型、工具、会话、**连 UI 都是可替换的插件**。皮肤（Skin）就是一种 UI 插件，通过 `skin.json` + `lib/client.js` 定义，由 `ThemePresenter` 接口实现"先试穿再应用、退出零残留"。
-
-`dsh-web-ui` 已经给出了 8 款作者精选皮肤，证明这条路走得通。**我们想再往前走一步：**
-
-> **让用户自己造皮肤、自己上传皮肤，做一个开放的皮肤中心（Skin Gallery）。**
-
-不是"作者精选 N 款"，而是"任何人都能贡献、任何人都能装"的 marketplace 形态。
-
-### ✨ 核心特性
-
-| 特性 | 说明 |
-|---|---|
-| 🎨 **内置精选皮肤 ×18** | LOL ×10 · 凡人修仙传 ×5 · 梗文化 ×1 · 极简原创 ×2，全部带 5 档境界形态（背景/吉祥物/光标/提示音随推理等级变化） |
-| 📥 **上传皮肤 · 真正的已安装** | 拖入 .zip → 安全解压（zip bomb/路径穿越防护）→ 安装审阅 → **IndexedDB 持久化**（刷新不丢）；同 id 更新自动保留旧版，**一键回滚** |
-| 🎨 **皮肤工坊（无代码编辑器）** | 选配色/传图/实时预览/WCAG 对比度检查，一键安装本机或导出 .zip 分享，不用写任何代码 |
-| 🖼️ **可视化画廊** | 全屏预览、试穿→确认两段式、自定义背景上传、安装前能力审阅 |
-| 🛡️ **安全模式与诊断** | 界面被皮肤弄坏时 `?safe-theme=1` 一键救援；设置面板复制诊断信息报障 |
-| 📊 **本地使用统计** | 各皮肤使用时长/激活/试穿转化率，只存本机可随时清除，绝不上传 |
-| 🛠️ **开发者工具链** | `pnpm gen:skin` 脚手架 + 数据单一真源生成器 + 校验器 + CI 漂移/体积门禁（见[创作指南](docs/skin-authoring.md)） |
-
-### 🎨 内置皮肤一览（18 款）
-
-**英雄联盟系列 · 10 款（神话级质感）**
-
-| 皮肤 | 主题 |
-|---|---|
-| 阿狸 · 九尾魅影 | 粉紫幻境 · 魅惑灵动 |
-| 伊泽瑞尔 · 符文远征 | 金蓝符文 · 探险家气质 |
-| 金克斯 · 弹幕狂潮 | 疯狂霓虹 · 鲨鱼火箭 |
-| 卡莎 · 虚空降临 | 深紫虚空 · 活体装甲 |
-| 拉克丝 · 光棱圣辉 | 圣洁光晕 · 彩虹光谱 |
-| 厄运小姐 · 赏金女王 | 红金赏金 · 弹雨玫瑰 |
-| 萨勒芬妮 · 星颂 | 星空舞台 · 双色应援 |
-| 娑娜 · 弦语仙音 | 琴音流淌 · 静谧雅致 |
-| 维恩 · 夜狩 | 冷银夜色 · 银弩猎手 |
-| 亚索 · 斩风疾影 | 青风竹意 · 疾剑浪客 |
-
-**凡人修仙传系列 · 5 款**
-
-| 皮肤 | 主题 |
-|---|---|
-| 韩立 · 青竹 | 青衫修士 · 竹林问心 |
-| 南宫婉 · 寒梅 | 冰雪聪明 · 寒梅傲骨 |
-| 银月 · 月华 | 狼族圣女 · 月华如水 |
-| 紫灵 · 紫霞 | 紫气东来 · 仙子凌波 |
-| 慕沛灵 · 桃夭 | 桃之夭夭 · 灼灼其华 |
-
-**基础系列 · 2 款**
-
-| 皮肤 | 主题 |
-|---|---|
-| Aurora | 极简亮色 · 清晨极光 |
-| Midnight | 极简暗色 · 深夜静谧 |
-
-**梗文化系列 · 1 款**
-
-| 皮肤 | 主题 |
-|---|---|
-| 梁神 · 深度求道 | 凉子（冻得发抖）→ 梁子 → 梁圣 → 梁神（始皇帝形态），推理等级越高 boss 修为越高 · 卡通 caricature 非真人肖像 |
-
-### 🚀 快速开始
-
-#### 前置要求
-
-- Node.js ≥ 20
-- DeepSeek Harness 已安装（`npx @deepseek-ai/dsh web` 可正常启动）
-
-#### 安装
+> Requirements: [Node.js ≥ 20](https://nodejs.org/), pnpm ≥ 9, and [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 ```bash
-# 装皮肤聚合包到 web profile
-dsh plugin --profile web add @dsh-skin-studio/gallery
+# 1. Clone and set up (downloads skin assets on first run)
+git clone https://github.com/daboge-beach/dsh-skin-studio.git
+cd dsh-skin-studio && pnpm setup
 
-# 或装全家桶（皮肤 + 皮肤中心 + 开发工具）
-dsh plugin --profile web add @dsh-skin-studio/studio
+# 2. Wire it into your local DSH (idempotent)
+pnpm install-to-dsh
+
+# 3. Restart DSH and open it
+dsh web   # then: Settings → Skin Studio
 ```
 
-#### 验证
+Interface unreadable after trying a skin? Load `?safe-theme=1` — one click back to native.
 
-```bash
-dsh --profile web --dump-config   # 确认插件已挂载
-```
+> npm distribution is **not published yet** — the install path above (verified in CI)
+> is currently the only supported one. See [the roadmap](#-roadmap).
 
-打开 http://127.0.0.1:3080，侧栏会出现 **Skin Studio** 入口。
+## ✨ What makes it different
 
-#### 试穿皮肤
-
-1. 点击侧栏 **Skin Studio**
-2. 画廊里点击任意皮肤 → 全屏预览
-3. 点 **试穿** → 即时生效，不满意随时退出
-4. 满意后点 **应用** → 正式启用
-
-#### 上传自定义皮肤
-
-- **方式一（本地目录）**：把皮肤文件夹放到 `~/.dsh/skins/<your-skin>/`，刷新画廊即可看到
-- **方式二（拖拽上传）**：在画廊界面拖入 `.zip` 皮肤包，自动解压校验
-- **方式三（npm 包）**：`dsh plugin --profile web add <你的皮肤包名>`
-
-### 🧱 皮肤包格式
-
-每个皮肤是一个目录，结构如下（兼容官方 `dsh-web-ui` 规范）：
-
-```
-my-skin/
-├── skin.json          # 皮肤清单（必填）
-├── preview.png        # 画廊预览图（必填，建议 1280×800）
-├── README.md          # 皮肤介绍（可选）
-└── lib/
-    └── client.js      # 客户端 bundle（必填，含 ThemePresenter 实现）
-```
-
-#### `skin.json` 字段规范
-
-```jsonc
-{
-  "id": "my-skin",                    // 皮肤唯一 ID（kebab-case）
-  "name": "我的皮肤",                  // 显示名
-  "version": "1.0.0",                  // 语义化版本
-  "author": "你的名字 <email@example.com>",
-  "description": "一句话描述这个皮肤",
-  "homepage": "https://github.com/...", // 可选
-  "license": "MIT",
-
-  // 视觉变体（至少一个，支持 light/dark）
-  "variants": ["light", "dark"],
-
-  // 客户端入口（相对于皮肤根目录）
-  "client": "lib/client.js",
-
-  // 皮肤能力声明（皮肤能做什么）
-  "capabilities": {
-    "customTitleBar": true,           // 自定义标题栏
-    "customBackground": true,         // 自定义背景
-    "customScrollbars": true,         // 自定义滚动条
-    "consumePlugins": ["dsh-fun-ticker"]  // 消费其他插件的数据
-  },
-
-  // 调色板（可选，给皮肤中心做配色预览）
-  "palette": {
-    "primary": "#3b82f6",
-    "background": "#0f172a",
-    "surface": "#1e293b",
-    "text": "#f1f5f9"
-  }
-}
-```
-
-> 完整字段定义和 `ThemePresenter` 接口签名见 [docs/SKIN_SPEC.md](docs/SKIN_SPEC.md)。
-
-### 🛠️ 开发自己的皮肤
-
-```bash
-# 用脚手架创建皮肤模板
-npx @dsh-skin-studio/create my-skin
-
-cd my-skin
-pnpm install
-pnpm dev    # 启动开发服务器，热重载预览
-pnpm build  # 构建 lib/client.js
-```
-
-开发文档见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
-
-### 📦 项目结构
-
-```
-dsh-skin-studio/
-├── packages/
-│   ├── gallery/              # 皮肤中心 UI（画廊、试穿、上传）
-│   ├── studio/               # 聚合包（gallery + 内置皮肤 + 工具）
-│   ├── create/               # 皮肤脚手架 CLI
-│   └── skins/                # 内置皮肤源码
-│       ├── aurora/           # 极光（极简亮色）
-│       ├── midnight/         # 午夜（极简暗色）
-│       ├── ahri-ninefold/    # 英雄联盟系列 × 10
-│       └── ...               # 凡人修仙传系列 × 5
-├── docs/
-│   ├── SKIN_SPEC.md          # 皮肤规范（权威）
-│   ├── DEVELOPMENT.md        # 开发指南
-│   ├── CONTRIBUTING.md       # 贡献指南
-│   └── uploads/              # 用户上传皮肤的格式约定
-├── examples/                 # 最小示例皮肤
-├── scripts/                  # 构建与发布脚本
-└── website/                  # 文档站
-```
-
-### 🤝 贡献皮肤
-
-任何人都可以贡献皮肤到内置画廊。流程：
-
-1. Fork 本仓库
-2. 用 `npx @dsh-skin-studio/create` 创建皮肤
-3. 把皮肤源码放到 `packages/skins/<你的皮肤名>/`
-4. 提交 PR，附上预览截图
-5. 通过评审后合入下一版发布
-
-详见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)。
-
-### 🗺️ 路线图
-
-- [x] 仓库初始化、规范定稿
-- [x] v0.1：皮肤中心 MVP（`packages/gallery`：画廊 / 试穿 / 应用 / 详情面板 / 吉祥物浮层 / 切换特效，内置 aurora + midnight + 凡人修仙传 5 款）
-- [x] v0.2：拖拽上传、zip 解压、格式校验（浏览器内零依赖解压 + `skin.json` 校验）
-- [x] v0.2.x：英雄联盟英雄皮肤系列 10 款（神话级质感）
-- [x] v0.3.0：吉祥物生态（满屏漫步 · 庆祝动作）+ 任务完成提醒 + 境界档位系统（推理等级联动）+ 梗文化皮肤「梁神」（详见 CHANGELOG.md）
-- [x] v0.4–v0.9：全皮肤五档资产 · 自定义背景上传 · 滑条↔推理等级同步 · 欢迎页控制条 · 上传持久化（IndexedDB）+ zip 安全限制 + 安装审阅 · 设置面板重构 + 完整中英文 + 无障碍
-- [x] v0.10：bundle 减重 34%（语录外置）· 皮肤数据单一真源（gen-skin-data）· CI 架构门禁（漂移 + 体积阈值）
-- [x] v0.11：皮肤脚手架 CLI（`pnpm gen:skin`，[创作指南](docs/skin-authoring.md)）
-- [ ] v1.0：开发热重载 · 签名/来源可信度 · 跟随 DSH v1.0 稳定 API 正式发布
-
-### ⚖️ 免责声明
-
-- 本项目是**独立的社区同人作品**，与 Riot Games（英雄联盟）、忘语/万维猫动画（凡人修仙传）及 DeepSeek 官方**无任何隶属或合作关系**；包名与标题中的第三方 IP 仅为内容指代
-- 所有角色形象均为 AI 生成或社区重绘的**卡通演绎**，非官方素材；如权利人提出异议，对应内容包可独立下架且不影响核心项目
-- 「梁神」为社区梗文化的调侃演绎，**非真实人物肖像**，避免任何贬损性或错误暗示的使用
-- 原创旗舰皮肤 **Aurora / Midnight** 是项目的默认宣传素材，欢迎作为接入示例
-
-### 📄 License
-
-MIT — 跟随 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 上游协议。
-
-### 🙏 致谢
-
-- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — 感谢 DeepSeek 团队提供"万物皆插件"的运行时框架，本项目得以在其之上构建皮肤生态
-- [dsh-web-ui](https://github.com/zhu1090093659/dsh-web-ui) — 皮肤格式和 ThemePresenter 抽象的开拓者，本项目借鉴了大量设计
-- 所有贡献皮肤的用户
-
-> 🎨 凡人修仙传系列皮肤为 AI 生成的同人创作，基于《凡人修仙传》（作者：忘语）角色形象，仅供个人欣赏与学习交流。
-
----
-
-## 🎨 DSH Skin Studio · English
-
-> **An installable visual theme platform for DSH** — a theme runtime handles loading / switching / restoration / compatibility; character skins and dynamic effects are just part of the theme capability. Curated content: **League of Legends (LOL)** ×10 · **A Record of a Mortal's Journey to Immortality (凡人修仙传)** ×5 · **DeepSeek meme (Liang Shen)** ×1 · original minimal ×2 — with **cultivation-stage / skin-tier** forms that follow the reasoning-effort level (character backgrounds · mascot · cursors · chimes).
->
-> **Three layers**: 🧩 Skin Runtime (theme loading / switching / restoration / compatibility — a host-adapter layer centralizes capability detection and graceful degradation) → 🖼 Skin Studio (browse / upload / review / settings / safe mode) → 📦 Skin Packs (LOL · Fanren · meme packs, decoupled from the core and independently removable).
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-green.svg)](https://nodejs.org/)
-[![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
-[![DeepSeek Harness](https://img.shields.io/badge/DeepSeek-Harness-orange)](https://github.com/deepseek-ai/deepseek-harness)
-[![Skins: 18](https://img.shields.io/badge/skins-18-ff69b4)](#-built-in-skins)
-[![Status: Preview](https://img.shields.io/badge/status-preview-red)](#project-status)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
-
-> ⚠️ **DSH itself is at the v0.1 developer-preview stage** and its plugin API is still unstable. This project tracks upstream releases; cross-version compatibility is not guaranteed yet.
-
-### 📖 What is this project
-
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) takes "everything is a plugin" to the extreme — models, tools, sessions, and **even the UI are replaceable plugins**. A Skin is a kind of UI plugin, defined by `skin.json` + `lib/client.js`, implementing try-before-apply with zero residue on exit via the `ThemePresenter` interface.
-
-`dsh-web-ui` already ships 8 hand-picked skins by its author, proving the road works. **We want to go one step further:**
-
-> **Let users build their own skins and upload them — an open Skin Gallery.**
-
-Not "N curated picks by the author", but a marketplace where anyone can contribute and anyone can install.
-
-### ✨ Key Features
-
-| Feature | Description |
+| | DSH Skin Studio |
 |---|---|
-| 🎨 **18 curated skins** | LOL ×10 · Fanren ×5 · meme ×1 · original minimal ×2 — all with 5 effort-linked tier forms (background/mascot/cursor/chime) |
-| 📥 **Uploaded skins that truly install** | Drop a .zip → safe extraction (zip-bomb & traversal hardened) → install review → **IndexedDB persistence** (survives refresh); updates keep the old version with **one-click rollback** |
-| 🎨 **Skin Composer (no-code editor)** | Pick colors / drop images / live preview / WCAG contrast check — install locally or export .zip, zero code |
-| 🖼️ **Visual gallery** | Full previews, try→confirm two-step, custom background upload, pre-install capability review |
-| 🛡️ **Safe mode & diagnostics** | `?safe-theme=1` rescues a broken UI; copy a diagnostics snapshot from settings |
-| 📊 **Local usage stats** | Per-skin duration / activations / try-on conversion — on-device only, clearable anytime |
-| 🛠️ **Dev toolchain** | `pnpm gen:skin` scaffolder + single-source data generators + validator + CI drift/size gates (see the [authoring guide](docs/skin-authoring.md)) |
+| 🎨 **No-code composer** | Pick colors, drop images, live preview, WCAG contrast check → install or export `.zip`. No `skin.json` handwriting. |
+| 🔄 **Living skins** | 18 built-in skins whose background, mascot, cursor and chime shift with the reasoning-effort level (5 tiers). |
+| 💾 **Real installs** | Uploaded skins persist in IndexedDB (survive refresh), with update snapshots and one-click rollback. |
+| 🛡️ **Safety first** | Zip-bomb/traversal hardening, pre-install capability review, `?safe-theme=1` rescue mode, local-only stats. |
+| 🌐 **Bilingual & local-first** | Full Chinese/English UI; everything runs on your machine, nothing uploads. |
 
-### 🎨 Built-in skins (18)
+## 🚀 More
 
-**League of Legends series · 10 skins (mythic-tier polish)**
+- [Skin authoring guide](./docs/skin-authoring.md) — ship your own skin in minutes (`pnpm gen:skin`)
+- [Verification matrix](./docs/verification-matrix.md) — what's tested, what's verified in real DSH, what needs manual QA
+- [Contributing](./docs/CONTRIBUTING.md) · [Security](./SECURITY.md) · [Support](./SUPPORT.md)
+- [Changelog](./CHANGELOG.md) — 16 releases, every step test-gated
 
-| Skin | Theme |
-|---|---|
-| Ahri · Nine-Tail Charms | Pink-violet fantasy · enchanting agility |
-| Ezreal · Rune Expedition | Golden-blue runes · explorer spirit |
-| Jinx · Bullet Mayhem | Neon chaos · shark rockets |
-| Kai'Sa · Voidborn Descent | Deep-void purple · living armor |
-| Lux · Radiant Prism | Holy radiance · rainbow spectrum |
-| Miss Fortune · Bounty Queen | Red-gold bounty · bullet-rose |
-| Seraphine · Star Anthem | Starry stage · duo-tone cheer |
-| Sona · Etwahl Muse | Flowing strings · serene elegance |
-| Vayne · Night Hunter | Cold-silver night · silverbolt huntress |
-| Yasuo · Gale Slasher | Green wind & bamboo · wandering swordsman |
+## 🗺️ Roadmap
 
-**A Record of a Mortal's Journey series · 5 skins**
+- [x] v0.7–v0.16 — welcome dock · upload persistence & safety · composer · safe mode · host adapter · versioning & rollback · local stats
+- [ ] npm distribution (blocked: org account) · online skin index · hot-reload dev flow
 
-| Skin | Theme |
-|---|---|
-| Han Li · Green Bamboo | Azure-robed cultivator · bamboo grove |
-| Nangong Wan · Winter Plum | Ice-smart grace · plum in the snow |
-| Yin Yue · Moonlight | Wolf-tribe maiden · moonlit waters |
-| Ziling · Violet Mist | Purple aura · immortal fairy |
-| Mu Peiling · Peach Blossom | Peach blossoms in full bloom |
+## ⭐ Show support
 
-**Essentials · 2 skins**
+If this made your DSH more fun to look at, a star helps others find it — thank you!
 
-| Skin | Theme |
-|---|---|
-| Aurora | Minimal light · dawn aurora |
-| Midnight | Minimal dark · deep-night calm |
+## 📄 License
 
-**Meme series · 1 skin**
-
-| Skin | Theme |
-|---|---|
-| Liang Shen · Deep Quest | Chilly → Liang-zi → Saint → Emperor (Qin Shi Huang form); higher reasoning effort, higher boss cultivation · cartoon caricature, not a real person |
-
-### 🚀 Quick Start
-
-#### Prerequisites
-
-- Node.js ≥ 20
-- DeepSeek Harness installed (`npx @deepseek-ai/dsh web` runs successfully)
-
-#### Installation
-
-```bash
-# Add the skin gallery package to the web profile
-dsh plugin --profile web add @dsh-skin-studio/gallery
-
-# Or the full bundle (skins + gallery + dev tools)
-dsh plugin --profile web add @dsh-skin-studio/studio
-```
-
-#### Verify
-
-```bash
-dsh --profile web --dump-config   # confirm the plugin is mounted
-```
-
-Open http://127.0.0.1:3080 — a **Skin Studio** entry appears in the sidebar.
-
-#### Try a skin
-
-1. Click **Skin Studio** in the sidebar
-2. Click any skin in the gallery → full-screen preview
-3. Click **Try on** → applies instantly, revert anytime
-4. Happy with it? Click **Apply** to make it official
-
-#### Upload a custom skin
-
-- **Option 1 (local folder)**: put the skin folder under `~/.dsh/skins/<your-skin>/` and refresh the gallery
-- **Option 2 (drag & drop)**: drop a `.zip` skin package onto the gallery; it is unzipped and validated automatically
-- **Option 3 (npm package)**: `dsh plugin --profile web add <your-skin-package>`
-
-### 🧱 Skin package format
-
-Each skin is a directory structured as follows (compatible with the official `dsh-web-ui` spec):
-
-```
-my-skin/
-├── skin.json          # skin manifest (required)
-├── preview.png        # gallery preview (required, 1280×800 recommended)
-├── README.md          # skin introduction (optional)
-└── lib/
-    └── client.js      # client bundle (required, contains the ThemePresenter)
-```
-
-#### `skin.json` field spec
-
-```jsonc
-{
-  "id": "my-skin",                    // unique skin ID (kebab-case)
-  "name": "My Skin",                  // display name
-  "version": "1.0.0",                 // semver
-  "author": "You <email@example.com>",
-  "description": "One line about this skin",
-  "homepage": "https://github.com/...", // optional
-  "license": "MIT",
-
-  // visual variants (at least one; supports light/dark)
-  "variants": ["light", "dark"],
-
-  // client entry (relative to the skin root)
-  "client": "lib/client.js",
-
-  // capability declarations (what the skin can do)
-  "capabilities": {
-    "customTitleBar": true,           // custom title bar
-    "customBackground": true,         // custom background
-    "customScrollbars": true,         // custom scrollbars
-    "consumePlugins": ["dsh-fun-ticker"]  // consume data from other plugins
-  },
-
-  // palette (optional, used for gallery color previews)
-  "palette": {
-    "primary": "#3b82f6",
-    "background": "#0f172a",
-    "surface": "#1e293b",
-    "text": "#f1f5f9"
-  }
-}
-```
-
-> See [docs/SKIN_SPEC.md](docs/SKIN_SPEC.md) for the full field definitions and the `ThemePresenter` interface signature.
-
-### 🛠️ Develop your own skin
-
-```bash
-# Scaffold a skin template
-npx @dsh-skin-studio/create my-skin
-
-cd my-skin
-pnpm install
-pnpm dev    # dev server with hot-reload preview
-pnpm build  # build lib/client.js
-```
-
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the development guide.
-
-### 📦 Project layout
-
-```
-dsh-skin-studio/
-├── packages/
-│   ├── gallery/              # skin gallery UI (browse, try-on, upload)
-│   ├── studio/               # aggregate package (gallery + built-ins + tools)
-│   ├── create/               # skin scaffolder CLI
-│   └── skins/                # built-in skin sources
-│       ├── aurora/           # Aurora (minimal light)
-│       ├── midnight/         # Midnight (minimal dark)
-│       ├── ahri-ninefold/    # League of Legends series × 10
-│       └── ...               # Mortal's Journey series × 5
-├── docs/
-│   ├── SKIN_SPEC.md          # skin spec (authoritative)
-│   ├── DEVELOPMENT.md        # development guide
-│   ├── CONTRIBUTING.md       # contribution guide
-│   └── uploads/              # format conventions for user-uploaded skins
-├── examples/                 # minimal example skin
-├── scripts/                  # build & release scripts
-└── website/                  # docs site
-```
-
-### 🤝 Contribute a skin
-
-Anyone can contribute a skin to the built-in gallery. The flow:
-
-1. Fork this repository
-2. Create a skin with `npx @dsh-skin-studio/create`
-3. Put the skin source under `packages/skins/<your-skin-name>/`
-4. Open a PR with preview screenshots
-5. Once reviewed, it ships in the next release
-
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
-
-### 🗺️ Roadmap
-
-- [x] Repository bootstrap, spec finalized
-- [x] v0.1: gallery MVP (`packages/gallery`: browse / try-on / apply / detail panel / mascot overlay / transition effects; ships aurora + midnight + 5 A Record of a Mortal's Journey skins)
-- [x] v0.2: drag & drop upload, zip extraction, format validation (dependency-free in-browser unzip + `skin.json` validation)
-- [x] v0.2.x: League of Legends champion skin series × 10 (mythic-tier polish)
-- [x] v0.3.0: mascot ecosystem (full-screen wandering, celebrations) + task-done alerts + power tier system (reasoning-effort linked) + the "Liang Shen" meme skin (see CHANGELOG.md)
-- [x] v0.4–v0.9: tier-5 assets for all skins · custom background upload · slider↔reasoning-effort sync · welcome-page dock · upload persistence (IndexedDB) + zip safety caps + install review · settings drawer + full i18n + a11y
-- [x] v0.10: 34% bundle cut (externalized quotes) · single source of truth for skin data (gen-skin-data) · CI architecture gates (drift + size)
-- [x] v0.11: skin scaffolder CLI (`pnpm gen:skin`, [authoring guide](docs/skin-authoring.md))
-- [ ] v1.0: hot-reload dev flow · signing/provenance · official release on DSH v1.0 stable API
-
-### ⚖️ Disclaimer
-
-- This project is an **independent fan-work** — not affiliated with, endorsed by, or connected to Riot Games (League of Legends), Wang Yu / Wan Wei Mao Animation (A Record of a Mortal's Journey to Immortality), or DeepSeek. Third-party IPs in package names and titles are content references only
-- All character art is **AI-generated or community-redrawn cartoon interpretation**, never official assets. If a rights holder objects, the affected content pack can be removed independently without affecting the core project
-- "Liang Shen" is a tongue-in-cheek community-meme persona, **not a portrait of any real person**; avoid any derogatory or misleading use
-- The original flagship skins **Aurora / Midnight** serve as the project's default showcase and integration examples
-
-### 📄 License
-
-MIT — follows the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) upstream license.
-
-### 🙏 Acknowledgments
-
-- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — thanks to the DeepSeek team for the "everything is a plugin" runtime this skin ecosystem is built upon
-- [dsh-web-ui](https://github.com/zhu1090093659/dsh-web-ui) — pioneer of the skin format and the ThemePresenter abstraction; this project borrows heavily from its design
-- Everyone who contributes skins
-
-> 🎨 The *A Record of a Mortal's Journey* skins are AI-generated fan art based on characters from the novel by Wang Yu (忘语), for personal enjoyment and learning only.
-
----
-
-<p align="center">Made with 🎨 for the DeepSeek Harness community</p>
+MIT © [daboge-beach](https://github.com/daboge-beach) · Fan-made, not affiliated with Riot Games / Wang Yu / DeepSeek — see the [disclaimer](./README.zh-CN.md#%EF%B8%8F-免责声明--disclaimer).

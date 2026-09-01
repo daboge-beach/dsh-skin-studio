@@ -15,7 +15,7 @@
  */
 
 /** 插件版本（release 时同步 package.json；诊断信息用）。 */
-export const SKIN_STUDIO_VERSION = '0.16.0'
+export const SKIN_STUDIO_VERSION = '0.17.0'
 
 /** 宿主能力面（启动探测 + 按需重探）。 */
 export interface HostCapabilities {
