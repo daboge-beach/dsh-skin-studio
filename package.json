@@ -25,7 +25,8 @@
     "gen:skin": "node scripts/create-skin.mjs",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && node scripts/gen-skin-data.mjs --check && node --experimental-strip-types scripts/gen-quotes.mjs --check && pnpm build && pnpm check:bundle && pnpm validate-skins",
     "install-to-dsh": "node scripts/install-to-dsh.mjs",
-    "gen:social-preview": "node --experimental-strip-types scripts/gen-social-preview.mjs"
+    "gen:social-preview": "node --experimental-strip-types scripts/gen-social-preview.mjs",
+    "build:demo": "node scripts/build-demo.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

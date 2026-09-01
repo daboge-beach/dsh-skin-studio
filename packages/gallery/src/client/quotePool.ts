@@ -10,6 +10,7 @@
  * 内存缓存），加载完成前 random* 落回通用双语池，失败静默（吉祥物
  * 不因网络问题丢气泡）。源数据模块 quotes.ts 仍由测试与生成脚本消费。
  */
+import { assetUrl } from './assetBase.ts'
 import type { QuoteLang } from './quotes/types.ts'
 
 export type { QuoteLang } from './quotes/types.ts'
@@ -32,7 +33,7 @@ const inFlight = new Map<string, Promise<void>>()
 /** 预热某款皮肤的语录池（皮肤激活 / 切换时调用；幂等，失败静默）。 */
 export function warmQuotes(skinId: string): void {
   if (skinId === '' || cache.has(skinId) || inFlight.has(skinId)) return
-  const load = fetch(`/skins/${skinId}/assets/quotes.json`)
+  const load = fetch(assetUrl(`/skins/${skinId}/assets/quotes.json`))
     .then(r => {
       if (!r.ok) throw new Error(`quotes.json ${r.status}`)
       return r.json() as Promise<SkinQuotes>

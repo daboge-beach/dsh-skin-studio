@@ -1,0 +1,51 @@
+name: Pages demo
+
+# 在线演示（mock 宿主，无需本机 DSH）：main 推送时构建静态站并发布。
+# 依赖仓库 Settings → Pages → Source 已选 "GitHub Actions"（首次部署前
+# 如未选择，Actions 会失败并在仓库 Pages 设置页给出一键开启入口）。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true   # 皮肤资产（PNG）经 LFS 检出
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build demo site
+        run: node scripts/build-demo.mjs
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/gallery/dist-demo
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

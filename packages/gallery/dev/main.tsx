@@ -7,14 +7,14 @@
  */
 import { useSyncExternalStore } from 'react'
 import { createRoot } from 'react-dom/client'
-import { apply as applyGallery } from '../src/client/index.ts'
 import { createMockHost } from './mockHost.ts'
 import './shell.css'
 
 const host = createMockHost([])
 
-// 载入皮肤中心插件（与真实 DSH 的插件加载等价：import + apply(ctx)）
-applyGallery(host.ctx)
+// 静态部署（Pages 子路径）时把 Vite base 注入给插件（assetBase.ts 读取）；
+// 开发服务器 base='/' → 注入被忽略，行为与此前一致。必须在插件 import 前。
+;(globalThis as { __SKIN_STUDIO_ASSET_BASE__?: string }).__SKIN_STUDIO_ASSET_BASE__ = import.meta.env.BASE_URL
 
 function DemoShell(): JSX.Element {
   const entries = useSyncExternalStore(host.subscribeEntries, host.sidebarEntries)
@@ -42,4 +42,10 @@ function DemoShell(): JSX.Element {
   )
 }
 
-createRoot(document.getElementById('root')!).render(<DemoShell />)
+// 载入皮肤中心插件（动态 import 保证上面的全局注入先于插件模块求值；
+// 不用顶层 await——esbuild 目标环境不含它）
+void (async () => {
+  const { apply: applyGallery } = await import('../src/client/index.ts')
+  applyGallery(host.ctx)
+  createRoot(document.getElementById('root')!).render(<DemoShell />)
+})()

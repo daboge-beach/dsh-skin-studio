@@ -19,6 +19,7 @@
 import type { ThemeSnapshot } from '@dsh-skin-studio/types'
 import { skinStudioSettings } from './settings.ts'
 import { effectiveTier, subscribeTier, TIERED_CURSOR_SKINS } from './tierPower.ts'
+import { assetUrl } from './assetBase.ts'
 
 /** 每款皮肤的视觉元数据：皮肤 class 后缀 + 光标文件名前缀 + 画布尺寸。 */
 export interface SkinVisual {
@@ -75,7 +76,7 @@ function buildCursorCss(): string {
   const rules: string[] = []
   const tier = effectiveTier()
   for (const [skinId, v] of Object.entries(SKIN_CURSORS)) {
-    const base = `/skins/${skinId}/assets/cursors`
+    const base = assetUrl(`/skins/${skinId}/assets/cursors`)
     const [hx, hy] = v.hotspot
     // 分档光标：t1+ 用 -t{n} 配色变体（TIERED_CURSOR_SKINS 有变体资产）
     const suffix = tier > 0 && TIERED_CURSOR_SKINS.has(skinId) ? `-t${tier}` : ''
@@ -255,10 +256,11 @@ function buildDecorCss(): string {
     if (cssClass === undefined) continue
     const [a0, a1, a2, a3] = DARK_SKINS.has(skinId) ? VEIL_DARK : VEIL_LIGHT
     const c = PANEL_VEIL[skinId]?.base.join(' ') ?? ''
+    const bgUrl = assetUrl(`/skins/${skinId}/assets/bg.png`)
     rules.push(
       `body.${cssClass} {`,
       `  background-color: rgb(${c});`,
-      `  background-image: linear-gradient(100deg, rgb(${c} / ${a0}) 0%, rgb(${c} / ${a1}) 30%, rgb(${c} / ${a2}) 55%, rgb(${c} / ${a3}) 100%), url('/skins/${skinId}/assets/bg.png');`,
+      `  background-image: linear-gradient(100deg, rgb(${c} / ${a0}) 0%, rgb(${c} / ${a1}) 30%, rgb(${c} / ${a2}) 55%, rgb(${c} / ${a3}) 100%), url('${bgUrl}');`,
       `  background-size: cover; background-position: center top; background-repeat: no-repeat; background-attachment: fixed;`,
       `}`,
     )
@@ -459,8 +461,8 @@ function buildGlassCss(): string {
     // bgRev 参数：自定义背景上传后 bump，让浏览器立刻拉新图（CSS url 变化）
     const bgRev = skinStudioSettings.get().bgRev
     const bg = (tiered
-      ? `/skins/${skinId}/assets/tiers/t${tier}/bg.png`
-      : GLASS_BG[skinId] ?? '') + (bgRev > 0 ? `?v=${bgRev}` : '')
+      ? assetUrl(`/skins/${skinId}/assets/tiers/t${tier}/bg.png`)
+      : assetUrl(GLASS_BG[skinId] ?? '')) + (bgRev > 0 ? `?v=${bgRev}` : '')
     // 分档图皮肤不加滤镜（图已按档位专门生成）；其余皮肤按档位滤镜递进
     const filter = tiered ? 'none' : TIER_BG_FILTERS[tier] ?? 'none'
     const rgba = (rgb: readonly number[], a: number): string =>

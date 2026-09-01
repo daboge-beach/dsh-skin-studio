@@ -11,11 +11,12 @@
  * assets/preview.png → previewUrl、assets/hero.png → heroUrl、
  * assets/sprite_anim.png → mascotUrl（2×2 网格 4 帧动画）。
  */
+import { assetUrl as skAssetUrl } from '../assetBase.ts'
 import type { SkinEntry } from './types.ts'
 import { GENERATED_SKINS } from './builtinSkins.gen.ts'
 
 /** 内置皮肤的静态资源基址（与 FANREN_SKINS_DESIGN.md 的光标资源路径约定一致）。 */
-const assetUrl = (skinId: string, file: string): string => `/skins/${skinId}/assets/${file}`
+const assetUrl = (skinId: string, file: string): string => skAssetUrl(`/skins/${skinId}/assets/${file}`)
 
 /** 由 palette 摘要生成卡片回退渐变（无 preview.png 时使用）。 */
 export function paletteCssGradient(palette: SkinEntry['palette']): string {

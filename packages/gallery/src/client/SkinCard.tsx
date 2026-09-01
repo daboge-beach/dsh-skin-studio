@@ -45,9 +45,10 @@ export function SkinCard({ skin, active, tryOn, onClick, onTryOn, onRemove }: Sk
         {skin.previewUrl ? (
           <img
             className={styles['preview-img']}
+            loading="lazy"
+            decoding="async"
             src={skin.previewUrl}
             alt={skin.name}
-            loading="lazy"
           />
         ) : (
           <div

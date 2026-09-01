@@ -15,6 +15,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import { usePrefersReducedMotion, useThemeSnapshot } from './hooks.ts'
 import { skinStudioSettings } from './settings.ts'
 import { skinRegistry } from './registry/skinRegistry.ts'
+import { assetUrl } from './assetBase.ts'
 import { randomGreeting, randomQuote, warmQuotes, type QuoteLang } from './quotePool.ts'
 import { onTaskDone, randomDoneQuote } from './taskNotify.ts'
 import { effectiveTier, subscribeTier, TIERED_SPRITE_SKINS, type PowerTier } from './tierPower.ts'
@@ -211,7 +212,7 @@ export function MascotFloat({ ctx }: { ctx: ClientContext }): JSX.Element | null
 
   // 分档造型：t1+ 用 tiers/t{n}/sprite_anim.png（t0 沿用原形象）
   const tierMascotUrl = tier > 0 && TIERED_SPRITE_SKINS.has(skinId)
-    ? `/skins/${skinId}/assets/tiers/t${tier}/sprite_anim.png`
+    ? assetUrl(`/skins/${skinId}/assets/tiers/t${tier}/sprite_anim.png`)
     : activeSkin.mascotUrl
 
   return (
