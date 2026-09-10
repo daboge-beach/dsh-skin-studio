@@ -1,12 +1,12 @@
-# Release 草稿 · v0.17.0（含 v0.6.0 → v0.17.0 累积亮点）
+# Release 草稿 · v0.18.0（含 v0.6.0 → v0.18.0 累积亮点）
 
 > **发布方式**：本文件为完整草稿。因当前环境无 GitHub API 凭据，需要人工发布：
-> Releases → Draft a new release → tag `v0.17.0`（已有提交后）→ 粘贴下方正文 → Publish。
+> Releases → Draft a new release → tag `v0.18.0`（已有提交后）→ 粘贴下方正文 → Publish。
 > 发布后把本文件路径写进 ZCODE_REPLY 存档。
 
 ---
 
-**Tag**: `v0.17.0` · **Baseline**: commit 本版发布提交 · **CI**: green（`pnpm verify` 同一串）
+**Tag**: `v0.18.0` · **Baseline**: commit 本版发布提交 · **CI**: green（`pnpm verify` 同一串）
 
 ## 主要新能力（v0.6.0 → v0.17.0）
 
@@ -16,6 +16,7 @@
 - 🔄 **五档活皮肤**：18 款内置皮肤的背景/吉祥物/光标/提示音随推理等级变化
 - 🏗 **工程底座**：宿主适配层（DOM 探测集中+降级）、bundle 减重 34%、皮肤数据单一真源生成器、CI 漂移+体积双门禁、`pnpm verify` 统一验收
 - 🌐 中英双语界面 · 纯本地使用统计（绝不上传）
+- 🖥 **在线演示就绪**（GitHub Pages mock 宿主，无需本机 DSH；workflow 已内置）
 
 ## 安装与升级
 
