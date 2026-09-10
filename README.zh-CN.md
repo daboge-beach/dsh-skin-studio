@@ -14,6 +14,11 @@
 
 ---
 
+[![在线演示](https://img.shields.io/badge/%F0%9F%96%A5-%E5%9C%A8%E7%BA%BF%E6%BC%94%E7%A4%BA-4D6BFE?style=for-the-badge)](https://daboge-beach.github.io/dsh-skin-studio/)
+
+**现在就在浏览器里试——免安装、不需要本机 DeepSeek Harness：**
+**[daboge-beach.github.io/dsh-skin-studio](https://daboge-beach.github.io/dsh-skin-studio/)**（mock 宿主，完整界面）
+
 ![演示](docs/demo.gif)
 
 **和普通主题包有什么区别？** 这里的皮肤是「活」的：人物背景、吉祥物、光标、提示音

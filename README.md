@@ -14,6 +14,11 @@
 
 ---
 
+[![Live demo](https://img.shields.io/badge/%F0%9F%96%A5-live_demo-4D6BFE?style=for-the-badge)](https://daboge-beach.github.io/dsh-skin-studio/)
+
+**Try it right now in your browser — no install, no local DSH needed:**
+**[daboge-beach.github.io/dsh-skin-studio](https://daboge-beach.github.io/dsh-skin-studio/)** (mock host, full UI)
+
 ![Demo](docs/demo.gif)
 
 **Why not just a theme pack?** Skins here are *alive*: characters, mascots, cursors and chimes
